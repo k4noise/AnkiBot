@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 /**
  * Тесты на класс менеджера управления колодами {@link DeckManager}
@@ -43,7 +42,11 @@ class DeckManagerTest {
 
         Assertions.assertFalse(decks.isEmpty());
         Assertions.assertEquals(1, decks.size(), "Должна быть сохранена только одна колода в менеджере");
-        // TODO: проверка имени колоды
+        Assertions.assertEquals(
+                deckName,
+                deckManager.getDeck(deckName).getName(),
+                "Имя колоды должно соответствовать изначальному"
+        );
     }
 
     /**
@@ -104,8 +107,11 @@ class DeckManagerTest {
         deckManager.addDeck(deckName);
 
         Deck deck = deckManager.getDeck(deckName);
-
-        //TODO проверка имени колоды
+        Assertions.assertEquals(
+                deckName,
+                deck.getName(),
+                "Колода должна иметь имя, указанное при создании"
+        );
     }
 
     /**
@@ -140,7 +146,12 @@ class DeckManagerTest {
                 decks.size(),
                 "Количество созданных колод должно совпадать с количеством полученных колод"
         );
-        //TODO проверка имен колод
+        Assertions.assertTrue(
+                deckNames.stream().allMatch(deckName ->
+                        decks.stream().anyMatch(deck -> deck.getName().equals(deckName))
+                ),
+                "Все созданные колоды должны присутствовать в списке полученных колод"
+        );
     }
 
     /**
@@ -160,7 +171,8 @@ class DeckManagerTest {
                 () -> deckManager.getDeck(deckName),
                 "Невозможно получить колоду по старому имени"
         );
-        // TODO: проверка имени новой колоды
+        Assertions.assertNotEquals(deckName, deck.getName(), "Колода не должна иметь старое имя");
+        Assertions.assertEquals(newDeckName, deck.getName(), "Колода должна иметь новое имя");
     }
 
 
