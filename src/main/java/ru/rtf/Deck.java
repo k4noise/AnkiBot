@@ -1,11 +1,11 @@
 package ru.rtf;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
  * Колода с картами для обучения
+ * Взаимодействие с картами идет через класс CardManager
  *
  * @author k4noise
  * @since 22.10.2024
@@ -15,10 +15,11 @@ public class Deck {
      * Имя колоды - идентификатор
      */
     private String name;
+
     /**
-     * Список карт колоды
+     * Менеджер карт, отвечающий за все операции с картами в колоде
      */
-    private final Map<String, Card> cards;
+    private final CardManager cardManager;
 
     /**
      * Инициализировать колоду
@@ -63,7 +64,7 @@ public class Deck {
     public void updateName(String newName) {
     }
 
-    // Взаимодействие с картами //
+    // Взаимодействие с картами через CardManager //
 
     /**
      * Добавить новую карту в колоду
