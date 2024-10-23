@@ -1,6 +1,7 @@
 package ru.rtf;
 
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -17,6 +18,7 @@ public class DeckManager {
      * Инициализация менеджера управления колодами
      */
     public DeckManager() {
+        decks = new LinkedHashMap<>();
     }
 
     /**
@@ -27,15 +29,23 @@ public class DeckManager {
      * @throws IllegalArgumentException Колода с таким именем уже существует
      */
     public void addDeck(String name) {
+        if (decks.containsKey(name)) {
+            throw new IllegalArgumentException("Колода с именем " + name + " уже существует, выберите другое имя");
+        }
+        decks.put(name, new Deck(name));
     }
 
     /**
      * Получить колоду из менеджера с указанным именем
      *
-     * @return Колода с указанным именем
+     * @return Найденная колода
      * @throws NoSuchElementException Колоды с таким именем не существует
      */
     public Deck getDeck(String name) {
+        if (decks.containsKey(name)) {
+            return decks.get(name);
+        }
+        throw new NoSuchElementException("Колода с именем" + name + "не существует");
     }
 
     /**
@@ -48,6 +58,16 @@ public class DeckManager {
      * @throws IllegalArgumentException Колода с таким именем уже существует
      */
     public void updateDeckName(String oldName, String newName) {
+        if (!decks.containsKey(oldName)) {
+            throw new NoSuchElementException("Колода с именем" + oldName + "не существует");
+        }
+        if (decks.containsKey(newName)) {
+            throw new IllegalArgumentException("Колода с именем " + newName + " уже существует, выберите другое имя");
+        }
+
+        Deck deck = decks.remove(oldName);
+        deck.updateName(newName);
+        decks.put(newName, deck);
     }
 
     /**
@@ -57,6 +77,10 @@ public class DeckManager {
      * @throws NoSuchElementException Колоды с таким именем не существует
      */
     public void removeDeck(String name) {
+        if (!decks.containsKey(name)) {
+            throw new NoSuchElementException("Колода с именем" + name + "не существует");
+        }
+        decks.remove(name);
     }
 
     /**
@@ -65,5 +89,6 @@ public class DeckManager {
      * @return Все сохраненные колоды
      */
     public Collection<Deck> getDecks() {
+        return decks.values();
     }
 }

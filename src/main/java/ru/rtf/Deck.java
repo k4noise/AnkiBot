@@ -2,6 +2,7 @@ package ru.rtf;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * Колода с картами для обучения
@@ -27,6 +28,8 @@ public class Deck {
      * @param name Имя колоды
      */
     public Deck(String name) {
+        this.name = name;
+        cardManager = new CardManager();
     }
 
     /**
@@ -36,6 +39,7 @@ public class Deck {
      */
     @Override
     public int hashCode() {
+        return Objects.hash(name);
     }
 
     /**
@@ -46,6 +50,10 @@ public class Deck {
      */
     @Override
     public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Deck deck = (Deck) object;
+        return Objects.equals(name, deck.name);
     }
 
     /**
@@ -54,6 +62,7 @@ public class Deck {
      * @return Имя колоды
      */
     public String getName() {
+        return name;
     }
 
     /**
@@ -62,6 +71,7 @@ public class Deck {
      * @param newName Новое имя колоды
      */
     public void updateName(String newName) {
+        name = newName;
     }
 
     // Взаимодействие с картами через CardManager //
@@ -105,7 +115,7 @@ public class Deck {
      * @param term Термин карты
      * @throws NoSuchElementException Карты с таким термином не существует в колоде
      */
-    public Card getCard(String term)  {
+    public Card getCard(String term) {
     }
 
     /**
