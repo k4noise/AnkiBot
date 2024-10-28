@@ -18,7 +18,6 @@ public class HelpCommand implements Command {
 
     /**
      * Выполнить команду
-     * * выводит справку о доступных командах пользователю
      *
      * @param chatId в каком чате выполнить
      * @param text   текст вызова команды

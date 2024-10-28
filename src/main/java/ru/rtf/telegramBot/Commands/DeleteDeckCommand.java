@@ -20,6 +20,12 @@ public class DeleteDeckCommand implements Command {
      * Соответствие пользователей и их колод
      */
     private final UserDecksData userDecksData;
+    /**
+     * Количество аргументов в сообщении пользователя
+     * 1. сама команда (/delete-deck)
+     * 2. название колоды
+     */
+    private final int COUNT_ARGS = 2;
 
     public DeleteDeckCommand(SenderMessages senderMessages, UserDecksData userDecksData) {
         this.senderMessages = senderMessages;
@@ -27,7 +33,7 @@ public class DeleteDeckCommand implements Command {
     }
 
     /**
-     * Удаляет колоду
+     * выполнить команду
      *
      * @param chatId в каком чате выполнить
      * @param text   текст вызова команды
@@ -54,10 +60,10 @@ public class DeleteDeckCommand implements Command {
      * выделяет имя колоды из сообщения пользователя
      * выводит пользователю ошибку при неудаче
      *
-     * @return имя новой колоды
+     * @return имя новой колоды (аргумент следующий за именем команды)
      */
     private String ReturnNameDeck(Long chatId, String message) {
-        if (message.split(" ").length < 2) {
+        if (message.split(" ").length < COUNT_ARGS) {
             senderMessages.sendMessage(chatId, "Команда отменена. Нужно ввести имя колоды.");
             return null;
         }

@@ -21,13 +21,21 @@ public class RenameDeckCommand implements Command {
      */
     private final UserDecksData userDecksData;
 
+    /**
+     * Количество аргументов в сообщении пользователя
+     * 1. сама команда (/rename-deck)
+     * 2. старое название колоды
+     * 3. новое название
+     */
+    private final int COUNT_ARGS = 3;
+
     public RenameDeckCommand(SenderMessages senderMessages, UserDecksData userDecksData) {
         this.senderMessages = senderMessages;
         this.userDecksData = userDecksData;
     }
 
     /**
-     * выполнить команду переименования колоды
+     * выполнить команду
      *
      * @param chatId в каком чате выполнить
      * @param text   текст вызова команды
@@ -36,7 +44,7 @@ public class RenameDeckCommand implements Command {
     public void execution(Long chatId, String text) {
 
         String[] words = text.split(" ");
-        if (words.length < 3) {
+        if (words.length < COUNT_ARGS) {
             senderMessages.sendMessage(chatId,
                     "Команда отменена. Команда должна соответствовать шаблону:\n /rename-deck <название колоды> <новое название>");
             return;

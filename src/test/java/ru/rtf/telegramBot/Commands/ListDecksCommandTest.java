@@ -2,13 +2,14 @@ package ru.rtf.telegramBot.Commands;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
-
-import static org.mockito.Mockito.*;
-
+/**
+ * Тесты для команды просмотра имеющихся у пользователя колод
+ */
 public class ListDecksCommandTest {
     private SenderMessages senderMessages;
     private UserDecksData userDecksData;
@@ -16,8 +17,8 @@ public class ListDecksCommandTest {
 
     @BeforeEach
     void setUp() {
-        senderMessages = mock(SenderMessages.class);
-        userDecksData = mock(UserDecksData.class);
+        senderMessages = Mockito.mock(SenderMessages.class);
+        userDecksData = Mockito.mock(UserDecksData.class);
         listDecksCommand = new ListDecksCommand(senderMessages, userDecksData);
     }
 
@@ -29,15 +30,15 @@ public class ListDecksCommandTest {
         Long chatId = 987654321L;
 
         // Настраиваем userDecksData, чтобы возвращал null для данного chatId (нет колод)
-        when(userDecksData.getUserDecks(chatId)).thenReturn(null);
+        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(null);
 
         // попытка выполнить команду
         listDecksCommand.execution(chatId, "/list-decks");
 
         // Проверка, что отправляется корректное сообщение
-        verify(senderMessages).sendMessage(chatId, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
+        Mockito.verify(senderMessages).sendMessage(chatId, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
         //Проверка, что сообщение для ненулевого количества колод не отправилось
-        verify(senderMessages, never()).sendMessage(chatId, "Ваши колоды:");
+        Mockito.verify(senderMessages, Mockito.never()).sendMessage(chatId, "Ваши колоды:");
     }
 
     /**
@@ -47,15 +48,15 @@ public class ListDecksCommandTest {
     void testExecutionWithNoDecksEmpty() {
         Long chatId = 987654321L;
 
-        when(userDecksData.getUserDecks(chatId)).thenReturn(new DeckManager());
+        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(new DeckManager());
 
         // попытка выполнить команду
         listDecksCommand.execution(chatId, "/list-decks");
 
         // Проверка, что отправляется корректное сообщение
-        verify(senderMessages).sendMessage(chatId, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
+        Mockito.verify(senderMessages).sendMessage(chatId, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
         //Проверка, что сообщение для ненулевого количества колод не отправилось
-        verify(senderMessages, never()).sendMessage(chatId, "Ваши колоды:");
+        Mockito.verify(senderMessages, Mockito.never()).sendMessage(chatId, "Ваши колоды:");
     }
 
     /**
@@ -69,12 +70,12 @@ public class ListDecksCommandTest {
         deckManager.addDeck("first");
         deckManager.addDeck("second");
 
-        when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
+        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
 
         // попытка выполнить команду
         listDecksCommand.execution(chatId, "/list-decks");
 
-        verify(senderMessages).sendMessage(chatId, "Ваши колоды:");
-        verify(senderMessages).sendMessage(chatId, "first\nsecond\n");
+        Mockito.verify(senderMessages).sendMessage(chatId, "Ваши колоды:");
+        Mockito.verify(senderMessages).sendMessage(chatId, "first\nsecond\n");
     }
 }

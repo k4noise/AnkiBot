@@ -3,12 +3,14 @@ package ru.rtf.telegramBot.Commands;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
-import static org.mockito.Mockito.*;
-
+/**
+ * Тесты для команды создание новой колоды
+ */
 class CreateDeckCommandTest {
 
     private SenderMessages senderMessages;
@@ -17,8 +19,8 @@ class CreateDeckCommandTest {
 
     @BeforeEach
     void setUp() {
-        senderMessages = mock(SenderMessages.class);
-        userDecksData = mock(UserDecksData.class);
+        senderMessages = Mockito.mock(SenderMessages.class);
+        userDecksData = Mockito.mock(UserDecksData.class);
         createDeckCommand = new CreateDeckCommand(senderMessages, userDecksData);
     }
 
@@ -30,15 +32,15 @@ class CreateDeckCommandTest {
         Long chatId = 987654321L;
         String commandText = "/create-deck FirstDeck";
 
-        when(userDecksData.containsUser(chatId)).thenReturn(false);
+        Mockito.when(userDecksData.containsUser(chatId)).thenReturn(false);
 
-        DeckManager deckManager = mock(DeckManager.class);
-        when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
+        DeckManager deckManager = Mockito.mock(DeckManager.class);
+        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
 
         createDeckCommand.execution(chatId, commandText);
 
-        verify(userDecksData).addUser(chatId);
-        verify(deckManager).addDeck("FirstDeck");
+        Mockito.verify(userDecksData).addUser(chatId);
+        Mockito.verify(deckManager).addDeck("FirstDeck");
     }
 
     /**
@@ -49,16 +51,16 @@ class CreateDeckCommandTest {
         Long chatId = 987654321L;
         String commandText = "/create-deck NewDeck";
 
-        when(userDecksData.containsUser(chatId)).thenReturn(true);
+        Mockito.when(userDecksData.containsUser(chatId)).thenReturn(true);
 
-        DeckManager deckManager = mock(DeckManager.class);
-        when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
+        DeckManager deckManager = Mockito.mock(DeckManager.class);
+        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
 
         createDeckCommand.execution(chatId, commandText);
 
         // Проверяем добавление новой колоды без добавления пользователя
-        verify(userDecksData, never()).addUser(chatId);
-        verify(deckManager).addDeck("NewDeck");
+        Mockito.verify(userDecksData, Mockito.never()).addUser(chatId);
+        Mockito.verify(deckManager).addDeck("NewDeck");
     }
 
     /**
@@ -69,10 +71,10 @@ class CreateDeckCommandTest {
         Long chatId = 987654321L;
         String commandText = "/create-deck";
 
-        when(userDecksData.containsUser(chatId)).thenReturn(true);
+        Mockito.when(userDecksData.containsUser(chatId)).thenReturn(true);
         createDeckCommand.execution(chatId, commandText);
 
         // Проверяем отправку сообщения об ошибке
-        verify(senderMessages).sendMessage(chatId, "Команда отменена. Нужно ввести имя колоды.");
+        Mockito.verify(senderMessages).sendMessage(chatId, "Команда отменена. Нужно ввести имя колоды.");
     }
 }

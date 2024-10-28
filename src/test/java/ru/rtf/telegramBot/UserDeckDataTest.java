@@ -1,11 +1,13 @@
 package ru.rtf.telegramBot;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.rtf.DeckManager;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * Тесты для класса связи пользователей и их колод
+ */
 class UserDecksDataTest {
 
     private UserDecksData userDecksData;
@@ -23,7 +25,7 @@ class UserDecksDataTest {
         Long chatId = 123456789L;
         userDecksData.addUser(chatId);
 
-        assertTrue(userDecksData.containsUser(chatId),
+        Assertions.assertTrue(userDecksData.containsUser(chatId),
                 "user при добавлении должен сохраняться в userDecksData");
     }
 
@@ -36,7 +38,7 @@ class UserDecksDataTest {
         userDecksData.addUser(chatId);
 
         DeckManager deckManager = userDecksData.getUserDecks(chatId);
-        assertNotNull(deckManager, "у пользователя должен быть экземпляр deckManager");
+        Assertions.assertNotNull(deckManager, "у пользователя должен быть экземпляр deckManager");
     }
 
     /**
@@ -47,7 +49,7 @@ class UserDecksDataTest {
         Long chatId = 202020202L;
 
         DeckManager deckManager = userDecksData.getUserDecks(chatId);
-        assertNull(deckManager, "Пользователь не добавлен в список, у него не должно быть колод");
+        Assertions.assertNull(deckManager, "Пользователь не добавлен в список, у него не должно быть колод");
     }
 }
 

@@ -2,6 +2,7 @@ package ru.rtf.telegramBot.Commands;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import ru.rtf.Deck;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
@@ -9,8 +10,9 @@ import ru.rtf.DeckManager;
 
 import java.util.Set;
 
-import static org.mockito.Mockito.*;
-
+/**
+ * Тесты для команды удаление колоды
+ */
 class DeleteDeckCommandTest {
 
     private SenderMessages senderMessages;
@@ -19,8 +21,8 @@ class DeleteDeckCommandTest {
 
     @BeforeEach
     void setUp() {
-        senderMessages = mock(SenderMessages.class);
-        userDecksData = mock(UserDecksData.class);
+        senderMessages = Mockito.mock(SenderMessages.class);
+        userDecksData = Mockito.mock(UserDecksData.class);
         deleteDeckCommand = new DeleteDeckCommand(senderMessages, userDecksData);
     }
 
@@ -32,16 +34,16 @@ class DeleteDeckCommandTest {
         Long chatId = 987654321L;
         String commandText = "/delete-deck DelDeck";
 
-        when(userDecksData.containsUser(chatId)).thenReturn(true);
+        Mockito.when(userDecksData.containsUser(chatId)).thenReturn(true);
 
-        DeckManager deckManager = mock(DeckManager.class);
-        when(deckManager.getDecks()).thenReturn(Set.of(new Deck("DelDeck")));
-        when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
+        DeckManager deckManager = Mockito.mock(DeckManager.class);
+        Mockito.when(deckManager.getDecks()).thenReturn(Set.of(new Deck("DelDeck")));
+        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
 
         deleteDeckCommand.execution(chatId, commandText);
 
-        verify(deckManager).removeDeck("DelDeck");
-        verify(senderMessages).sendMessage(chatId, "Колода DelDeck удалена");
+        Mockito.verify(deckManager).removeDeck("DelDeck");
+        Mockito.verify(senderMessages).sendMessage(chatId, "Колода DelDeck удалена");
     }
 
     /**
@@ -52,17 +54,17 @@ class DeleteDeckCommandTest {
         Long chatId = 987654321L;
         String commandText = "/delete-deck MyDeck";
 
-        when(userDecksData.getUserDecks(chatId)).thenReturn(null);
+        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(null);
         deleteDeckCommand.execution(chatId, commandText);
 
-        verify(senderMessages).sendMessage(chatId, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
+        Mockito.verify(senderMessages).sendMessage(chatId, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
 
         Long chatIdEmpty = 123456789L;
 
-        when(userDecksData.getUserDecks(chatIdEmpty)).thenReturn(new DeckManager());
+        Mockito.when(userDecksData.getUserDecks(chatIdEmpty)).thenReturn(new DeckManager());
         deleteDeckCommand.execution(chatIdEmpty, commandText);
 
-        verify(senderMessages).sendMessage(chatIdEmpty, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
+        Mockito.verify(senderMessages).sendMessage(chatIdEmpty, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
 
     }
 
@@ -75,13 +77,13 @@ class DeleteDeckCommandTest {
         String commandText = "/delete-deck";
 
         // "заполняем" коллекцию колод пользователя
-        when(userDecksData.containsUser(chatId)).thenReturn(true);
-        DeckManager deckManager = mock(DeckManager.class);
-        when(deckManager.getDecks()).thenReturn(Set.of(new Deck("DelDeck")));
-        when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
+        Mockito.when(userDecksData.containsUser(chatId)).thenReturn(true);
+        DeckManager deckManager = Mockito.mock(DeckManager.class);
+        Mockito.when(deckManager.getDecks()).thenReturn(Set.of(new Deck("DelDeck")));
+        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
 
         deleteDeckCommand.execution(chatId, commandText);
 
-        verify(senderMessages).sendMessage(chatId, "Команда отменена. Нужно ввести имя колоды.");
+        Mockito.verify(senderMessages).sendMessage(chatId, "Команда отменена. Нужно ввести имя колоды.");
     }
 }

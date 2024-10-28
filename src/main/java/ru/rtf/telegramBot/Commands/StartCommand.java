@@ -6,6 +6,7 @@ import ru.rtf.telegramBot.SenderMessages;
 /**
  * класс команды /start
  * обычно используется при начале диалога с ботом
+ * выводит приветственное сообщение
  */
 public class StartCommand implements Command {
 
@@ -20,7 +21,6 @@ public class StartCommand implements Command {
 
     /**
      * выполнить команду
-     * вывод приветственного сообщения
      *
      * @param chatId в каком чате выполнить
      * @param text   текст вызова команды

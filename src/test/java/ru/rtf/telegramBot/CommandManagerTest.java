@@ -1,14 +1,14 @@
 package ru.rtf.telegramBot;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.rtf.telegramBot.Commands.*;
 
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
+/**
+ * Тесты для класса управления командами
+ */
 class CommandManagerTest {
 
     private CommandManager commandManager;
@@ -17,8 +17,8 @@ class CommandManagerTest {
 
     @BeforeEach
     void setUp() {
-        senderMessages = mock(SenderMessages.class);
-        userDecksData = mock(UserDecksData.class);
+        senderMessages = Mockito.mock(SenderMessages.class);
+        userDecksData = Mockito.mock(UserDecksData.class);
         commandManager = new CommandManager(senderMessages, userDecksData);
     }
 
@@ -28,8 +28,8 @@ class CommandManagerTest {
     @Test
     void testReturnsCorrectCommand() {
         Command startCommand = commandManager.getCommand("/start");
-        assertNotNull(startCommand);
-        assertTrue(startCommand instanceof StartCommand);
+        Assertions.assertNotNull(startCommand);
+        Assertions.assertTrue(startCommand instanceof StartCommand);
     }
 
     /**
@@ -37,11 +37,11 @@ class CommandManagerTest {
      */
     @Test
     void testUnknownCommand() {
-        IllegalArgumentException exception = assertThrows(
+        IllegalArgumentException exception = Assertions.assertThrows(
                 IllegalArgumentException.class,
                 () -> commandManager.getCommand("/unknown")
         );
-        assertEquals("Команда /unknown не распознана", exception.getMessage());
+        Assertions.assertEquals("Команда /unknown не распознана", exception.getMessage());
     }
 }
 

@@ -24,7 +24,7 @@ public class CardTest {
         );
     }
     /**
-     * проверка работы геттеров
+     * проверка работы геттеров - термин
      */
     @Test
     @DisplayName("работа метода get() для термина")
@@ -34,6 +34,10 @@ public class CardTest {
         Assertions.assertEquals("cat", actualTerm,
                 "Возвращаемый термин не совпадает с заданным");
     }
+
+    /**
+     * проверка работы геттеров - определение
+     */
     @Test
     @DisplayName("работа метода get() для определения")
     void testGetDefinition(){
@@ -107,6 +111,10 @@ public class CardTest {
         Assertions.assertNotEquals(exCard.hashCode(), actCard3.hashCode(),
                 "Карты с разными терминами не должны иметь один хеш");
     }
+
+    /**
+     * Строковое представление
+     */
     @Test
     @DisplayName("Строковое представление")
     void testToString(){
