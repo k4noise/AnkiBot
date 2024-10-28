@@ -54,7 +54,7 @@ public class DeckManager {
      *
      * @param oldName Старое имя колоды
      * @param newName Новое имя колоды
-     * @throws NoSuchElementException Колоды с таким именем не существует
+     * @throws NoSuchElementException   Колоды с таким именем не существует
      * @throws IllegalArgumentException Колода с таким именем уже существует
      */
     public void updateDeckName(String oldName, String newName) {
