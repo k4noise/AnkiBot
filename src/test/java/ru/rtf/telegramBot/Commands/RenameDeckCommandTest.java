@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.rtf.Deck;
 import ru.rtf.DeckManager;
+import ru.rtf.telegramBot.ParserMessageComand;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
@@ -33,13 +34,14 @@ class RenameDeckCommandTest {
     @Test
     void testCorrectNames() {
         Long chatId = 987654321L;
-        String commandText = "/rename-deck OldName NewName";
+        String commandText = "/rename-deck OldName := NewName";
+        ParserMessageComand parser = new ParserMessageComand(commandText);
 
         DeckManager deckManager = Mockito.mock(DeckManager.class);
         Mockito.when(deckManager.getDecks()).thenReturn(Set.of(new Deck("OldName")));
         Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
 
-        renameDeckCommand.execution(chatId, commandText);
+        renameDeckCommand.execution(chatId, parser.paramsCommand());
 
         // Проверяем, что метод updateDeckName был вызван с правильными аргументами
 
@@ -48,15 +50,24 @@ class RenameDeckCommandTest {
     }
 
     /**
-     * тест для некорректной формулировки команды
+     * тест на корректных данных названия с пробелами
      */
     @Test
-    void testIncorrectWordingCommand() {
+    void testCorrectBigNames() {
         Long chatId = 987654321L;
-        String commandText = "/rename-deck OldDeck"; // Только старое имя, новое не указано
-        renameDeckCommand.execution(chatId, commandText);
-        Mockito.verify(senderMessages).sendMessage(chatId,
-                "Команда отменена. Команда должна соответствовать шаблону:\n /rename-deck <название колоды> <новое название>");
+        String commandText = "/rename-deck Old big Name := New Name";
+        ParserMessageComand parser = new ParserMessageComand(commandText);
+
+        DeckManager deckManager = Mockito.mock(DeckManager.class);
+        Mockito.when(deckManager.getDecks()).thenReturn(Set.of(new Deck("Old big Name")));
+        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
+
+        renameDeckCommand.execution(chatId, parser.paramsCommand());
+
+        // Проверяем, что метод updateDeckName был вызван с правильными аргументами
+
+        Mockito.verify(deckManager).updateDeckName("Old big Name", "New Name");
+        Mockito.verify(senderMessages).sendMessage(chatId, "Переименование Old big Name -> New Name");
     }
 
     /**
@@ -65,17 +76,13 @@ class RenameDeckCommandTest {
     @Test
     void testExecutionWithNoDecks() {
         Long chatId = 987654321L;
-        String commandText = "/rename-deck OldDeck NewDeck";
-        //колоды не созданы
-        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(null);
-        renameDeckCommand.execution(chatId, commandText);
-        Mockito.verify(senderMessages).sendMessage(chatId, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
+        String commandText = "/rename-deck OldName:= NewName";
+        ParserMessageComand parser = new ParserMessageComand(commandText);
 
         //пустая коллекция колод
-        Long chatIdEmpty = 123456789L;
-        Mockito.when(userDecksData.getUserDecks(chatIdEmpty)).thenReturn(new DeckManager());
-        renameDeckCommand.execution(chatIdEmpty, commandText);
-        Mockito.verify(senderMessages).sendMessage(chatIdEmpty, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
+        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(new DeckManager());
+        renameDeckCommand.execution(chatId, parser.paramsCommand());
+        Mockito.verify(senderMessages).sendMessage(chatId, "Колода с именем OldName не существует");
     }
 }
 

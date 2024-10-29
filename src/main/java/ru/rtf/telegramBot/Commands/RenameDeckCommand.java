@@ -47,8 +47,9 @@ public class RenameDeckCommand implements Command {
         String newDeckName = params[1];
 
         //попытка изменить имя колоды
+        //TODO изменить реализацию
         try {
-            //TODO реализация
+            userDeckManager.updateDeckName(oldDeckName, newDeckName);
         } catch (NoSuchElementException | IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
             return;

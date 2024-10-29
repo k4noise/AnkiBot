@@ -45,7 +45,8 @@ public class CreateDeckCommand implements Command {
 
         //попытка добавить колоду
         try {
-            //TODO реализация
+            //TODO изменить реализацию
+            userDeckManager.addDeck(deckName);
         } catch (IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
             return;

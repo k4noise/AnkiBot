@@ -1,12 +1,13 @@
 package ru.rtf.telegramBot.Commands;
-//TODO проверка что у разных пользователей разные колоды
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.rtf.DeckManager;
+import ru.rtf.telegramBot.ParserMessageComand;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
+
 
 /**
  * Тесты для команды создание новой колоды
@@ -25,42 +26,24 @@ class CreateDeckCommandTest {
     }
 
     /**
-     * первая колода пользователя
+     * корректное добавление колоды
      */
     @Test
-    void testAddUserAndDeck() {
+    void testSimpleAddDeck() {
         Long chatId = 987654321L;
-        String commandText = "/create-deck FirstDeck";
-
-        Mockito.when(userDecksData.containsUser(chatId)).thenReturn(false);
-
-        DeckManager deckManager = Mockito.mock(DeckManager.class);
-        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
-
-        createDeckCommand.execution(chatId, commandText);
-
-        Mockito.verify(userDecksData).addUser(chatId);
-        Mockito.verify(deckManager).addDeck("FirstDeck");
-    }
-
-    /**
-     * Корректное добавление колоды
-     */
-    @Test
-    void testAddDeck() {
-        Long chatId = 987654321L;
-        String commandText = "/create-deck NewDeck";
+        String commandText = "/create-deck Deck";
+        ParserMessageComand parser = new ParserMessageComand(commandText);
 
         Mockito.when(userDecksData.containsUser(chatId)).thenReturn(true);
 
         DeckManager deckManager = Mockito.mock(DeckManager.class);
+
         Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
 
-        createDeckCommand.execution(chatId, commandText);
+        createDeckCommand.execution(chatId, parser.paramsCommand());
 
-        // Проверяем добавление новой колоды без добавления пользователя
-        Mockito.verify(userDecksData, Mockito.never()).addUser(chatId);
-        Mockito.verify(deckManager).addDeck("NewDeck");
+        Mockito.verify(deckManager).addDeck("Deck");
+        Mockito.verify(senderMessages).sendMessage(chatId, "колода Deck добавлена");
     }
 
     /**
@@ -69,12 +52,18 @@ class CreateDeckCommandTest {
     @Test
     void testIncorrectWordingCommand() {
         Long chatId = 987654321L;
-        String commandText = "/create-deck";
+        String commandText = "/create-deck name";
+        ParserMessageComand parser = new ParserMessageComand(commandText);
 
         Mockito.when(userDecksData.containsUser(chatId)).thenReturn(true);
-        createDeckCommand.execution(chatId, commandText);
+        DeckManager deckManager = new DeckManager();
+        deckManager.addDeck("name");
+        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
+
+        createDeckCommand.execution(chatId, parser.paramsCommand());
 
         // Проверяем отправку сообщения об ошибке
-        Mockito.verify(senderMessages).sendMessage(chatId, "Команда отменена. Нужно ввести имя колоды.");
+        Mockito.verify(senderMessages).sendMessage(chatId,
+                "Колода с именем name уже существует, выберите другое имя");
     }
 }

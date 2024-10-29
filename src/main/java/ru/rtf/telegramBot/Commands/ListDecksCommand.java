@@ -6,6 +6,8 @@ import ru.rtf.telegramBot.Command;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
+import java.util.Collection;
+
 /**
  * класс просмотра всех колод /list-decks
  */
@@ -40,10 +42,16 @@ public class ListDecksCommand implements Command {
     public void execution(Long chatId, String[] params) {
         DeckManager userDeckManager = userDecksData.getUserDecks(chatId);
 
+        //TODO изменить реализацию
         //сообщение пользователю о выполнении
-        //TODO
-        String decksText = LineNamesDecks(new DeckManager());//исправить
-        senderMessages.sendMessage(chatId, "Ваши колоды:\n"+decksText);
+        if(userDeckManager.getDecks().isEmpty())
+            senderMessages.sendMessage(chatId,
+                    "У Вас пока нет ни одной колоды, создайте первую /create-deck <название>");
+        else{
+            //TODO изменить реализацию
+            String decksText = LineNamesDecks(userDeckManager.getDecks());
+            senderMessages.sendMessage(chatId, "Ваши колоды:\n"+decksText);
+        }
     }
 
     /**
@@ -51,9 +59,9 @@ public class ListDecksCommand implements Command {
      *
      * @return имена колод через перевод строки
      */
-    private String LineNamesDecks(DeckManager deckManager) {
+    private String LineNamesDecks(Collection<Deck> decks) {
         StringBuilder names = new StringBuilder();
-        for (Deck deck : deckManager.getDecks()) {
+        for (Deck deck : decks) {
             names.append(deck.getName()).append("\n");
         }
         return names.toString();

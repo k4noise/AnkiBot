@@ -1,14 +1,15 @@
 package ru.rtf.telegramBot.Commands;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import ru.rtf.Deck;
+import ru.rtf.telegramBot.ParserMessageComand;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 import ru.rtf.DeckManager;
 
-import java.util.Set;
+import java.util.NoSuchElementException;
 
 /**
  * Тесты для команды удаление колоды
@@ -33,17 +34,18 @@ class DeleteDeckCommandTest {
     void testExistingDeck() {
         Long chatId = 987654321L;
         String commandText = "/delete-deck DelDeck";
+        ParserMessageComand parser = new ParserMessageComand(commandText);
 
         Mockito.when(userDecksData.containsUser(chatId)).thenReturn(true);
 
-        DeckManager deckManager = Mockito.mock(DeckManager.class);
-        Mockito.when(deckManager.getDecks()).thenReturn(Set.of(new Deck("DelDeck")));
+        DeckManager deckManager = new DeckManager();
+        deckManager.addDeck("DelDeck");
         Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
 
-        deleteDeckCommand.execution(chatId, commandText);
-
-        Mockito.verify(deckManager).removeDeck("DelDeck");
-        Mockito.verify(senderMessages).sendMessage(chatId, "Колода DelDeck удалена");
+        deleteDeckCommand.execution(chatId, parser.paramsCommand());
+        Assertions.assertThrows(NoSuchElementException.class, () -> deckManager.getDeck("DelDeck")
+        );
+        Mockito.verify(senderMessages).sendMessage(chatId, "колода DelDeck удалена");
     }
 
     /**
@@ -51,39 +53,14 @@ class DeleteDeckCommandTest {
      */
     @Test
     void testEmptyDeckList() {
-        Long chatId = 987654321L;
         String commandText = "/delete-deck MyDeck";
-
-        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(null);
-        deleteDeckCommand.execution(chatId, commandText);
-
-        Mockito.verify(senderMessages).sendMessage(chatId, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
+        ParserMessageComand parser = new ParserMessageComand(commandText);
 
         Long chatIdEmpty = 123456789L;
 
         Mockito.when(userDecksData.getUserDecks(chatIdEmpty)).thenReturn(new DeckManager());
-        deleteDeckCommand.execution(chatIdEmpty, commandText);
+        deleteDeckCommand.execution(chatIdEmpty, parser.paramsCommand());
 
-        Mockito.verify(senderMessages).sendMessage(chatIdEmpty, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
-
-    }
-
-    /**
-     * тест для некорректной формулировки команды
-     */
-    @Test
-    void testIncorrectWordingCommand() {
-        Long chatId = 987654321L;
-        String commandText = "/delete-deck";
-
-        // "заполняем" коллекцию колод пользователя
-        Mockito.when(userDecksData.containsUser(chatId)).thenReturn(true);
-        DeckManager deckManager = Mockito.mock(DeckManager.class);
-        Mockito.when(deckManager.getDecks()).thenReturn(Set.of(new Deck("DelDeck")));
-        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
-
-        deleteDeckCommand.execution(chatId, commandText);
-
-        Mockito.verify(senderMessages).sendMessage(chatId, "Команда отменена. Нужно ввести имя колоды.");
+        Mockito.verify(senderMessages).sendMessage(chatIdEmpty, "Колода с именем MyDeck не существует");
     }
 }

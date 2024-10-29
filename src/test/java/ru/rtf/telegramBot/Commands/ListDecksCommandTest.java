@@ -23,38 +23,20 @@ public class ListDecksCommandTest {
     }
 
     /**
-     * тест на неинициализированном списке колод
-     */
-    @Test
-    void testExecutionWithNoDecksNull() {
-        Long chatId = 987654321L;
-
-        // Настраиваем userDecksData, чтобы возвращал null для данного chatId (нет колод)
-        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(null);
-
-        // попытка выполнить команду
-        listDecksCommand.execution(chatId, "/list-decks");
-
-        // Проверка, что отправляется корректное сообщение
-        Mockito.verify(senderMessages).sendMessage(chatId, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
-        //Проверка, что сообщение для ненулевого количества колод не отправилось
-        Mockito.verify(senderMessages, Mockito.never()).sendMessage(chatId, "Ваши колоды:");
-    }
-
-    /**
      * тест на пустом списке колод
      */
     @Test
     void testExecutionWithNoDecksEmpty() {
         Long chatId = 987654321L;
+        String commandText = "/list-decks";
 
         Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(new DeckManager());
 
         // попытка выполнить команду
-        listDecksCommand.execution(chatId, "/list-decks");
+        listDecksCommand.execution(chatId, null);
 
         // Проверка, что отправляется корректное сообщение
-        Mockito.verify(senderMessages).sendMessage(chatId, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
+        Mockito.verify(senderMessages).sendMessage(chatId, "У Вас пока нет ни одной колоды, создайте первую /create-deck <название>");
         //Проверка, что сообщение для ненулевого количества колод не отправилось
         Mockito.verify(senderMessages, Mockito.never()).sendMessage(chatId, "Ваши колоды:");
     }
@@ -73,9 +55,8 @@ public class ListDecksCommandTest {
         Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
 
         // попытка выполнить команду
-        listDecksCommand.execution(chatId, "/list-decks");
+        listDecksCommand.execution(chatId, null);
 
-        Mockito.verify(senderMessages).sendMessage(chatId, "Ваши колоды:");
-        Mockito.verify(senderMessages).sendMessage(chatId, "first\nsecond\n");
+        Mockito.verify(senderMessages).sendMessage(chatId, "Ваши колоды:\nfirst\nsecond\n");
     }
 }

@@ -1,8 +1,5 @@
 package ru.rtf.telegramBot;
 
-import ru.rtf.telegramBot.Commands.*;
-
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -62,7 +59,7 @@ public class CommandManager {
         }
         //проверка параметров
         String[] paramsCommand = partsMessage.paramsCommand();
-        if (!checkParameters(command, paramsCommand)) {
+        if (checkParameters(command, paramsCommand)) {
             //Выполнение команды
             command.execution(chatId, paramsCommand);
         }

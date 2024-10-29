@@ -62,7 +62,7 @@ public class DeckManager {
      */
     public void updateDeckName(String oldName, String newName) {
         if (!decks.containsKey(oldName)) {
-            throw new NoSuchElementException("Колода с именем" + oldName + "не существует");
+            throw new NoSuchElementException("Колода с именем " + oldName + " не существует");
         }
         if (decks.containsKey(newName)) {
             throw new IllegalArgumentException("Колода с именем " + newName + " уже существует, выберите другое имя");
@@ -81,7 +81,7 @@ public class DeckManager {
      */
     public void removeDeck(String name) {
         if (!decks.containsKey(name)) {
-            throw new NoSuchElementException("Колода с именем" + name + "не существует");
+            throw new NoSuchElementException("Колода с именем " + name + " не существует");
         }
         decks.remove(name);
     }
