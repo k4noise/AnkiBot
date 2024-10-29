@@ -20,14 +20,12 @@ public class RenameDeckCommand implements Command {
      * Соответствие пользователей и их колод
      */
     private final UserDecksData userDecksData;
-
     /**
-     * Количество аргументов в сообщении пользователя
-     * 1. сама команда (/rename-deck)
-     * 2. старое название колоды
-     * 3. новое название
+     * Количество параметров команды
+     * 1.старое имя колоды
+     * 2.новое имя колоды
      */
-    private final int COUNT_ARGS = 3;
+    private final int COUNT_PARAMS = 2;
 
     public RenameDeckCommand(SenderMessages senderMessages, UserDecksData userDecksData) {
         this.senderMessages = senderMessages;
@@ -37,47 +35,34 @@ public class RenameDeckCommand implements Command {
     /**
      * выполнить команду
      *
-     * @param chatId в каком чате выполнить
-     * @param text   текст вызова команды
+     * @param chatId идентификатор чата
+     * @param params параметры команды без ее имени
      */
     @Override
-    public void execution(Long chatId, String text) {
+    public void execution(Long chatId, String[] params) {
+        DeckManager userDeckManager = userDecksData.getUserDecks(chatId);
 
-        String[] words = text.split(" ");
-        if (words.length < COUNT_ARGS) {
-            senderMessages.sendMessage(chatId,
-                    "Команда отменена. Команда должна соответствовать шаблону:\n /rename-deck <название колоды> <новое название>");
+        //обработка параметров
+        String oldDeckName = params[0];
+        String newDeckName = params[1];
+
+        //попытка изменить имя колоды
+        try {
+            //TODO реализация
+        } catch (NoSuchElementException | IllegalArgumentException e) {
+            senderMessages.sendMessage(chatId, e.getMessage());
             return;
         }
-        String oldName = words[1];
-        String newName = words[2];
-
-        //есть ли у пользователя вообще колоды
-        if (heckingForEmptiness(chatId)) {
-            //достать старую колоду (если она существует) и переименовать, если имя ещё не занято
-            DeckManager deckManager = userDecksData.getUserDecks(chatId);
-            try {
-                deckManager.updateDeckName(oldName, newName);
-            } catch (NoSuchElementException | IllegalArgumentException e) {
-                senderMessages.sendMessage(chatId, e.getMessage());
-                return;
-            }
-            //вывести пользователю сообщение об успешности переименования
-            senderMessages.sendMessage(chatId, "Переименование " + oldName + " -> " + newName);
-        }
+        //сообщение пользователю о выполнении
+        senderMessages.sendMessage(chatId, "Переименование " + oldDeckName + " -> " + newDeckName);
     }
-
     /**
-     * Проверяет, есть ли у пользователя колоды
+     * Возвращает количество параметров нужных команде для выполнения
      *
-     * @return логический ответ
+     * @return количество параметров
      */
-    private boolean heckingForEmptiness(Long chatId) {
-        DeckManager deckManager = userDecksData.getUserDecks(chatId);
-        if (deckManager == null || deckManager.getDecks().isEmpty()) {
-            senderMessages.sendMessage(chatId, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
-            return false;
-        }
-        return true;
+    @Override
+    public int getCountParams() {
+        return COUNT_PARAMS;
     }
 }

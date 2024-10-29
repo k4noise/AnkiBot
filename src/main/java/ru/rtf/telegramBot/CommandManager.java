@@ -29,24 +29,10 @@ public class CommandManager {
      * @param senderMessages может отправлять сообщения
      * @param userDecksData  для доступа к колодам конкретного пользователя
      */
-    public CommandManager(SenderMessages senderMessages, UserDecksData userDecksData) {
-        commands = new HashMap<>();
+    public CommandManager(Map<String, Command> commands, SenderMessages senderMessages, UserDecksData userDecksData) {
+        this.commands = commands;
         this.userDecksData = userDecksData;
         this.senderMessages = senderMessages;
-        uploadCommands();
-    }
-
-    /**
-     * добавление команд, их имени и экземпляра соответствующего класса в список команд
-     */
-    private void uploadCommands() {
-        commands.put("/start", new StartCommand(senderMessages));
-        commands.put("/help", new HelpCommand(senderMessages));
-        commands.put("/list-decks", new ListDecksCommand(senderMessages, userDecksData));
-        commands.put("/create-deck", new CreateDeckCommand(senderMessages, userDecksData));
-        commands.put("/rename-deck", new RenameDeckCommand(senderMessages, userDecksData));
-        commands.put("/delete-deck", new DeleteDeckCommand(senderMessages, userDecksData));
-        //TODO добавить команды с карточками
     }
 
     /**
@@ -62,17 +48,33 @@ public class CommandManager {
     }
 
     public void execution(Long chatId, String text) {
-        String nameCommand = nameCommandInMassege(text);
-        getCommand(nameCommand).execution(chatId, text);
+        ParserMessageComand partsMessage = new ParserMessageComand(text);
+        //добавление менеджера колод новому пользователю
+        if(!userDecksData.containsUser(chatId))
+            userDecksData.addUser(chatId);
+        //поиск класса введенной команды
+        Command command;
+        try{
+            command = getCommand(partsMessage.nameCommand());
+        }catch (IllegalArgumentException e){
+            senderMessages.sendMessage(chatId, e.getMessage());
+            return;
+        }
+        //проверка параметров
+        String[] paramsCommand = partsMessage.paramsCommand();
+        if (!checkParameters(command, paramsCommand)) {
+            //Выполнение команды
+            command.execution(chatId, paramsCommand);
+        }
+        else {
+            senderMessages.sendMessage(chatId,
+                    "Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)");
+        }
     }
 
-    /**
-     * Возвращает команду из пользовательского сообщения
-     *
-     * @param message сообщение пользователя
-     * @return имя команды
-     */
-    private String nameCommandInMassege(String message) {
-        return message.split(" ")[0];
+    private boolean checkParameters(Command command, String[] paramsCommand){
+        int correctCountParams = command.getCountParams();
+        return (paramsCommand == null && correctCountParams == 0) ||
+                (paramsCommand != null && paramsCommand.length >= correctCountParams);
     }
 }

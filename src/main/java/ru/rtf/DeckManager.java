@@ -21,6 +21,9 @@ public class DeckManager {
         decks = new LinkedHashMap<>();
     }
 
+    public void addCardToDeck(String deckName, Card card) {
+       //TODO
+    }
     /**
      * Добавить новую колоду в менеджера
      * Колода может быть создана, если имя колоды не используется другими колодами

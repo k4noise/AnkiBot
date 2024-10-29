@@ -12,18 +12,34 @@ public class HelpCommand implements Command {
      */
     private final SenderMessages senderMessages;
 
+    /**
+     * Количество параметров команды
+     * нет параметров
+     */
+    private final int COUNT_PARAMS = 0;
+
     public HelpCommand(SenderMessages senderMessages) {
         this.senderMessages = senderMessages;
     }
 
+
     /**
-     * Выполнить команду
+     * выполнить команду
      *
-     * @param chatId в каком чате выполнить
-     * @param text   текст вызова команды
+     * @param chatId идентификатор чата
+     * @param params параметры команды без ее имени
      */
     @Override
-    public void execution(Long chatId, String text) {
-        //TODO
+    public void execution(Long chatId, String[] params) {
+
+    }
+    /**
+     * Возвращает количество параметров нужных команде для выполнения
+     *
+     * @return количество параметров
+     */
+    @Override
+    public int getCountParams() {
+        return COUNT_PARAMS;
     }
 }

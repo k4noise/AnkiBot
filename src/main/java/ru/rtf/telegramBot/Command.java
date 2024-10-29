@@ -1,7 +1,5 @@
 package ru.rtf.telegramBot;
 
-import org.telegram.telegrambots.meta.api.objects.Update;
-
 /**
  * интерфейс для команд бота
  */
@@ -9,8 +7,14 @@ public interface Command {
 
     /**
      * выполнить команду
-     * @param chatId в каком чате выполнить
-     * @param text текст вызова команды
+     * @param chatId идентификатор чата
+     * @param params параметры команды без ее имени
      */
-    void execution(Long chatId, String text);
+    void execution(Long chatId, String[] params);
+
+    /**
+     * Возвращает количество параметров нужных команде для выполнения
+     * @return количество параметров
+     */
+    int getCountParams();
 }

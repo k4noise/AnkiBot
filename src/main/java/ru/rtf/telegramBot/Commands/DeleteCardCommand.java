@@ -7,9 +7,10 @@ import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
- * класс команды добавления новой колоды
+ * Команда удаления карты из колоды
+ *
  */
-public class CreateDeckCommand implements Command {
+public class DeleteCardCommand implements Command {
 
     /**
      * поле для отправки сообщений пользователю
@@ -22,11 +23,12 @@ public class CreateDeckCommand implements Command {
 
     /**
      * Количество параметров команды
-     * 1.имя новой колоды
+     * 1.имя колоды
+     * 2.термин
      */
-    private final int COUNT_PARAMS = 1;
+    private final int COUNT_PARAMS = 2;
 
-    public CreateDeckCommand(SenderMessages senderMessages, UserDecksData userDecksData) {
+    public DeleteCardCommand(SenderMessages senderMessages, UserDecksData userDecksData) {
         this.senderMessages = senderMessages;
         this.userDecksData = userDecksData;
     }
@@ -42,8 +44,9 @@ public class CreateDeckCommand implements Command {
         DeckManager userDeckManager = userDecksData.getUserDecks(chatId);
 
         String deckName = params[0];
+        String term = params[1];
 
-        //попытка добавить колоду
+        //попытка удалить карту из колоды
         try {
             //TODO реализация
         } catch (IllegalArgumentException e) {
@@ -51,7 +54,8 @@ public class CreateDeckCommand implements Command {
             return;
         }
         //сообщение пользователю о выполнении
-        senderMessages.sendMessage(chatId, "колода " + deckName + " добавлена");
+        //TODO вместо термина показывать всю карточку
+        senderMessages.sendMessage(chatId, deckName + ": - " + term);
     }
 
     /**

@@ -1,16 +1,16 @@
 package ru.rtf.telegramBot.Commands;
 
+import ru.rtf.Card;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.Command;
-import ru.rtf.telegramBot.ParserMessageComand;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
- * класс команды добавления новой колоды
+ * Добавление новой карты в конкретную колоду пользователя
+ * /create-card название колоды: термин - определение
  */
-public class CreateDeckCommand implements Command {
-
+public class CreateCardCommand implements Command {
     /**
      * поле для отправки сообщений пользователю
      */
@@ -22,11 +22,13 @@ public class CreateDeckCommand implements Command {
 
     /**
      * Количество параметров команды
-     * 1.имя новой колоды
+     * 1.имя колоды
+     * 2.термин
+     * 3.определение
      */
-    private final int COUNT_PARAMS = 1;
+    private final int COUNT_PARAMS = 3;
 
-    public CreateDeckCommand(SenderMessages senderMessages, UserDecksData userDecksData) {
+    public CreateCardCommand(SenderMessages senderMessages, UserDecksData userDecksData) {
         this.senderMessages = senderMessages;
         this.userDecksData = userDecksData;
     }
@@ -39,11 +41,13 @@ public class CreateDeckCommand implements Command {
      */
     @Override
     public void execution(Long chatId, String[] params) {
+
         DeckManager userDeckManager = userDecksData.getUserDecks(chatId);
 
         String deckName = params[0];
+        Card newCard = new Card(params[1], params[2]);
 
-        //попытка добавить колоду
+        //попытка добавить карту в колоду
         try {
             //TODO реализация
         } catch (IllegalArgumentException e) {
@@ -51,7 +55,7 @@ public class CreateDeckCommand implements Command {
             return;
         }
         //сообщение пользователю о выполнении
-        senderMessages.sendMessage(chatId, "колода " + deckName + " добавлена");
+        senderMessages.sendMessage(chatId, deckName + ": + " + newCard);
     }
 
     /**

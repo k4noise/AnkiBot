@@ -19,6 +19,11 @@ public class ListDecksCommand implements Command {
      * Соответствие пользователей и их колод
      */
     private final UserDecksData userDecksData;
+    /**
+     * Количество параметров команды
+     * нет параметров
+     */
+    public final int COUNT_PARAMS = 0;
 
     public ListDecksCommand(SenderMessages senderMessages, UserDecksData userDecksData) {
         this.senderMessages = senderMessages;
@@ -28,29 +33,17 @@ public class ListDecksCommand implements Command {
     /**
      * выполнить команду
      *
-     * @param chatId в каком чате выполнить
-     * @param text   текст вызова команды
+     * @param chatId идентификатор чата
+     * @param params параметры команды без ее имени
      */
     @Override
-    public void execution(Long chatId, String text) {
-        if (heckingForEmptiness(chatId)) {
-            senderMessages.sendMessage(chatId, "Ваши колоды:");
-            senderMessages.sendMessage(chatId, NamesLineDeckManager(userDecksData.getUserDecks(chatId)));
-        }
-    }
+    public void execution(Long chatId, String[] params) {
+        DeckManager userDeckManager = userDecksData.getUserDecks(chatId);
 
-    /**
-     * Проверяет есть ли у пользователя колоды
-     *
-     * @return логический ответ
-     */
-    private boolean heckingForEmptiness(Long chatId) {
-        DeckManager deckManager = userDecksData.getUserDecks(chatId);
-        if (deckManager == null || deckManager.getDecks().isEmpty()) {
-            senderMessages.sendMessage(chatId, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
-            return false;
-        }
-        return true;
+        //сообщение пользователю о выполнении
+        //TODO
+        String decksText = LineNamesDecks(new DeckManager());//исправить
+        senderMessages.sendMessage(chatId, "Ваши колоды:\n"+decksText);
     }
 
     /**
@@ -58,11 +51,35 @@ public class ListDecksCommand implements Command {
      *
      * @return имена колод через перевод строки
      */
-    private String NamesLineDeckManager(DeckManager deckManager) {
+    private String LineNamesDecks(DeckManager deckManager) {
         StringBuilder names = new StringBuilder();
         for (Deck deck : deckManager.getDecks()) {
             names.append(deck.getName()).append("\n");
         }
         return names.toString();
     }
+
+    /**
+     * Возвращает количество параметров нужных команде для выполнения
+     *
+     * @return количество параметров
+     */
+    @Override
+    public int getCountParams() {
+        return COUNT_PARAMS;
+    }
+
+//    /**
+//     * Проверяет есть ли у пользователя колоды
+//     *
+//     * @return логический ответ
+//     */
+//    private boolean heckingForEmptiness(Long chatId) {
+//        DeckManager deckManager = userDecksData.getUserDecks(chatId);
+//        if (deckManager == null || deckManager.getDecks().isEmpty()) {
+//            senderMessages.sendMessage(chatId, "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
+//            return false;
+//        }
+//        return true;
+//    }
 }

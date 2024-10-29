@@ -2,13 +2,14 @@ package ru.rtf.telegramBot.Commands;
 
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.Command;
+import ru.rtf.telegramBot.ParserMessageComand;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
 import java.util.NoSuchElementException;
 
 /**
- * Класс команды удаления колоды у пользователя /delete-deck название колоды
+ * Класс команды удаления колоды у пользователя
  */
 public class DeleteDeckCommand implements Command {
 
@@ -20,12 +21,12 @@ public class DeleteDeckCommand implements Command {
      * Соответствие пользователей и их колод
      */
     private final UserDecksData userDecksData;
+
     /**
-     * Количество аргументов в сообщении пользователя
-     * 1. сама команда (/delete-deck)
-     * 2. название колоды
+     * Количество параметров команды
+     * 1.имя колоды
      */
-    private final int COUNT_ARGS = 2;
+    private final int COUNT_PARAMS = 1;
 
     public DeleteDeckCommand(SenderMessages senderMessages, UserDecksData userDecksData) {
         this.senderMessages = senderMessages;
@@ -35,53 +36,33 @@ public class DeleteDeckCommand implements Command {
     /**
      * выполнить команду
      *
-     * @param chatId в каком чате выполнить
-     * @param text   текст вызова команды
+     * @param chatId идентификатор чата
+     * @param params параметры команды без ее имени
      */
     @Override
-    public void execution(Long chatId, String text) {
-        //есть ли у пользователя список колод?
-        if (heckingForEmptiness(chatId)) {
-            //выделить имя колоды из сообщения
-            String nameDeck = ReturnNameDeck(chatId, text);
-            //удалить колоду
-            DeckManager deckManager = userDecksData.getUserDecks(chatId);
-            try {
-                deckManager.removeDeck(nameDeck);
-            } catch (NoSuchElementException e) {
-                senderMessages.sendMessage(chatId, e.getMessage());
-                return;
-            }
-            senderMessages.sendMessage(chatId, "Колода " + nameDeck + " удалена");
-        }
-    }
+    public void execution(Long chatId, String[] params) {
+        DeckManager userDeckManager = userDecksData.getUserDecks(chatId);
 
-    /**
-     * выделяет имя колоды из сообщения пользователя
-     * выводит пользователю ошибку при неудаче
-     *
-     * @return имя новой колоды (аргумент следующий за именем команды)
-     */
-    private String ReturnNameDeck(Long chatId, String message) {
-        if (message.split(" ").length < COUNT_ARGS) {
-            senderMessages.sendMessage(chatId, "Команда отменена. Нужно ввести имя колоды.");
-            return null;
-        }
-        return message.split(" ")[1];
-    }
+        //обработка параметров
+        String deckName = params[0];
 
-    /**
-     * Проверяет, есть ли у пользователя колоды
-     *
-     * @return логический ответ
-     */
-    private boolean heckingForEmptiness(Long chatId) {
-        DeckManager deckManager = userDecksData.getUserDecks(chatId);
-        if (deckManager == null || deckManager.getDecks().isEmpty()) {
-            senderMessages.sendMessage(chatId,
-                    "У Вас пока нет ни одной колоды, создайте первую (/create-deck <название>)");
-            return false;
+        //попытка удалить колоду
+        try {
+            //TODO реализация
+        } catch (NoSuchElementException e) {
+            senderMessages.sendMessage(chatId, e.getMessage());
+            return;
         }
-        return true;
+        //сообщение пользователю о выполнении
+        senderMessages.sendMessage(chatId, "колода " + deckName + " удалена");
+    }
+    /**
+     * Возвращает количество параметров нужных команде для выполнения
+     *
+     * @return количество параметров
+     */
+    @Override
+    public int getCountParams() {
+        return COUNT_PARAMS;
     }
 }

@@ -1,15 +1,17 @@
 package ru.rtf.telegramBot.Commands;
 
+import ru.rtf.Deck;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.Command;
-import ru.rtf.telegramBot.ParserMessageComand;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
+import java.util.Collection;
+
 /**
- * класс команды добавления новой колоды
+ * Выводит список всех карт колоды
  */
-public class CreateDeckCommand implements Command {
+public class ListCardsCommands implements Command {
 
     /**
      * поле для отправки сообщений пользователю
@@ -19,14 +21,13 @@ public class CreateDeckCommand implements Command {
      * Соответствие пользователей и их колод
      */
     private final UserDecksData userDecksData;
-
     /**
      * Количество параметров команды
-     * 1.имя новой колоды
+     * 1.имя колоды
      */
-    private final int COUNT_PARAMS = 1;
+    public final int COUNT_PARAMS = 1;
 
-    public CreateDeckCommand(SenderMessages senderMessages, UserDecksData userDecksData) {
+    public ListCardsCommands(SenderMessages senderMessages, UserDecksData userDecksData) {
         this.senderMessages = senderMessages;
         this.userDecksData = userDecksData;
     }
@@ -41,9 +42,10 @@ public class CreateDeckCommand implements Command {
     public void execution(Long chatId, String[] params) {
         DeckManager userDeckManager = userDecksData.getUserDecks(chatId);
 
+        //обработка параметров
         String deckName = params[0];
 
-        //попытка добавить колоду
+        //попытка найти колоду
         try {
             //TODO реализация
         } catch (IllegalArgumentException e) {
@@ -51,11 +53,27 @@ public class CreateDeckCommand implements Command {
             return;
         }
         //сообщение пользователю о выполнении
-        senderMessages.sendMessage(chatId, "колода " + deckName + " добавлена");
+        //TODO
+        String deckCards = deckListCardToString(new Deck(""));//исправить
+        senderMessages.sendMessage(chatId, deckName + ":\n" + deckCards);
     }
 
     /**
-     * возвращает количество параметров нужных команде для выполнения
+     * возвращает строковое представление карточек колоды
+     * @param deck колода
+     * @return строка с карточками колоды
+     */
+    private String deckListCardToString(Deck deck){
+        //TODO
+        return null;
+    }
+//Формат вывода
+//    Deck:
+//      term - def
+//      term - def
+
+    /**
+     * Возвращает количество параметров нужных команде для выполнения
      *
      * @return количество параметров
      */

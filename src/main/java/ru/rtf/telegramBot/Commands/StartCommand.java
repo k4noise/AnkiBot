@@ -15,6 +15,12 @@ public class StartCommand implements Command {
      */
     private final SenderMessages senderMessages;
 
+    /**
+     * Количество параметров команды
+     * нет параметров
+     */
+    private final int COUNT_PARAMS = 0;
+
     public StartCommand(SenderMessages senderMessages) {
         this.senderMessages = senderMessages;
     }
@@ -22,12 +28,21 @@ public class StartCommand implements Command {
     /**
      * выполнить команду
      *
-     * @param chatId в каком чате выполнить
-     * @param text   текст вызова команды
+     * @param chatId идентификатор чата
+     * @param params параметры команды без ее имени
      */
     @Override
-    public void execution(Long chatId, String text) {
+    public void execution(Long chatId, String[] params) {
         senderMessages.sendMessage(chatId,
                 "Добро пожаловать в AnkiBot. Введите команду /help, чтобы посмотреть доступные команды");
+    }
+    /**
+     * Возвращает количество параметров нужных команде для выполнения
+     *
+     * @return количество параметров
+     */
+    @Override
+    public int getCountParams() {
+        return COUNT_PARAMS;
     }
 }

@@ -7,10 +7,9 @@ import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
- * класс команды добавления новой колоды
+ * команда изменения определения карточки
  */
-public class CreateDeckCommand implements Command {
-
+public class EditCardDefCommand implements Command {
     /**
      * поле для отправки сообщений пользователю
      */
@@ -19,14 +18,15 @@ public class CreateDeckCommand implements Command {
      * Соответствие пользователей и их колод
      */
     private final UserDecksData userDecksData;
-
     /**
      * Количество параметров команды
-     * 1.имя новой колоды
+     * 1.имя колоды
+     * 2.термин
+     * 3.новое определение
      */
-    private final int COUNT_PARAMS = 1;
+    private final int COUNT_PARAMS = 3;
 
-    public CreateDeckCommand(SenderMessages senderMessages, UserDecksData userDecksData) {
+    public EditCardDefCommand(SenderMessages senderMessages, UserDecksData userDecksData) {
         this.senderMessages = senderMessages;
         this.userDecksData = userDecksData;
     }
@@ -41,9 +41,12 @@ public class CreateDeckCommand implements Command {
     public void execution(Long chatId, String[] params) {
         DeckManager userDeckManager = userDecksData.getUserDecks(chatId);
 
+        //обработка параметров
         String deckName = params[0];
+        String term = params[1];
+        String newDef = params[2];
 
-        //попытка добавить колоду
+        //попытка изменить определение карты
         try {
             //TODO реализация
         } catch (IllegalArgumentException e) {
@@ -51,7 +54,8 @@ public class CreateDeckCommand implements Command {
             return;
         }
         //сообщение пользователю о выполнении
-        senderMessages.sendMessage(chatId, "колода " + deckName + " добавлена");
+        //TODO вместо термина показывать всю карточку
+        senderMessages.sendMessage(chatId, deckName + ": " + term);
     }
 
     /**
