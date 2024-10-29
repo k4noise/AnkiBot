@@ -48,7 +48,7 @@ public class DeckManager {
         if (decks.containsKey(name)) {
             return decks.get(name);
         }
-        throw new NoSuchElementException("Колода с именем" + name + "не существует");
+        throw new NoSuchElementException("Колода с именем " + name + " не существует");
     }
 
     /**

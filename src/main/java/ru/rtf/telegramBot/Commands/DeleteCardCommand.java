@@ -55,7 +55,7 @@ public class DeleteCardCommand implements Command {
         }
         //сообщение пользователю о выполнении
         //TODO вместо термина показывать всю карточку
-        senderMessages.sendMessage(chatId, deckName + ": - " + term);
+        senderMessages.sendMessage(chatId, deckName + ": - \"" + term + "\"");
     }
 
     /**
