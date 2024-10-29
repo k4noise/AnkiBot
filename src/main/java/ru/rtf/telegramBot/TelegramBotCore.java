@@ -40,9 +40,10 @@ public class TelegramBotCore extends TelegramLongPollingBot {
         this.telegramBotName = telegramBotName;
         //создать класс вывода сообщений пользователю
         SenderMessages senderMessages = new SenderMessages(this);
+
+        userDecksData = new UserDecksData();
         //создать команды
         uploadCommands(senderMessages);
-        userDecksData = new UserDecksData();
         commandManager = new CommandManager(commands, senderMessages, userDecksData);
     }
 
