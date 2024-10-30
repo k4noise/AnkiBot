@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.rtf.Deck;
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.ParserMessageComand;
+import ru.rtf.telegramBot.ParserMessageCommand;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
@@ -35,7 +35,7 @@ class RenameDeckCommandTest {
     void testCorrectNames() {
         Long chatId = 987654321L;
         String commandText = "/rename-deck OldName := NewName";
-        ParserMessageComand parser = new ParserMessageComand(commandText);
+        ParserMessageCommand parser = new ParserMessageCommand(commandText);
 
         DeckManager deckManager = Mockito.mock(DeckManager.class);
         Mockito.when(deckManager.getDecks()).thenReturn(Set.of(new Deck("OldName")));
@@ -56,7 +56,7 @@ class RenameDeckCommandTest {
     void testCorrectBigNames() {
         Long chatId = 987654321L;
         String commandText = "/rename-deck Old big Name := New Name";
-        ParserMessageComand parser = new ParserMessageComand(commandText);
+        ParserMessageCommand parser = new ParserMessageCommand(commandText);
 
         DeckManager deckManager = Mockito.mock(DeckManager.class);
         Mockito.when(deckManager.getDecks()).thenReturn(Set.of(new Deck("Old big Name")));
@@ -77,7 +77,7 @@ class RenameDeckCommandTest {
     void testExecutionWithNoDecks() {
         Long chatId = 987654321L;
         String commandText = "/rename-deck OldName:= NewName";
-        ParserMessageComand parser = new ParserMessageComand(commandText);
+        ParserMessageCommand parser = new ParserMessageCommand(commandText);
 
         //пустая коллекция колод
         Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(new DeckManager());

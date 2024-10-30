@@ -6,38 +6,36 @@ import ru.rtf.telegramBot.Command;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
-import java.util.Collection;
-
 /**
  * Выводит список всех карт колоды
  */
 public class ListCardsCommands implements Command {
 
     /**
-     * поле для отправки сообщений пользователю
+     * Количество параметров команды
+     * 1.имя колоды
+     */
+    public final int COUNT_PARAMS = 1;
+    /**
+     * Поле для отправки сообщений пользователю
      */
     private final SenderMessages senderMessages;
     /**
      * Соответствие пользователей и их колод
      */
     private final UserDecksData userDecksData;
-    /**
-     * Количество параметров команды
-     * 1.имя колоды
-     */
-    public final int COUNT_PARAMS = 1;
 
+    /**
+     * Создание экземпляра команды для добавления новой карты
+     *
+     * @param senderMessages может отправлять сообщения
+     * @param userDecksData  может получать колоды пользователя
+     */
     public ListCardsCommands(SenderMessages senderMessages, UserDecksData userDecksData) {
         this.senderMessages = senderMessages;
         this.userDecksData = userDecksData;
     }
 
-    /**
-     * выполнить команду
-     *
-     * @param chatId идентификатор чата
-     * @param params параметры команды без ее имени
-     */
     @Override
     public void execution(Long chatId, String[] params) {
         DeckManager userDeckManager = userDecksData.getUserDecks(chatId);
@@ -59,11 +57,12 @@ public class ListCardsCommands implements Command {
     }
 
     /**
-     * возвращает строковое представление карточек колоды
+     * Возвращает строковое представление карточек колоды
+     *
      * @param deck колода
      * @return строка с карточками колоды
      */
-    private String deckListCardToString(Deck deck){
+    private String deckListCardToString(Deck deck) {
         //TODO
         return null;
     }
@@ -72,11 +71,6 @@ public class ListCardsCommands implements Command {
 //      term - def
 //      term - def
 
-    /**
-     * Возвращает количество параметров нужных команде для выполнения
-     *
-     * @return количество параметров
-     */
     @Override
     public int getCountParams() {
         return COUNT_PARAMS;

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.ParserMessageComand;
+import ru.rtf.telegramBot.ParserMessageCommand;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
@@ -32,7 +32,7 @@ class CreateDeckCommandTest {
     void testSimpleAddDeck() {
         Long chatId = 987654321L;
         String commandText = "/create-deck Deck";
-        ParserMessageComand parser = new ParserMessageComand(commandText);
+        ParserMessageCommand parser = new ParserMessageCommand(commandText);
 
         Mockito.when(userDecksData.containsUser(chatId)).thenReturn(true);
 
@@ -53,7 +53,7 @@ class CreateDeckCommandTest {
     void testIncorrectWordingCommand() {
         Long chatId = 987654321L;
         String commandText = "/create-deck name";
-        ParserMessageComand parser = new ParserMessageComand(commandText);
+        ParserMessageCommand parser = new ParserMessageCommand(commandText);
 
         Mockito.when(userDecksData.containsUser(chatId)).thenReturn(true);
         DeckManager deckManager = new DeckManager();

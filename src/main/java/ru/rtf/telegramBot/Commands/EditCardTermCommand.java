@@ -12,7 +12,7 @@ import ru.rtf.telegramBot.UserDecksData;
  */
 public class EditCardTermCommand implements Command {
     /**
-     * поле для отправки сообщений пользователю
+     * Поле для отправки сообщений пользователю
      */
     private final SenderMessages senderMessages;
     /**
@@ -27,17 +27,17 @@ public class EditCardTermCommand implements Command {
      */
     private final int COUNT_PARAMS = 3;
 
+    /**
+     * Создание экземпляра команды для добавления новой карты
+     *
+     * @param senderMessages может отправлять сообщения
+     * @param userDecksData  может получать колоды пользователя
+     */
     public EditCardTermCommand(SenderMessages senderMessages, UserDecksData userDecksData) {
         this.senderMessages = senderMessages;
         this.userDecksData = userDecksData;
     }
 
-    /**
-     * выполнить команду
-     *
-     * @param chatId идентификатор чата
-     * @param params параметры команды без ее имени
-     */
     @Override
     public void execution(Long chatId, String[] params) {
         DeckManager userDeckManager = userDecksData.getUserDecks(chatId);
@@ -59,11 +59,6 @@ public class EditCardTermCommand implements Command {
         senderMessages.sendMessage(chatId, deckName + ": " + term);
     }
 
-    /**
-     * возвращает количество параметров нужных команде для выполнения
-     *
-     * @return количество параметров
-     */
     @Override
     public int getCountParams() {
         return COUNT_PARAMS;

@@ -3,51 +3,51 @@ package ru.rtf.telegramBot;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class ParserMessageComandTest {
+class ParserMessageCommandTest {
 
     @Test
     void testNameCommandCorrect() {
-        ParserMessageComand parser1 = new ParserMessageComand("/edit-card-def param1 param2");
+        ParserMessageCommand parser1 = new ParserMessageCommand("/edit-card-def param1 param2");
         Assertions.assertEquals("/edit-card-def", parser1.nameCommand());
 
-        ParserMessageComand parser2 = new ParserMessageComand("help");
+        ParserMessageCommand parser2 = new ParserMessageCommand("help");
         Assertions.assertEquals("help", parser2.nameCommand());
 
-        ParserMessageComand parser3 = new ParserMessageComand("/add /del");
+        ParserMessageCommand parser3 = new ParserMessageCommand("/add /del");
         Assertions.assertEquals("/add", parser3.nameCommand());
     }
 
     @Test
     void testNameCommandWithWithEmptyStart() {
-        ParserMessageComand parser = new ParserMessageComand("     \t\n/add /del");
+        ParserMessageCommand parser = new ParserMessageCommand("     \t\n/add /del");
         Assertions.assertEquals("/add", parser.nameCommand());
     }
 
     @Test
     void testNameCommandWithEmptyMessage() {
-        ParserMessageComand parser = new ParserMessageComand("");
+        ParserMessageCommand parser = new ParserMessageCommand("");
         Assertions.assertNull(parser.nameCommand());
 
-        ParserMessageComand parserSpan = new ParserMessageComand("  ");
+        ParserMessageCommand parserSpan = new ParserMessageCommand("  ");
         Assertions.assertNull(parserSpan.nameCommand());
     }
 
     @Test
     void testNameCommandWithNullMessage() {
-        ParserMessageComand parser = new ParserMessageComand(null);
+        ParserMessageCommand parser = new ParserMessageCommand(null);
         Assertions.assertNull(parser.nameCommand());
     }
 
     @Test
     void testParamsCommandSpace() {
-        ParserMessageComand parser = new ParserMessageComand("/edit-card-def длинный параметр с пробелами");
+        ParserMessageCommand parser = new ParserMessageCommand("/edit-card-def длинный параметр с пробелами");
         String[] expectedParams = {"длинный параметр с пробелами"};
         Assertions.assertArrayEquals(expectedParams, parser.paramsCommand());
     }
 
     @Test
     void testParamsCommandSpaceSeveral() {
-        ParserMessageComand parser = new ParserMessageComand(
+        ParserMessageCommand parser = new ParserMessageCommand(
                 "/edit-card-def название колоды: большой термин := новое определение");
         String[] expectedParams = {"название колоды", "большой термин", "новое определение"};
         Assertions.assertArrayEquals(expectedParams, parser.paramsCommand());
@@ -55,26 +55,26 @@ class ParserMessageComandTest {
 
     @Test
     void testParamsCommandWithNoParams() {
-        ParserMessageComand parser = new ParserMessageComand("/start");
+        ParserMessageCommand parser = new ParserMessageCommand("/start");
         Assertions.assertNull(parser.paramsCommand());
     }
 
     @Test
     void testParse() {
-        ParserMessageComand parser = new ParserMessageComand("");
+        ParserMessageCommand parser = new ParserMessageCommand("");
         String[] expectedParts = {"/help:нет:пробела", "param"};
         Assertions.assertArrayEquals(expectedParts, parser.parseUsersMessage("/help:нет:пробела param"));
     }
 
     @Test
     void testParseMessageWithEmptyMessage() {
-        ParserMessageComand parser = new ParserMessageComand("");
+        ParserMessageCommand parser = new ParserMessageCommand("");
         Assertions.assertNull(parser.parseUsersMessage(""));
     }
 
     @Test
     void testParseUsersMessageWithSpacesAndEmptyValues() {
-        ParserMessageComand parser = new ParserMessageComand(" /start  param1=  :param2 ");
+        ParserMessageCommand parser = new ParserMessageCommand(" /start  param1=  :param2 ");
         String[] expectedParts = {"/start", "param1", "param2"};
         Assertions.assertArrayEquals(expectedParts, parser.parseUsersMessage(" /start  param1=  :param2 "));
     }

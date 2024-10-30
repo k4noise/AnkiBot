@@ -4,14 +4,14 @@ import ru.rtf.telegramBot.Command;
 import ru.rtf.telegramBot.SenderMessages;
 
 /**
- * класс команды /start
+ * Класс команды /start
  * обычно используется при начале диалога с ботом
  * выводит приветственное сообщение
  */
 public class StartCommand implements Command {
 
     /**
-     * поле для отправки сообщений пользователю
+     * Поле для отправки сообщений пользователю
      */
     private final SenderMessages senderMessages;
 
@@ -21,26 +21,21 @@ public class StartCommand implements Command {
      */
     private final int COUNT_PARAMS = 0;
 
+    /**
+     * Создание экземпляра команды для добавления новой карты
+     *
+     * @param senderMessages может отправлять сообщения
+     */
     public StartCommand(SenderMessages senderMessages) {
         this.senderMessages = senderMessages;
     }
 
-    /**
-     * выполнить команду
-     *
-     * @param chatId идентификатор чата
-     * @param params параметры команды без ее имени
-     */
     @Override
     public void execution(Long chatId, String[] params) {
         senderMessages.sendMessage(chatId,
                 "Добро пожаловать в AnkiBot. Введите команду /help, чтобы посмотреть доступные команды");
     }
-    /**
-     * Возвращает количество параметров нужных команде для выполнения
-     *
-     * @return количество параметров
-     */
+
     @Override
     public int getCountParams() {
         return COUNT_PARAMS;
