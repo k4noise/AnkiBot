@@ -23,7 +23,7 @@ public class ListDecksCommandTest {
     }
 
     /**
-     * тест на пустом списке колод
+     * Тест на пустом списке колод
      */
     @Test
     void testExecutionWithNoDecksEmpty() {
@@ -42,7 +42,7 @@ public class ListDecksCommandTest {
     }
 
     /**
-     * тест на непустом списке колод
+     * Тест на непустом списке колод
      */
     @Test
     void testExecutionWithDecks() {
@@ -57,6 +57,7 @@ public class ListDecksCommandTest {
         // попытка выполнить команду
         listDecksCommand.execution(chatId, null);
 
-        Mockito.verify(senderMessages).sendMessage(chatId, "Ваши колоды:\nfirst\nsecond\n");
+        Mockito.verify(senderMessages).sendMessage(chatId, "Ваши колоды:\nfirst: 0 карт\n" +
+                "second: 0 карт\n");
     }
 }

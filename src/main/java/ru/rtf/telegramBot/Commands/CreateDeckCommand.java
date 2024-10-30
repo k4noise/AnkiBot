@@ -5,6 +5,8 @@ import ru.rtf.telegramBot.Command;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
+import java.util.NoSuchElementException;
+
 /**
  * Класс команды добавления новой колоды
  */
@@ -46,7 +48,7 @@ public class CreateDeckCommand implements Command {
         //попытка добавить колоду
         try {
             userDeckManager.addDeck(deckName);
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchElementException | IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
             return;
         }

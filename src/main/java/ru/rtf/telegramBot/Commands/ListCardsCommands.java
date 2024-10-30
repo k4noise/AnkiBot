@@ -6,6 +6,8 @@ import ru.rtf.telegramBot.Command;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
+import java.util.NoSuchElementException;
+
 /**
  * Выводит список всех карт колоды
  */
@@ -45,11 +47,10 @@ public class ListCardsCommands implements Command {
 
         //попытка найти колоду
         try {
-
             String deckCards = deckListCardToString(userDeckManager.getDeck(deckName));
             senderMessages.sendMessage(chatId, deckCards);
 
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchElementException | IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
         }
     }
@@ -65,7 +66,8 @@ public class ListCardsCommands implements Command {
      * @return строка с карточками колоды
      */
     private String deckListCardToString(Deck deck) {
-        return deck.getName() + ":\n" + deck.getCardsDescription();
+        String cardsDescription = deck.getCardsDescription();
+        return deck.getName() + ":\n" + (cardsDescription.isEmpty() ? "В этой колоде пока нет карточек" : cardsDescription);
     }
 
     @Override

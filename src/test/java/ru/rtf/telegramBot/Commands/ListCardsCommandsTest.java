@@ -11,10 +11,10 @@ import ru.rtf.telegramBot.UserDecksData;
  * Тест команды вывод карт колоды
  */
 public class ListCardsCommandsTest {
+    private final Long existUser = 987654321L;
     private SenderMessages senderMessages;
     private UserDecksData userDecksData;
     private ListCardsCommands listCardsCommands;
-    private final Long existUser = 987654321L;
 
     @BeforeEach
     void setUp() {
@@ -25,15 +25,15 @@ public class ListCardsCommandsTest {
     }
 
     /**
-     * корректный вывод
+     * Корректный вывод
      */
     @Test
     void testCorrectPrintCard() {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Deck");
-        //TODO добавление карты "term1" в колоду (term1 = def 1)
-        //TODO добавление карты "term2" в колоду (term2 = def 2)
-        //TODO добавление карты "term3" в колоду (term3 = def 3)
+        decks.getDeck("Deck").addCard("term1", "def 1");
+        decks.getDeck("Deck").addCard("term2", "def 2");
+        decks.getDeck("Deck").addCard("term3", "def 3");
         listCardsCommands.execution(existUser, new String[]{"Deck"});
         Mockito.verify(senderMessages).sendMessage(existUser, "Deck:\n" +
                 "\"term1\" = def 1\n" +
@@ -42,7 +42,7 @@ public class ListCardsCommandsTest {
     }
 
     /**
-     * нет карт
+     * Нет карт
      */
     @Test
     void testNoCard() {
@@ -56,7 +56,7 @@ public class ListCardsCommandsTest {
     }
 
     /**
-     * несуществующая колода
+     * Несуществующая колода
      */
     @Test
     void testIncorrectDeck() {
@@ -65,6 +65,6 @@ public class ListCardsCommandsTest {
 
         // Проверяем отправку сообщения об ошибке
         Mockito.verify(senderMessages).sendMessage(existUser,
-                "Колода с именем Deck не существует");
+                "Колода с именем Deck не существует в менеджере");
     }
 }

@@ -5,6 +5,8 @@ import ru.rtf.telegramBot.Command;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
+import java.util.NoSuchElementException;
+
 /**
  * Команда удаления карты из колоды
  */
@@ -47,7 +49,7 @@ public class DeleteCardCommand implements Command {
         //попытка удалить карту из колоды
         try {
             userDeckManager.getDeck(deckName).removeCard(term);
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchElementException | IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
             return;
         }

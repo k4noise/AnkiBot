@@ -26,7 +26,7 @@ class CreateDeckCommandTest {
     }
 
     /**
-     * корректное добавление колоды
+     * Корректное добавление колоды
      */
     @Test
     void testSimpleAddDeck() {
@@ -43,11 +43,11 @@ class CreateDeckCommandTest {
         createDeckCommand.execution(chatId, parser.paramsCommand());
 
         Mockito.verify(deckManager).addDeck("Deck");
-        Mockito.verify(senderMessages).sendMessage(chatId, "колода Deck добавлена");
+        Mockito.verify(senderMessages).sendMessage(chatId, "Колода Deck успешно добавлена");
     }
 
     /**
-     * тест для некорректной формулировки команды
+     * Тест для некорректной формулировки команды
      */
     @Test
     void testIncorrectWordingCommand() {
@@ -64,6 +64,6 @@ class CreateDeckCommandTest {
 
         // Проверяем отправку сообщения об ошибке
         Mockito.verify(senderMessages).sendMessage(chatId,
-                "Колода с именем name уже существует, выберите другое имя");
+                "Колода с именем name существует в менеджере");
     }
 }

@@ -6,6 +6,8 @@ import ru.rtf.telegramBot.Command;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
+import java.util.NoSuchElementException;
+
 /**
  * Команда изменения определения карточки
  */
@@ -56,7 +58,7 @@ public class EditCardDefCommand implements Command {
                     String.format("Определение карты было успешно изменено: %s", userDeck.getCard(term).toString())
             );
 
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchElementException | IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
         }
     }

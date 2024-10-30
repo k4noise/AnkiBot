@@ -6,6 +6,8 @@ import ru.rtf.telegramBot.Command;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
+import java.util.NoSuchElementException;
+
 /**
  * Выводит карточку из колоды
  */
@@ -49,7 +51,7 @@ public class ListCardCommand implements Command {
             Card card = userDeckManager.getDeck(deckName).getCard(term);
             //сообщение пользователю о выполнении
             senderMessages.sendMessage(chatId,String.format(card.toString()));
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchElementException | IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
         }
     }

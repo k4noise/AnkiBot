@@ -45,7 +45,7 @@ class DeleteDeckCommandTest {
         deleteDeckCommand.execution(chatId, parser.paramsCommand());
         Assertions.assertThrows(NoSuchElementException.class, () -> deckManager.getDeck("DelDeck")
         );
-        Mockito.verify(senderMessages).sendMessage(chatId, "колода DelDeck удалена");
+        Mockito.verify(senderMessages).sendMessage(chatId, "Колода DelDeck была успешно удалена");
     }
 
     /**
@@ -61,6 +61,6 @@ class DeleteDeckCommandTest {
         Mockito.when(userDecksData.getUserDecks(chatIdEmpty)).thenReturn(new DeckManager());
         deleteDeckCommand.execution(chatIdEmpty, parser.paramsCommand());
 
-        Mockito.verify(senderMessages).sendMessage(chatIdEmpty, "Колода с именем MyDeck не существует");
+        Mockito.verify(senderMessages).sendMessage(chatIdEmpty, "Колода с именем MyDeck не существует в менеджере");
     }
 }

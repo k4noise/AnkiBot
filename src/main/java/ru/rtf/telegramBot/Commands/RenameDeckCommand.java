@@ -5,6 +5,8 @@ import ru.rtf.telegramBot.Command;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
+import java.util.NoSuchElementException;
+
 /**
  * Класс команды переименования колоды /rename-deck (старое название) (новое название)
  */
@@ -47,7 +49,7 @@ public class RenameDeckCommand implements Command {
         //попытка изменить имя колоды
         try {
             userDeckManager.updateDeckName(oldDeckName, newDeckName);
-        } catch (RuntimeException e) {
+        } catch (NoSuchElementException | IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
             return;
         }

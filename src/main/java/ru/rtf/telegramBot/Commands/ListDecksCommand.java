@@ -70,7 +70,7 @@ public class ListDecksCommand implements Command {
             names.append(deck.getName())
                     .append(": ")
                     .append(deck.getCardsCount())
-                    .append("карт")
+                    .append(" карт")
                     .append("\n");
         }
         return names.toString();

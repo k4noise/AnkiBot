@@ -6,6 +6,8 @@ import ru.rtf.telegramBot.Command;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
+import java.util.NoSuchElementException;
+
 /**
  * Добавление новой карты в конкретную колоду пользователя
  * /create-card название колоды: термин - определение
@@ -50,7 +52,7 @@ public class CreateCardCommand implements Command {
         //попытка добавить карту в колоду
         try {
             userDeckManager.getDeck(deckName).addCard(newCard);
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchElementException | IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
             return;
         }

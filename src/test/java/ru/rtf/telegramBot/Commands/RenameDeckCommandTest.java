@@ -27,9 +27,8 @@ class RenameDeckCommandTest {
         renameDeckCommand = new RenameDeckCommand(senderMessages, userDecksData);
     }
 
-
     /**
-     * тест на корректных данных
+     * Тест на корректных данных
      */
     @Test
     void testCorrectNames() {
@@ -46,11 +45,11 @@ class RenameDeckCommandTest {
         // Проверяем, что метод updateDeckName был вызван с правильными аргументами
 
         Mockito.verify(deckManager).updateDeckName("OldName", "NewName");
-        Mockito.verify(senderMessages).sendMessage(chatId, "Переименование OldName -> NewName");
+        Mockito.verify(senderMessages).sendMessage(chatId, "Колода успешно переименована: OldName -> NewName");
     }
 
     /**
-     * тест на корректных данных названия с пробелами
+     * Тест на корректных данных названия с пробелами
      */
     @Test
     void testCorrectBigNames() {
@@ -67,11 +66,11 @@ class RenameDeckCommandTest {
         // Проверяем, что метод updateDeckName был вызван с правильными аргументами
 
         Mockito.verify(deckManager).updateDeckName("Old big Name", "New Name");
-        Mockito.verify(senderMessages).sendMessage(chatId, "Переименование Old big Name -> New Name");
+        Mockito.verify(senderMessages).sendMessage(chatId, "Колода успешно переименована: Old big Name -> New Name");
     }
 
     /**
-     * тест с пустой коллекцией колод
+     * Тест с пустой коллекцией колод
      */
     @Test
     void testExecutionWithNoDecks() {
@@ -82,7 +81,7 @@ class RenameDeckCommandTest {
         //пустая коллекция колод
         Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(new DeckManager());
         renameDeckCommand.execution(chatId, parser.paramsCommand());
-        Mockito.verify(senderMessages).sendMessage(chatId, "Колода с именем OldName не существует");
+        Mockito.verify(senderMessages).sendMessage(chatId, "Колода с именем OldName не существует в менеджере");
     }
 }
 

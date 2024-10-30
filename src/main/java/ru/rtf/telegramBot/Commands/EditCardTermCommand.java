@@ -6,6 +6,8 @@ import ru.rtf.telegramBot.Command;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
+import java.util.NoSuchElementException;
+
 /**
  * Команда изменения термина карты
  * /edit-card-term название колоды: термин
@@ -57,7 +59,7 @@ public class EditCardTermCommand implements Command {
                     chatId,
                     String.format("Термин карты был успешно изменен: %s", userDeck.getCard(term).toString())
             );
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchElementException | IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
         }
     }

@@ -15,18 +15,15 @@ import java.util.Map;
  */
 class CommandManagerTest {
 
+    private final Map<String, Command> commands = new LinkedHashMap<>();
     private CommandManager commandManager;
     private SenderMessages senderMessages;
     private UserDecksData userDecksData;
 
-    private final Map<String, Command> commands = new LinkedHashMap<>();
-
-
-
     @BeforeEach
     void setUp() {
         senderMessages = Mockito.mock(SenderMessages.class);
-        userDecksData =  new UserDecksData();
+        userDecksData = new UserDecksData();
         uploadCommands(senderMessages);
         commandManager = new CommandManager(commands, senderMessages, userDecksData);
     }
@@ -42,7 +39,7 @@ class CommandManagerTest {
     }
 
     /**
-     * попытка вызова неизвестной команды
+     * Попытка вызова неизвестной команды
      */
     @Test
     void testUnknownCommand() {
@@ -54,7 +51,7 @@ class CommandManagerTest {
     }
 
     /**
-     * тест на корректных данных
+     * Тест на корректных данных
      */
     @Test
     void testCorrectCountParams() {
@@ -64,11 +61,11 @@ class CommandManagerTest {
         decks.addDeck("old name");
         commandManager.execution(chatId, "/rename-deck old name:=new name");
         Mockito.verify(senderMessages).sendMessage(chatId,
-                "Переименование old name -> new name");
+                "Колода успешно переименована: old name -> new name");
     }
 
     /**
-     * тест на несоответствие параметров
+     * Тест на несоответствие параметров
      */
     @Test
     void testNoCorrectCountParams() {
@@ -79,7 +76,7 @@ class CommandManagerTest {
     }
 
     /**
-     * добавление команд, их имени и экземпляра соответствующего класса в список команд
+     * Добавление команд, их имени и экземпляра соответствующего класса в список команд
      */
     private void uploadCommands(SenderMessages senderMessages) {
         commands.put("/start", new StartCommand(senderMessages));
