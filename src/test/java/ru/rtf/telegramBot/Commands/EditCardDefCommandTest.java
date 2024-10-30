@@ -3,11 +3,9 @@ package ru.rtf.telegramBot.Commands;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import ru.rtf.Card;
 import ru.rtf.Deck;
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
@@ -15,16 +13,14 @@ import ru.rtf.telegramBot.UserDecksData;
  */
 public class EditCardDefCommandTest {
     private final Long existUser = 987654321L;
-    private SenderMessages senderMessages;
     private UserDecksData userDecksData;
     private EditCardDefCommand editCardDefCommand;
 
     @BeforeEach
     void setUp() {
-        senderMessages = Mockito.mock(SenderMessages.class);
         userDecksData = new UserDecksData();
         userDecksData.addUser(existUser);
-        editCardDefCommand = new EditCardDefCommand(senderMessages, userDecksData);
+        editCardDefCommand = new EditCardDefCommand();
     }
 
     /**
@@ -33,17 +29,19 @@ public class EditCardDefCommandTest {
     @Test
     void testCorrectEditDef() {
         DeckManager decks = userDecksData.getUserDecks(existUser);
+        //добавить колоду
         String deckName = "Deck";
         String term = "term", definition = "def";
         decks.addDeck("Deck");
+        //добавить карту
         Deck deck = decks.getDeck(deckName);
         deck.addCard(term, definition);
-
         String newDefinition = "new def";
-        editCardDefCommand.execution(existUser, new String[]{deckName, term, newDefinition});
+
+        String ans = editCardDefCommand.execution(decks, new String[]{deckName, term, newDefinition});
         Card modifiedCard = deck.getCard(term);
         Assertions.assertEquals(newDefinition, modifiedCard.getDefinition(), "Определение должно измениться");
-        Mockito.verify(senderMessages).sendMessage(existUser, "Определение карты было успешно изменено: \"term\" = new def");
+        Assertions.assertEquals("Определение карты было успешно изменено: \"term\" = new def", ans);
     }
 
     /**
@@ -52,12 +50,11 @@ public class EditCardDefCommandTest {
     @Test
     void testIncorrectTerm() {
 
-        DeckManager deckManager = userDecksData.getUserDecks(existUser);
-        deckManager.addDeck("Deck");
-        editCardDefCommand.execution(existUser, new String[]{"Deck", "term", "new def"});
+        DeckManager decks = userDecksData.getUserDecks(existUser);
+        decks.addDeck("Deck");
+        String ans = editCardDefCommand.execution(decks, new String[]{"Deck", "term", "new def"});
 
-        Mockito.verify(senderMessages).sendMessage(existUser,
-                "Карта с термином term не существует в колоде");
+        Assertions.assertEquals("Карта с термином term не существует в колоде", ans);
     }
 
     /**
@@ -66,9 +63,9 @@ public class EditCardDefCommandTest {
     @Test
     void testIncorrectDeck() {
 
-        editCardDefCommand.execution(existUser, new String[]{"Deck", "term", "new def"});
+        String ans = editCardDefCommand.execution(userDecksData.getUserDecks(existUser),
+                new String[]{"Deck", "term", "new def"});
 
-        Mockito.verify(senderMessages).sendMessage(existUser,
-                "Колода с именем Deck не существует в менеджере");
+        Assertions.assertEquals("Колода с именем Deck не существует в менеджере", ans);
     }
 }

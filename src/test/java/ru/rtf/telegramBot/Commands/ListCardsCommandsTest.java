@@ -1,10 +1,9 @@
 package ru.rtf.telegramBot.Commands;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
@@ -12,16 +11,14 @@ import ru.rtf.telegramBot.UserDecksData;
  */
 public class ListCardsCommandsTest {
     private final Long existUser = 987654321L;
-    private SenderMessages senderMessages;
     private UserDecksData userDecksData;
     private ListCardsCommands listCardsCommands;
 
     @BeforeEach
     void setUp() {
-        senderMessages = Mockito.mock(SenderMessages.class);
         userDecksData = new UserDecksData();
         userDecksData.addUser(existUser);
-        listCardsCommands = new ListCardsCommands(senderMessages, userDecksData);
+        listCardsCommands = new ListCardsCommands();
     }
 
     /**
@@ -34,11 +31,11 @@ public class ListCardsCommandsTest {
         decks.getDeck("Deck").addCard("term1", "def 1");
         decks.getDeck("Deck").addCard("term2", "def 2");
         decks.getDeck("Deck").addCard("term3", "def 3");
-        listCardsCommands.execution(existUser, new String[]{"Deck"});
-        Mockito.verify(senderMessages).sendMessage(existUser, "Deck:\n" +
+        String ans = listCardsCommands.execution(decks, new String[]{"Deck"});
+        Assertions.assertEquals("Deck:\n" +
                 "\"term1\" = def 1\n" +
                 "\"term2\" = def 2\n" +
-                "\"term3\" = def 3\n");
+                "\"term3\" = def 3\n", ans);
     }
 
     /**
@@ -47,12 +44,12 @@ public class ListCardsCommandsTest {
     @Test
     void testNoCard() {
 
-        DeckManager deckManager = userDecksData.getUserDecks(existUser);
-        deckManager.addDeck("Deck");
-        listCardsCommands.execution(existUser, new String[]{"Deck"});
+        DeckManager decks = userDecksData.getUserDecks(existUser);
+        decks.addDeck("Deck");
+        String ans = listCardsCommands.execution(decks, new String[]{"Deck"});
 
-        Mockito.verify(senderMessages).sendMessage(existUser, "Deck:\n" +
-                "В этой колоде пока нет карточек");
+        Assertions.assertEquals("Deck:\n" +
+                "В этой колоде пока нет карточек", ans);
     }
 
     /**
@@ -61,10 +58,9 @@ public class ListCardsCommandsTest {
     @Test
     void testIncorrectDeck() {
 
-        listCardsCommands.execution(existUser, new String[]{"Deck"});
+        String ans = listCardsCommands.execution(userDecksData.getUserDecks(existUser), new String[]{"Deck"});
 
         // Проверяем отправку сообщения об ошибке
-        Mockito.verify(senderMessages).sendMessage(existUser,
-                "Колода с именем Deck не существует в менеджере");
+        Assertions.assertEquals("Колода с именем Deck не существует в менеджере", ans);
     }
 }

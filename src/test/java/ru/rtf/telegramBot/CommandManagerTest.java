@@ -3,7 +3,6 @@ package ru.rtf.telegramBot;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.Commands.*;
 
@@ -17,15 +16,13 @@ class CommandManagerTest {
 
     private final Map<String, Command> commands = new LinkedHashMap<>();
     private CommandManager commandManager;
-    private SenderMessages senderMessages;
     private UserDecksData userDecksData;
 
     @BeforeEach
     void setUp() {
-        senderMessages = Mockito.mock(SenderMessages.class);
         userDecksData = new UserDecksData();
-        uploadCommands(senderMessages);
-        commandManager = new CommandManager(commands, senderMessages, userDecksData);
+        uploadCommands();
+        commandManager = new CommandManager(commands, userDecksData);
     }
 
     /**
@@ -59,9 +56,8 @@ class CommandManagerTest {
         userDecksData.addUser(chatId);
         DeckManager decks = userDecksData.getUserDecks(chatId);
         decks.addDeck("old name");
-        commandManager.execution(chatId, "/rename-deck old name:=new name");
-        Mockito.verify(senderMessages).sendMessage(chatId,
-                "Колода успешно переименована: old name -> new name");
+        String res = commandManager.execution(chatId, "/rename_deck old name:=new name");
+        Assertions.assertEquals("Колода успешно переименована: old name -> new name", res);
     }
 
     /**
@@ -70,28 +66,27 @@ class CommandManagerTest {
     @Test
     void testNoCorrectCountParams() {
         Long chatId = 123456789L;
-        commandManager.execution(chatId, "/rename-deck old name:=");
-        Mockito.verify(senderMessages).sendMessage(chatId,
-                "Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)");
+        String res = commandManager.execution(chatId, "/rename_deck old name:=");
+        Assertions.assertEquals("Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)", res);
     }
 
     /**
      * Добавление команд, их имени и экземпляра соответствующего класса в список команд
      */
-    private void uploadCommands(SenderMessages senderMessages) {
-        commands.put("/start", new StartCommand(senderMessages));
-        commands.put("/help", new HelpCommand(senderMessages));
-        //команды для работы с колодами
-        commands.put("/list-decks", new ListDecksCommand(senderMessages, userDecksData));
-        commands.put("/create-deck", new CreateDeckCommand(senderMessages, userDecksData));
-        commands.put("/rename-deck", new RenameDeckCommand(senderMessages, userDecksData));
-        commands.put("/delete-deck", new DeleteDeckCommand(senderMessages, userDecksData));
-        //команды для работы с картами
-        commands.put("/list-cards", new ListCardsCommands(senderMessages, userDecksData));
-        commands.put("/create-card", new CreateCardCommand(senderMessages, userDecksData));
-        commands.put("/edit-card-term", new EditCardTermCommand(senderMessages, userDecksData));
-        commands.put("/edit-card-def", new EditCardDefCommand(senderMessages, userDecksData));
-        commands.put("/delete-card", new DeleteCardCommand(senderMessages, userDecksData));
-        commands.put("/list-card", new ListCardCommand(senderMessages, userDecksData));
+    private void uploadCommands() {
+        commands.put("/start", new StartCommand());
+        commands.put("/help", new HelpCommand());
+        // команды для работы с колодами
+        commands.put("/list_decks", new ListDecksCommand());
+        commands.put("/create_deck", new CreateDeckCommand());
+        commands.put("/rename_deck", new RenameDeckCommand());
+        commands.put("/delete_deck", new DeleteDeckCommand());
+        // команды для работы с картами
+        commands.put("/list_cards", new ListCardsCommands());
+        commands.put("/create_card", new CreateCardCommand());
+        commands.put("/edit_card_term", new EditCardTermCommand());
+        commands.put("/edit_card_def", new EditCardDefCommand());
+        commands.put("/delete_card", new DeleteCardCommand());
+        commands.put("/list_card", new ListCardCommand());
     }
 }

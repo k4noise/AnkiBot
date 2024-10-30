@@ -3,23 +3,22 @@ package ru.rtf.telegramBot.Commands;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
+/**
+ * Тесты для команды удаления карты из колоды
+ */
 public class DeleteCardCommandTest {
     private final Long existUser = 987654321L;
-    private SenderMessages senderMessages;
     private UserDecksData userDecksData;
     private DeleteCardCommand deleteCardCommand;
 
     @BeforeEach
     void setUp() {
-        senderMessages = Mockito.mock(SenderMessages.class);
         userDecksData = new UserDecksData();
         userDecksData.addUser(existUser);
-        deleteCardCommand = new DeleteCardCommand(senderMessages, userDecksData);
+        deleteCardCommand = new DeleteCardCommand();
     }
 
     /**
@@ -30,10 +29,10 @@ public class DeleteCardCommandTest {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Deck");
         decks.getDeck("Deck").addCard("del term", "def");
-        deleteCardCommand.execution(existUser, new String[]{"Deck", "del term"});
+        String ans = deleteCardCommand.execution(decks, new String[]{"Deck", "del term"});
 
-        Assertions.assertEquals(0, decks.getDecks().size());
-        Mockito.verify(senderMessages).sendMessage(existUser, "Карта с термином del term была успешно удалена из колоды Deck");
+        Assertions.assertEquals(0, decks.getDeck("Deck").getCards().size());
+        Assertions.assertEquals("Карта с термином \"del term\" была успешно удалена из колоды Deck", ans);
     }
 
     /**
@@ -42,13 +41,12 @@ public class DeleteCardCommandTest {
     @Test
     void testIncorrectTerm() {
 
-        DeckManager deckManager = userDecksData.getUserDecks(existUser);
-        deckManager.addDeck("Deck");
-        deleteCardCommand.execution(existUser, new String[]{"Deck", "term"});
+        DeckManager decks = userDecksData.getUserDecks(existUser);
+        decks.addDeck("Deck");
+        String ans = deleteCardCommand.execution(decks, new String[]{"Deck", "term"});
 
         // Проверяем отправку сообщения об ошибке
-        Mockito.verify(senderMessages).sendMessage(existUser,
-                "Карта с термином term не существует в колоде");
+        Assertions.assertEquals("Карта с термином term не существует в колоде", ans);
     }
 
     /**
@@ -57,10 +55,8 @@ public class DeleteCardCommandTest {
     @Test
     void testIncorrectDeck() {
 
-        deleteCardCommand.execution(existUser, new String[]{"Deck", "term"});
-
+        String ans = deleteCardCommand.execution(userDecksData.getUserDecks(existUser), new String[]{"Deck", "term"});
         // Проверяем отправку сообщения об ошибке
-        Mockito.verify(senderMessages).sendMessage(existUser,
-                "Колода с именем Deck не существует в менеджере");
+        Assertions.assertEquals("Колода с именем Deck не существует в менеджере", ans);
     }
 }

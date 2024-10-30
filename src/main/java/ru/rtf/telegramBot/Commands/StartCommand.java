@@ -1,7 +1,7 @@
 package ru.rtf.telegramBot.Commands;
 
+import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.Command;
-import ru.rtf.telegramBot.SenderMessages;
 
 /**
  * Класс команды /start
@@ -11,29 +11,14 @@ import ru.rtf.telegramBot.SenderMessages;
 public class StartCommand implements Command {
 
     /**
-     * Поле для отправки сообщений пользователю
-     */
-    private final SenderMessages senderMessages;
-
-    /**
      * Количество параметров команды
      * нет параметров
      */
     private final int COUNT_PARAMS = 0;
 
-    /**
-     * Создание экземпляра команды для добавления новой карты
-     *
-     * @param senderMessages может отправлять сообщения
-     */
-    public StartCommand(SenderMessages senderMessages) {
-        this.senderMessages = senderMessages;
-    }
-
     @Override
-    public void execution(Long chatId, String[] params) {
-        senderMessages.sendMessage(chatId,
-                "Добро пожаловать в AnkiBot. Введите команду /help, чтобы посмотреть доступные команды");
+    public String execution(DeckManager usersDecks, String[] params) {
+        return "Добро пожаловать в AnkiBot. Введите команду /help, чтобы посмотреть доступные команды";
     }
 
     @Override

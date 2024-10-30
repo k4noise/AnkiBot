@@ -2,24 +2,24 @@ package ru.rtf.telegramBot.Commands;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.SenderMessages;
+import org.junit.jupiter.api.Assertions;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
  * Тесты для команды просмотра имеющихся у пользователя колод
  */
 public class ListDecksCommandTest {
-    private SenderMessages senderMessages;
+    private final Long existUser = 987654321L;
     private UserDecksData userDecksData;
     private ListDecksCommand listDecksCommand;
 
+
     @BeforeEach
     void setUp() {
-        senderMessages = Mockito.mock(SenderMessages.class);
-        userDecksData = Mockito.mock(UserDecksData.class);
-        listDecksCommand = new ListDecksCommand(senderMessages, userDecksData);
+        userDecksData = new UserDecksData();
+        userDecksData.addUser(existUser);
+        listDecksCommand = new ListDecksCommand();
     }
 
     /**
@@ -27,18 +27,11 @@ public class ListDecksCommandTest {
      */
     @Test
     void testExecutionWithNoDecksEmpty() {
-        Long chatId = 987654321L;
-        String commandText = "/list-decks";
-
-        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(new DeckManager());
-
         // попытка выполнить команду
-        listDecksCommand.execution(chatId, null);
+        String ans = listDecksCommand.execution(userDecksData.getUserDecks(existUser), null);
 
         // Проверка, что отправляется корректное сообщение
-        Mockito.verify(senderMessages).sendMessage(chatId, "У Вас пока нет ни одной колоды, создайте первую /create-deck <название>");
-        //Проверка, что сообщение для ненулевого количества колод не отправилось
-        Mockito.verify(senderMessages, Mockito.never()).sendMessage(chatId, "Ваши колоды:");
+        Assertions.assertEquals("У Вас пока нет ни одной колоды, создайте первую /create_deck <название>", ans);
     }
 
     /**
@@ -46,18 +39,15 @@ public class ListDecksCommandTest {
      */
     @Test
     void testExecutionWithDecks() {
-        Long chatId = 987654321L;
 
-        DeckManager deckManager = new DeckManager();
+        DeckManager deckManager = userDecksData.getUserDecks(existUser);
         deckManager.addDeck("first");
         deckManager.addDeck("second");
 
-        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
-
         // попытка выполнить команду
-        listDecksCommand.execution(chatId, null);
+        String ans = listDecksCommand.execution(deckManager, null);
 
-        Mockito.verify(senderMessages).sendMessage(chatId, "Ваши колоды:\nfirst: 0 карт\n" +
-                "second: 0 карт\n");
+        Assertions.assertEquals("Ваши колоды:\nfirst: 0 карт\n" +
+                "second: 0 карт\n", ans);
     }
 }
