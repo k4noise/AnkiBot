@@ -3,8 +3,6 @@ package ru.rtf.telegramBot.Commands;
 import ru.rtf.Deck;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.Command;
-import ru.rtf.telegramBot.SenderMessages;
-import ru.rtf.telegramBot.UserDecksData;
 
 import java.util.Collection;
 
@@ -18,41 +16,15 @@ public class ListDecksCommand implements Command {
      * нет параметров
      */
     public final int COUNT_PARAMS = 0;
-    /**
-     * Поле для отправки сообщений пользователю
-     */
-    private final SenderMessages senderMessages;
-    /**
-     * Соответствие пользователей и их колод
-     */
-    private final UserDecksData userDecksData;
-
-    /**
-     * Создание экземпляра команды для добавления новой карты
-     *
-     * @param senderMessages может отправлять сообщения
-     * @param userDecksData  может получать колоды пользователя
-     */
-    public ListDecksCommand(SenderMessages senderMessages, UserDecksData userDecksData) {
-        this.senderMessages = senderMessages;
-        this.userDecksData = userDecksData;
-    }
 
     @Override
-    public void execution(Long chatId, String[] params) {
-        DeckManager userDeckManager = userDecksData.getUserDecks(chatId);
-        Collection<Deck> userDecks = userDeckManager.getDecks();
+    public String execution(DeckManager usersDecks, String[] params) {
 
         //сообщение пользователю о выполнении
-        if (userDecks.isEmpty())
-            senderMessages.sendMessage(chatId,
-                    "У Вас пока нет ни одной колоды, создайте первую /create-deck <название>");
-        else {
-            String decksText = LineNamesDecks(userDecks);
-            senderMessages.sendMessage(chatId, "Ваши колоды:\n" + decksText);
-        }
+        if (usersDecks.getDecks().isEmpty())
+            return "У Вас пока нет ни одной колоды, создайте первую /create_deck <название>";
+        return "Ваши колоды:\n" + collectionDeckToSting(usersDecks.getDecks());
     }
-
 
     @Override
     public int getCountParams() {
@@ -60,20 +32,17 @@ public class ListDecksCommand implements Command {
     }
 
     /**
-     * Создает строку из имен колод
+     * Выводит колоды в виде их строковых представлений
      *
-     * @return имена колод через перевод строки
+     * @param decks колоды
+     * @return строка из строкового представления колод
      */
-    private String LineNamesDecks(Collection<Deck> decks) {
-        StringBuilder names = new StringBuilder();
+    private String collectionDeckToSting(Collection<Deck> decks) {
+        StringBuilder decksToSting = new StringBuilder();
         for (Deck deck : decks) {
-            names.append(deck.getName())
-                    .append(": ")
-                    .append(deck.getCardsCount())
-                    .append(" карт")
-                    .append("\n");
+            decksToSting.append(deck);
+            decksToSting.append("\n");
         }
-        return names.toString();
+        return decksToSting.toString();
     }
-
 }

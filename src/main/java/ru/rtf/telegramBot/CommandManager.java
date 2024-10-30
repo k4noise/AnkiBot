@@ -15,21 +15,16 @@ public class CommandManager {
      * Хранилище колод пользователя по id чата
      */
     private final UserDecksData userDecksData;
-    /**
-     * Единый объект для отправки сообщений пользователю
-     */
-    private final SenderMessages senderMessages;
 
     /**
      * Инициализирует поля и добавляет команды в список
      *
-     * @param senderMessages может отправлять сообщения
-     * @param userDecksData  для доступа к колодам конкретного пользователя
+     * @param commands словарь команд
+     * @param userDecksData для доступа к колодам конкретного пользователя
      */
-    public CommandManager(Map<String, Command> commands, SenderMessages senderMessages, UserDecksData userDecksData) {
+    public CommandManager(Map<String, Command> commands, UserDecksData userDecksData) {
         this.commands = commands;
         this.userDecksData = userDecksData;
-        this.senderMessages = senderMessages;
     }
 
     /**
@@ -49,8 +44,9 @@ public class CommandManager {
      *
      * @param chatId Идентификатор чата телеграма
      * @param text   Сообщение пользователя
+     * @return сообщение об успешном выполнении команды или об ошибке
      */
-    public void execution(Long chatId, String text) {
+    public String execution(Long chatId, String text) {
         ParserMessageCommand partsMessage = new ParserMessageCommand(text);
         //добавление менеджера колод новому пользователю
         if (!userDecksData.containsUser(chatId))
@@ -60,25 +56,22 @@ public class CommandManager {
         try {
             command = getCommand(partsMessage.nameCommand());
         } catch (IllegalArgumentException e) {
-            senderMessages.sendMessage(chatId, e.getMessage());
-            return;
+            return e.getMessage();
         }
         //проверка параметров
         String[] paramsCommand = partsMessage.paramsCommand();
         if (checkParameters(command, paramsCommand)) {
             //Выполнение команды
-            command.execution(chatId, paramsCommand);
-        } else {
-            senderMessages.sendMessage(chatId,
-                    "Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)");
+            return command.execution(userDecksData.getUserDecks(chatId), paramsCommand);
         }
+        return "Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)";
     }
 
     /**
      * <p>Проверка наличия необходимого количества аргументов для команды.</p>
      * <p>Количество аргументов зависит от конкретной команды</p>
      *
-     * @param command Команда
+     * @param command       Команда
      * @param paramsCommand Параметры для запуска команды
      * @return Достаточно ли количества параметров для запуска команды
      */

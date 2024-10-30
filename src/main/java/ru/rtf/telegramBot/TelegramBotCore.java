@@ -2,6 +2,7 @@ package ru.rtf.telegramBot;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -42,13 +43,11 @@ public class TelegramBotCore extends TelegramLongPollingBot {
     public TelegramBotCore(String telegramBotName, String token) {
         super(token);
         this.telegramBotName = telegramBotName;
-        //создать класс вывода сообщений пользователю
-        SenderMessages senderMessages = new SenderMessages(this);
 
         userDecksData = new UserDecksData();
         //создать команды
-        uploadCommands(senderMessages);
-        commandManager = new CommandManager(commands, senderMessages, userDecksData);
+        uploadCommands();
+        commandManager = new CommandManager(commands, userDecksData);
     }
 
     /**
@@ -68,7 +67,26 @@ public class TelegramBotCore extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             Message message = update.getMessage();
-            commandManager.execution(message.getChatId(), message.getText());
+            Long chatId = message.getChatId();
+            String messageResultExecution = commandManager.execution(chatId, message.getText());
+            sendMessage(chatId, messageResultExecution);
+        }
+    }
+
+    /**
+     * Отправить сообщение пользователю
+     *
+     * @param chatId  идентификатор чата
+     * @param message текст сообщения
+     */
+    public void sendMessage(Long chatId, String message) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setText(message);
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            System.err.println("Не удалось отправить сообщение. " + e.getMessage());
         }
     }
 
@@ -80,20 +98,20 @@ public class TelegramBotCore extends TelegramLongPollingBot {
     /**
      * Добавление команд, их имени и экземпляра соответствующего класса в список команд
      */
-    private void uploadCommands(SenderMessages senderMessages) {
-        commands.put("/start", new StartCommand(senderMessages));
-        commands.put("/help", new HelpCommand(senderMessages));
+    private void uploadCommands() {
+        commands.put("/start", new StartCommand());
+        commands.put("/help", new HelpCommand());
         // команды для работы с колодами
-        commands.put("/list-decks", new ListDecksCommand(senderMessages, userDecksData));
-        commands.put("/create-deck", new CreateDeckCommand(senderMessages, userDecksData));
-        commands.put("/rename-deck", new RenameDeckCommand(senderMessages, userDecksData));
-        commands.put("/delete-deck", new DeleteDeckCommand(senderMessages, userDecksData));
+        commands.put("/list_decks", new ListDecksCommand());
+        commands.put("/create_deck", new CreateDeckCommand());
+        commands.put("/rename_deck", new RenameDeckCommand());
+        commands.put("/delete_deck", new DeleteDeckCommand());
         // команды для работы с картами
-        commands.put("/list-cards", new ListCardsCommands(senderMessages, userDecksData));
-        commands.put("/create-card", new CreateCardCommand(senderMessages, userDecksData));
-        commands.put("/edit-card-term", new EditCardTermCommand(senderMessages, userDecksData));
-        commands.put("/edit-card-def", new EditCardDefCommand(senderMessages, userDecksData));
-        commands.put("/delete-card", new DeleteCardCommand(senderMessages, userDecksData));
-        commands.put("/list-card", new ListCardCommand(senderMessages, userDecksData));
+        commands.put("/list_cards", new ListCardsCommands());
+        commands.put("/create_card", new CreateCardCommand());
+        commands.put("/edit_card_term", new EditCardTermCommand());
+        commands.put("/edit_card_def", new EditCardDefCommand());
+        commands.put("/delete_card", new DeleteCardCommand());
+        commands.put("/list_card", new ListCardCommand());
     }
 }

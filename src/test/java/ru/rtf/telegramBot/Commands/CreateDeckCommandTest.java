@@ -2,11 +2,9 @@ package ru.rtf.telegramBot.Commands;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.ParserMessageCommand;
-import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
+import org.junit.jupiter.api.Assertions;
 
 
 /**
@@ -14,15 +12,15 @@ import ru.rtf.telegramBot.UserDecksData;
  */
 class CreateDeckCommandTest {
 
-    private SenderMessages senderMessages;
     private UserDecksData userDecksData;
     private CreateDeckCommand createDeckCommand;
+    private final Long existUser = 987654321L;
 
     @BeforeEach
     void setUp() {
-        senderMessages = Mockito.mock(SenderMessages.class);
-        userDecksData = Mockito.mock(UserDecksData.class);
-        createDeckCommand = new CreateDeckCommand(senderMessages, userDecksData);
+        userDecksData = new UserDecksData();
+        userDecksData.addUser(existUser);
+        createDeckCommand = new CreateDeckCommand();
     }
 
     /**
@@ -30,20 +28,11 @@ class CreateDeckCommandTest {
      */
     @Test
     void testSimpleAddDeck() {
-        Long chatId = 987654321L;
-        String commandText = "/create-deck Deck";
-        ParserMessageCommand parser = new ParserMessageCommand(commandText);
+        DeckManager decks = userDecksData.getUserDecks(existUser);
+        String ans = createDeckCommand.execution(decks, new String[]{"Deck"});
 
-        Mockito.when(userDecksData.containsUser(chatId)).thenReturn(true);
-
-        DeckManager deckManager = Mockito.mock(DeckManager.class);
-
-        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
-
-        createDeckCommand.execution(chatId, parser.paramsCommand());
-
-        Mockito.verify(deckManager).addDeck("Deck");
-        Mockito.verify(senderMessages).sendMessage(chatId, "Колода Deck успешно добавлена");
+        Assertions.assertEquals(1, decks.getDecks().size());
+        Assertions.assertEquals("Колода Deck успешно добавлена", ans);
     }
 
     /**
@@ -51,19 +40,12 @@ class CreateDeckCommandTest {
      */
     @Test
     void testIncorrectWordingCommand() {
-        Long chatId = 987654321L;
-        String commandText = "/create-deck name";
-        ParserMessageCommand parser = new ParserMessageCommand(commandText);
+        DeckManager decks = userDecksData.getUserDecks(existUser);
+        decks.addDeck("name");
 
-        Mockito.when(userDecksData.containsUser(chatId)).thenReturn(true);
-        DeckManager deckManager = new DeckManager();
-        deckManager.addDeck("name");
-        Mockito.when(userDecksData.getUserDecks(chatId)).thenReturn(deckManager);
-
-        createDeckCommand.execution(chatId, parser.paramsCommand());
+        String ans = createDeckCommand.execution(decks, new String[]{"name"});
 
         // Проверяем отправку сообщения об ошибке
-        Mockito.verify(senderMessages).sendMessage(chatId,
-                "Колода с именем name существует в менеджере");
+        Assertions.assertEquals("Колода с именем name существует в менеджере", ans);
     }
 }
