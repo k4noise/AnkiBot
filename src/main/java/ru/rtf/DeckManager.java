@@ -21,6 +21,9 @@ public class DeckManager {
         decks = new LinkedHashMap<>();
     }
 
+    public void addCardToDeck(String deckName, Card card) {
+       //TODO
+    }
     /**
      * Добавить новую колоду в менеджера
      * Колода может быть создана, если имя колоды не используется другими колодами
@@ -45,7 +48,7 @@ public class DeckManager {
         if (decks.containsKey(name)) {
             return decks.get(name);
         }
-        throw new NoSuchElementException("Колода с именем" + name + "не существует");
+        throw new NoSuchElementException("Колода с именем " + name + " не существует");
     }
 
     /**
@@ -54,12 +57,12 @@ public class DeckManager {
      *
      * @param oldName Старое имя колоды
      * @param newName Новое имя колоды
-     * @throws NoSuchElementException Колоды с таким именем не существует
+     * @throws NoSuchElementException   Колоды с таким именем не существует
      * @throws IllegalArgumentException Колода с таким именем уже существует
      */
     public void updateDeckName(String oldName, String newName) {
         if (!decks.containsKey(oldName)) {
-            throw new NoSuchElementException("Колода с именем" + oldName + "не существует");
+            throw new NoSuchElementException("Колода с именем " + oldName + " не существует");
         }
         if (decks.containsKey(newName)) {
             throw new IllegalArgumentException("Колода с именем " + newName + " уже существует, выберите другое имя");
@@ -78,7 +81,7 @@ public class DeckManager {
      */
     public void removeDeck(String name) {
         if (!decks.containsKey(name)) {
-            throw new NoSuchElementException("Колода с именем" + name + "не существует");
+            throw new NoSuchElementException("Колода с именем " + name + " не существует");
         }
         decks.remove(name);
     }
