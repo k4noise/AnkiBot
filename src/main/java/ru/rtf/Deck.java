@@ -85,8 +85,7 @@ public class Deck {
      * @throws IllegalArgumentException Карта с таким термином существует в колоде
      */
     public void addCard(String term, String definition) {
-        if (cards.containsKey(term))
-            throw new IllegalArgumentException("Карта с таким термином существует в колоде");
+        validateUnique(term);
         cards.put(term, new Card(term, definition));
     }
 
@@ -97,8 +96,7 @@ public class Deck {
      * @throws IllegalArgumentException Карта с таким термином существует в колоде
      */
     public void addCard(Card card) {
-        if (cards.containsKey(card.getTerm()))
-            throw new IllegalArgumentException("Карта с таким термином существует в колоде");
+        validateUnique(card.getTerm());
         cards.put(card.getTerm(), card);
     }
 
@@ -108,14 +106,13 @@ public class Deck {
      *
      * @param oldTerm Старый термин карты
      * @param newTerm Новый термин карты
-     * @throws NoSuchElementException   Карты с таким термином не существует в колоде
+     * @throws NoSuchElementException   Карта с таким термином не существует в колоде
      * @throws IllegalArgumentException Карта с новым термином существует в колоде
      */
     public void updateCardTerm(String oldTerm, String newTerm) {
-        if (!cards.containsKey(oldTerm))
-            throw new NoSuchElementException("Карты с таким термином не существует в колоде");
-        if (cards.containsKey(newTerm))
-            throw new IllegalArgumentException("Карта с новым термином существует в колоде");
+        validateExists(oldTerm);
+        validateUnique(newTerm);
+
         Card oldCard = cards.get(oldTerm);
         cards.remove(oldTerm);
         cards.put(newTerm, oldCard.changeTerm(newTerm));
@@ -126,11 +123,10 @@ public class Deck {
      *
      * @param term          Термин карты
      * @param newDefinition Новое определение карты
-     * @throws NoSuchElementException Карты с таким термином не существует в колоде
+     * @throws NoSuchElementException Карта с таким термином не существует в колоде
      */
     public void updateCardDefinition(String term, String newDefinition) {
-        if (!cards.containsKey(term))
-            throw new NoSuchElementException("Карты с таким термином не существует в колоде");
+        validateExists(term);
         cards.get(term).changeDefinition(newDefinition);
     }
 
@@ -138,11 +134,10 @@ public class Deck {
      * Получить карту из колоды
      *
      * @param term Термин карты
-     * @throws NoSuchElementException Карты с таким термином не существует в колоде
+     * @throws NoSuchElementException Карта с таким термином не существует в колоде
      */
     public Card getCard(String term) {
-        if (!cards.containsKey(term))
-            throw new NoSuchElementException("В колоде нет такой карты");
+        validateExists(term);
         return cards.get(term);
     }
 
@@ -159,11 +154,10 @@ public class Deck {
      * Удалить карту из колоды
      *
      * @param term Термин карты к удалению
-     * @throws NoSuchElementException Карты с таким термином не существует в колоде
+     * @throws NoSuchElementException Карта с таким термином не существует в колоде
      */
     public void removeCard(String term) {
-        if (!cards.containsKey(term))
-            throw new NoSuchElementException("Карты с таким термином не существует в колоде");
+        validateExists(term);
         cards.remove(term);
     }
 
@@ -196,5 +190,28 @@ public class Deck {
     @Override
     public String toString() {
         return String.format("%s: %d карт", name, getCardsCount());
+    }
+
+    /**
+     * Проверяет колоду на уникальность карты по термину
+     *
+     * @param term Термин
+     * @throws IllegalArgumentException Карта с таким термином существует в колоде
+     */
+    private void validateUnique(String term) {
+        if (cards.containsKey(term))
+            throw new IllegalArgumentException("Карта с термином " + term + " существует в колоде");
+
+    }
+
+    /**
+     * Проверяет колоду на существование карты по термину
+     *
+     * @param term Термин
+     * @throws NoSuchElementException Карта с таким термином не существует в колоде
+     */
+    private void validateExists(String term) {
+        if (!cards.containsKey(term))
+            throw new NoSuchElementException("Карта с термином " + term + " не существует в колоде");
     }
 }

@@ -119,7 +119,7 @@ public class CardTest {
     @DisplayName("Строковое представление")
     void testToString(){
         Card card = new Card("commit", "фиксация изменений");
-        Assertions.assertEquals("\"commit\" - фиксация изменений", card.toString(),
+        Assertions.assertEquals("\"commit\" = фиксация изменений", card.toString(),
                 "строковое представление не совпадает с ожидаемым");
     }
 }
