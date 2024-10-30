@@ -45,31 +45,28 @@ public class ListCardsCommands implements Command {
 
         //попытка найти колоду
         try {
-            //TODO реализация
+
+            String deckCards = deckListCardToString(userDeckManager.getDeck(deckName));
+            senderMessages.sendMessage(chatId, deckCards);
+
         } catch (IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
-            return;
         }
-        //сообщение пользователю о выполнении
-        //TODO
-        String deckCards = deckListCardToString(new Deck(""));//исправить
-        senderMessages.sendMessage(chatId, deckName + ":\n" + deckCards);
     }
 
     /**
      * Возвращает строковое представление карточек колоды
+     * Формат вывода
+     *     Deck:
+     *       term - def
+     *       term - def
      *
      * @param deck колода
      * @return строка с карточками колоды
      */
     private String deckListCardToString(Deck deck) {
-        //TODO
-        return null;
+        return deck.getName() + ":\n" + deck.getCardsDescription();
     }
-//Формат вывода
-//    Deck:
-//      term - def
-//      term - def
 
     @Override
     public int getCountParams() {

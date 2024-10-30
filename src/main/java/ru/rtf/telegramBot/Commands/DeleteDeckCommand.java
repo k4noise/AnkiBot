@@ -47,14 +47,13 @@ public class DeleteDeckCommand implements Command {
 
         //попытка удалить колоду
         try {
-            //TODO изменить реализацию
             userDeckManager.removeDeck(deckName);
         } catch (NoSuchElementException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
             return;
         }
         //сообщение пользователю о выполнении
-        senderMessages.sendMessage(chatId, "колода " + deckName + " удалена");
+        senderMessages.sendMessage(chatId, "Колода " + deckName + " была успешно удалена");
     }
 
     @Override

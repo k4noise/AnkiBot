@@ -49,13 +49,13 @@ public class CreateCardCommand implements Command {
 
         //попытка добавить карту в колоду
         try {
-            //TODO реализация
+            userDeckManager.getDeck(deckName).addCard(newCard);
         } catch (IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
             return;
         }
         //сообщение пользователю о выполнении
-        senderMessages.sendMessage(chatId, deckName + ": + " + newCard);
+        senderMessages.sendMessage(chatId, String.format("Карта с термином %s была успешно добавлена в колоду %s", newCard.getTerm(), deckName));
     }
 
     @Override

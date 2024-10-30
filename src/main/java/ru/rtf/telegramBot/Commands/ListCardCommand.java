@@ -1,5 +1,6 @@
 package ru.rtf.telegramBot.Commands;
 
+import ru.rtf.Card;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.Command;
 import ru.rtf.telegramBot.SenderMessages;
@@ -45,14 +46,12 @@ public class ListCardCommand implements Command {
 
         //попытка найти карту
         try {
-            //TODO реализация
+            Card card = userDeckManager.getDeck(deckName).getCard(term);
+            //сообщение пользователю о выполнении
+            senderMessages.sendMessage(chatId,String.format(card.toString()));
         } catch (IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
-            return;
         }
-        //сообщение пользователю о выполнении
-        //TODO вместо термина показывать всю карточку
-        senderMessages.sendMessage(chatId, deckName + ": " + term);
     }
 
     @Override

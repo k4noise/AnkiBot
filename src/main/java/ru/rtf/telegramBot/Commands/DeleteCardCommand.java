@@ -46,14 +46,13 @@ public class DeleteCardCommand implements Command {
 
         //попытка удалить карту из колоды
         try {
-            //TODO реализация
+            userDeckManager.getDeck(deckName).removeCard(term);
         } catch (IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
             return;
         }
         //сообщение пользователю о выполнении
-        //TODO вместо термина показывать всю карточку
-        senderMessages.sendMessage(chatId, deckName + ": - \"" + term + "\"");
+        senderMessages.sendMessage(chatId, String.format("Карта с термином %s была успешно удалена из колоды %s", term, deckName));
     }
 
     @Override

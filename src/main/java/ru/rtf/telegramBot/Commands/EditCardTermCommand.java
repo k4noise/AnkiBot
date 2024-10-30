@@ -1,5 +1,6 @@
 package ru.rtf.telegramBot.Commands;
 
+import ru.rtf.Deck;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.Command;
 import ru.rtf.telegramBot.SenderMessages;
@@ -49,14 +50,16 @@ public class EditCardTermCommand implements Command {
 
         //попытка изменить термин карты
         try {
-            //TODO реализация
+            Deck userDeck = userDeckManager.getDeck(deckName);
+            userDeck.updateCardTerm(term, newTerm);
+            //сообщение пользователю о выполнении
+            senderMessages.sendMessage(
+                    chatId,
+                    String.format("Термин карты был успешно изменен: %s", userDeck.getCard(term).toString())
+            );
         } catch (IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
-            return;
         }
-        //сообщение пользователю о выполнении
-        //TODO вместо термина показывать всю карточку
-        senderMessages.sendMessage(chatId, deckName + ": " + term);
     }
 
     @Override

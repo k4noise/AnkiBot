@@ -1,5 +1,6 @@
 package ru.rtf.telegramBot.Commands;
 
+import ru.rtf.Deck;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.Command;
 import ru.rtf.telegramBot.SenderMessages;
@@ -47,14 +48,17 @@ public class EditCardDefCommand implements Command {
 
         //попытка изменить определение карты
         try {
-            //TODO реализация
+            Deck userDeck = userDeckManager.getDeck(deckName);
+            userDeck.updateCardDefinition(term, newDef);
+            //сообщение пользователю о выполнении
+            senderMessages.sendMessage(
+                    chatId,
+                    String.format("Определение карты было успешно изменено: %s", userDeck.getCard(term).toString())
+            );
+
         } catch (IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
-            return;
         }
-        //сообщение пользователю о выполнении
-        //TODO вместо термина показывать всю карточку
-        senderMessages.sendMessage(chatId, deckName + ": " + term);
     }
 
     @Override
