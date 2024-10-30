@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.ParserMessageComand;
+import ru.rtf.telegramBot.ParserMessageCommand;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
@@ -26,13 +26,13 @@ class CreateDeckCommandTest {
     }
 
     /**
-     * корректное добавление колоды
+     * Корректное добавление колоды
      */
     @Test
     void testSimpleAddDeck() {
         Long chatId = 987654321L;
         String commandText = "/create-deck Deck";
-        ParserMessageComand parser = new ParserMessageComand(commandText);
+        ParserMessageCommand parser = new ParserMessageCommand(commandText);
 
         Mockito.when(userDecksData.containsUser(chatId)).thenReturn(true);
 
@@ -43,17 +43,17 @@ class CreateDeckCommandTest {
         createDeckCommand.execution(chatId, parser.paramsCommand());
 
         Mockito.verify(deckManager).addDeck("Deck");
-        Mockito.verify(senderMessages).sendMessage(chatId, "колода Deck добавлена");
+        Mockito.verify(senderMessages).sendMessage(chatId, "Колода Deck успешно добавлена");
     }
 
     /**
-     * тест для некорректной формулировки команды
+     * Тест для некорректной формулировки команды
      */
     @Test
     void testIncorrectWordingCommand() {
         Long chatId = 987654321L;
         String commandText = "/create-deck name";
-        ParserMessageComand parser = new ParserMessageComand(commandText);
+        ParserMessageCommand parser = new ParserMessageCommand(commandText);
 
         Mockito.when(userDecksData.containsUser(chatId)).thenReturn(true);
         DeckManager deckManager = new DeckManager();
@@ -64,6 +64,6 @@ class CreateDeckCommandTest {
 
         // Проверяем отправку сообщения об ошибке
         Mockito.verify(senderMessages).sendMessage(chatId,
-                "Колода с именем name уже существует, выберите другое имя");
+                "Колода с именем name существует в менеджере");
     }
 }

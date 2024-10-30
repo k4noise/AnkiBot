@@ -15,17 +15,21 @@ import java.util.Map;
  * Базовый класс телеграм бота
  */
 public class TelegramBotCore extends TelegramLongPollingBot {
-
+    /**
+     * Имя телеграм бота
+     */
     private final String telegramBotName;
     /**
-     * хранит в себе список команд для бота
+     * Хранит в себе список команд для бота
      */
     private final CommandManager commandManager;
     /**
-     * может возвращать список колод пользователя по id чата
+     * Может возвращать список колод пользователя по id чата
      */
     private final UserDecksData userDecksData;
-
+    /**
+     * Хранилище текстовой команды бота и команды для выполнения
+     */
     private final Map<String, Command> commands = new LinkedHashMap<>();
 
     /**
@@ -60,12 +64,6 @@ public class TelegramBotCore extends TelegramLongPollingBot {
         }
     }
 
-    /**
-     * вызывается каждый раз при отправке сообщения пользователем
-     * исполняет введенную команду
-     *
-     * @param update информация о сообщении
-     */
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
@@ -74,28 +72,23 @@ public class TelegramBotCore extends TelegramLongPollingBot {
         }
     }
 
-    /**
-     * Возвращает имя бота
-     *
-     * @return имя
-     */
     @Override
     public String getBotUsername() {
         return telegramBotName;
     }
 
     /**
-     * добавление команд, их имени и экземпляра соответствующего класса в список команд
+     * Добавление команд, их имени и экземпляра соответствующего класса в список команд
      */
     private void uploadCommands(SenderMessages senderMessages) {
         commands.put("/start", new StartCommand(senderMessages));
         commands.put("/help", new HelpCommand(senderMessages));
-        //команды для работы с колодами
+        // команды для работы с колодами
         commands.put("/list-decks", new ListDecksCommand(senderMessages, userDecksData));
         commands.put("/create-deck", new CreateDeckCommand(senderMessages, userDecksData));
         commands.put("/rename-deck", new RenameDeckCommand(senderMessages, userDecksData));
         commands.put("/delete-deck", new DeleteDeckCommand(senderMessages, userDecksData));
-        //команды для работы с картами
+        // команды для работы с картами
         commands.put("/list-cards", new ListCardsCommands(senderMessages, userDecksData));
         commands.put("/create-card", new CreateCardCommand(senderMessages, userDecksData));
         commands.put("/edit-card-term", new EditCardTermCommand(senderMessages, userDecksData));

@@ -7,12 +7,12 @@ import org.junit.jupiter.api.Test;
  */
 public class CardTest {
     /**
-     * тесты для проверки работы конструктора
+     * Тесты для проверки работы конструктора
      * парамеры конструктора не должны быть пустыми
      */
     @Test
     @DisplayName("Проверка конструктора")
-    void testCardInitEmtyTwoParams() {
+    void testCardInitEmptyTwoParams() {
         Assertions.assertThrows(
                 IllegalArgumentException.class, () -> new Card("", ""), "Карта с пустыми параметрами не может быть создана"
         );
@@ -24,7 +24,7 @@ public class CardTest {
         );
     }
     /**
-     * проверка работы геттеров - термин
+     * Проверка работы геттеров - термин
      */
     @Test
     @DisplayName("работа метода get() для термина")
@@ -36,7 +36,7 @@ public class CardTest {
     }
 
     /**
-     * проверка работы геттеров - определение
+     * Проверка работы геттеров - определение
      */
     @Test
     @DisplayName("работа метода get() для определения")
@@ -55,7 +55,7 @@ public class CardTest {
         Card originalCard = new Card("hero", "person who kill people");
         Card changedCard = originalCard.changeTerm("villain");
         Assertions.assertNotEquals(originalCard, changedCard,
-                "При измении термина карта не должна совпадать со своей старой версией");
+                "При изменении термина карта не должна совпадать со своей старой версией");
         Assertions.assertEquals(originalCard.getDefinition(), changedCard.getDefinition(),
                 "Определения должны совпадать");
         Assertions.assertEquals("villain", changedCard.getTerm(),
@@ -71,7 +71,7 @@ public class CardTest {
         Card changedCard = new Card(card.getTerm(), card.getDefinition());
         changedCard.changeDefinition("person who saves people");
         Assertions.assertEquals(card, changedCard,
-                "При измении определения карта считается такой же");
+                "При изменении определения карта считается такой же");
         Assertions.assertEquals(card.getTerm(), changedCard.getTerm(),
                 "Термины должны совпадать");
         Assertions.assertEquals("person who saves people", changedCard.getDefinition(),
@@ -119,7 +119,7 @@ public class CardTest {
     @DisplayName("Строковое представление")
     void testToString(){
         Card card = new Card("commit", "фиксация изменений");
-        Assertions.assertEquals("\"commit\" - фиксация изменений", card.toString(),
+        Assertions.assertEquals("\"commit\" = фиксация изменений", card.toString(),
                 "строковое представление не совпадает с ожидаемым");
     }
 }

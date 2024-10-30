@@ -6,7 +6,7 @@ import ru.rtf.telegramBot.Command;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
-import java.util.Collection;
+import java.util.NoSuchElementException;
 
 /**
  * Выводит список всех карт колоды
@@ -14,30 +14,30 @@ import java.util.Collection;
 public class ListCardsCommands implements Command {
 
     /**
-     * поле для отправки сообщений пользователю
+     * Количество параметров команды
+     * 1.имя колоды
+     */
+    public final int COUNT_PARAMS = 1;
+    /**
+     * Поле для отправки сообщений пользователю
      */
     private final SenderMessages senderMessages;
     /**
      * Соответствие пользователей и их колод
      */
     private final UserDecksData userDecksData;
-    /**
-     * Количество параметров команды
-     * 1.имя колоды
-     */
-    public final int COUNT_PARAMS = 1;
 
+    /**
+     * Создание экземпляра команды для добавления новой карты
+     *
+     * @param senderMessages может отправлять сообщения
+     * @param userDecksData  может получать колоды пользователя
+     */
     public ListCardsCommands(SenderMessages senderMessages, UserDecksData userDecksData) {
         this.senderMessages = senderMessages;
         this.userDecksData = userDecksData;
     }
 
-    /**
-     * выполнить команду
-     *
-     * @param chatId идентификатор чата
-     * @param params параметры команды без ее имени
-     */
     @Override
     public void execution(Long chatId, String[] params) {
         DeckManager userDeckManager = userDecksData.getUserDecks(chatId);
@@ -47,36 +47,29 @@ public class ListCardsCommands implements Command {
 
         //попытка найти колоду
         try {
-            //TODO реализация
-        } catch (IllegalArgumentException e) {
+            String deckCards = deckListCardToString(userDeckManager.getDeck(deckName));
+            senderMessages.sendMessage(chatId, deckCards);
+
+        } catch (NoSuchElementException | IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
-            return;
         }
-        //сообщение пользователю о выполнении
-        //TODO
-        String deckCards = deckListCardToString(new Deck(""));//исправить
-        senderMessages.sendMessage(chatId, deckName + ":\n" + deckCards);
     }
 
     /**
-     * возвращает строковое представление карточек колоды
+     * Возвращает строковое представление карточек колоды
+     * Формат вывода
+     *     Deck:
+     *       term - def
+     *       term - def
+     *
      * @param deck колода
      * @return строка с карточками колоды
      */
-    private String deckListCardToString(Deck deck){
-        //TODO
-        return null;
+    private String deckListCardToString(Deck deck) {
+        String cardsDescription = deck.getCardsDescription();
+        return deck.getName() + ":\n" + (cardsDescription.isEmpty() ? "В этой колоде пока нет карточек" : cardsDescription);
     }
-//Формат вывода
-//    Deck:
-//      term - def
-//      term - def
 
-    /**
-     * Возвращает количество параметров нужных команде для выполнения
-     *
-     * @return количество параметров
-     */
     @Override
     public int getCountParams() {
         return COUNT_PARAMS;

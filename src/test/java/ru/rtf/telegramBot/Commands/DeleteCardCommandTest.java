@@ -9,10 +9,10 @@ import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
 
 public class DeleteCardCommandTest {
+    private final Long existUser = 987654321L;
     private SenderMessages senderMessages;
     private UserDecksData userDecksData;
     private DeleteCardCommand deleteCardCommand;
-    private Long existUser = 987654321L;
 
     @BeforeEach
     void setUp() {
@@ -23,21 +23,21 @@ public class DeleteCardCommandTest {
     }
 
     /**
-     * корректное удаление
+     * Корректное удаление
      */
     @Test
     void testCorrectDelCard() {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Deck");
-        //TODO добавление карты "del term" в колоду
+        decks.getDeck("Deck").addCard("del term", "def");
         deleteCardCommand.execution(existUser, new String[]{"Deck", "del term"});
 
         Assertions.assertEquals(0, decks.getDecks().size());
-        Mockito.verify(senderMessages).sendMessage(existUser, "Deck: - \"name term\"");
+        Mockito.verify(senderMessages).sendMessage(existUser, "Карта с термином del term была успешно удалена из колоды Deck");
     }
 
     /**
-     * удаление несуществующей карты
+     * Удаление несуществующей карты
      */
     @Test
     void testIncorrectTerm() {
@@ -47,13 +47,12 @@ public class DeleteCardCommandTest {
         deleteCardCommand.execution(existUser, new String[]{"Deck", "term"});
 
         // Проверяем отправку сообщения об ошибке
-        //TODO
         Mockito.verify(senderMessages).sendMessage(existUser,
-                "//TODO выводить ошибку из класса ответственного за действия над картами");
+                "Карта с термином term не существует в колоде");
     }
 
     /**
-     * тест несуществующая колода
+     * Тест несуществующая колода
      */
     @Test
     void testIncorrectDeck() {
@@ -62,6 +61,6 @@ public class DeleteCardCommandTest {
 
         // Проверяем отправку сообщения об ошибке
         Mockito.verify(senderMessages).sendMessage(existUser,
-                "Колода с именем Deck не существует");
+                "Колода с именем Deck не существует в менеджере");
     }
 }

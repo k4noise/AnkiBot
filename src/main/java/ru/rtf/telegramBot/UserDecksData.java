@@ -10,12 +10,12 @@ import java.util.Map;
  */
 public class UserDecksData {
     /**
-     * хранит колоды по идентификатору чата
+     * Хранит колоды по идентификатору чата
      */
-    private Map<Long, DeckManager> userDesks;
+    private final Map<Long, DeckManager> userDecks;
 
     public UserDecksData() {
-        userDesks = new HashMap<>();
+        userDecks = new HashMap<>();
     }
 
     /**
@@ -24,25 +24,25 @@ public class UserDecksData {
      * @param chatId идентификатор чата
      */
     public boolean containsUser(Long chatId) {
-        return userDesks.containsKey(chatId);
+        return userDecks.containsKey(chatId);
     }
 
     /**
-     * Добавить нового пользователя в список соответствий
+     * Добавляет нового пользователя в список соответствий
      *
      * @param chatId идентификатор чата
      */
     public void addUser(Long chatId) {
-        userDesks.put(chatId, new DeckManager());
+        userDecks.put(chatId, new DeckManager());
     }
 
     /**
-     * возвращает колоды конкретного пользователя
+     * Возвращает колоды конкретного пользователя
      *
      * @param chatId идентификатор чата
      * @return колоды
      */
     public DeckManager getUserDecks(Long chatId) {
-        return userDesks.get(chatId);
+        return userDecks.get(chatId);
     }
 }

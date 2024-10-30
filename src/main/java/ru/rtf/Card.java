@@ -3,7 +3,7 @@ package ru.rtf;
 import java.util.Objects;
 
 /**
- * класс карты
+ * Класс карты
  */
 public class Card {
     /**
@@ -11,7 +11,7 @@ public class Card {
      */
     private final String term;
     /**
-     * определение
+     * Определение
      */
     private String definition;
 
@@ -29,7 +29,7 @@ public class Card {
     }
 
     /**
-     * возвращает термин
+     * Возвращает термин
      *
      * @return термин
      */
@@ -38,7 +38,7 @@ public class Card {
     }
 
     /**
-     * возвращает определение
+     * Возвращает определение
      *
      * @return определние
      */
@@ -48,7 +48,6 @@ public class Card {
 
     /**
      * Меняет термин и возвращает измененную карту
-     * меняет хеш карты!
      *
      * @param newTerm новый термин
      * @return новая карта
@@ -59,7 +58,6 @@ public class Card {
 
     /**
      * Меняет определение в карте
-     * не меняет хеш
      *
      * @param newDefinition новое определение
      */
@@ -69,13 +67,6 @@ public class Card {
         definition = newDefinition;
     }
 
-    /**
-     * Сравнивает карты
-     * только по термину
-     *
-     * @param obj объект сравнения
-     * @return совпадает ли с этой картой
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -84,22 +75,11 @@ public class Card {
         return Objects.equals(term, card.term);
     }
 
-    /**
-     * Возвращает хеш карты
-     * только по термину
-     *
-     * @return хеш
-     */
     @Override
     public int hashCode() {
         return Objects.hash(term);
     }
 
-    /**
-     * возвращает строковое представление карты
-     *
-     * @return строковое представление
-     */
     @Override
     public String toString() {
         return String.format("\"%s\" = %s", term, definition);

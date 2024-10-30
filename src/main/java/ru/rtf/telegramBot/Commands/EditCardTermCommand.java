@@ -1,9 +1,12 @@
 package ru.rtf.telegramBot.Commands;
 
+import ru.rtf.Deck;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.Command;
 import ru.rtf.telegramBot.SenderMessages;
 import ru.rtf.telegramBot.UserDecksData;
+
+import java.util.NoSuchElementException;
 
 /**
  * Команда изменения термина карты
@@ -12,7 +15,7 @@ import ru.rtf.telegramBot.UserDecksData;
  */
 public class EditCardTermCommand implements Command {
     /**
-     * поле для отправки сообщений пользователю
+     * Поле для отправки сообщений пользователю
      */
     private final SenderMessages senderMessages;
     /**
@@ -27,17 +30,17 @@ public class EditCardTermCommand implements Command {
      */
     private final int COUNT_PARAMS = 3;
 
+    /**
+     * Создание экземпляра команды для добавления новой карты
+     *
+     * @param senderMessages может отправлять сообщения
+     * @param userDecksData  может получать колоды пользователя
+     */
     public EditCardTermCommand(SenderMessages senderMessages, UserDecksData userDecksData) {
         this.senderMessages = senderMessages;
         this.userDecksData = userDecksData;
     }
 
-    /**
-     * выполнить команду
-     *
-     * @param chatId идентификатор чата
-     * @param params параметры команды без ее имени
-     */
     @Override
     public void execution(Long chatId, String[] params) {
         DeckManager userDeckManager = userDecksData.getUserDecks(chatId);
@@ -49,21 +52,18 @@ public class EditCardTermCommand implements Command {
 
         //попытка изменить термин карты
         try {
-            //TODO реализация
-        } catch (IllegalArgumentException e) {
+            Deck userDeck = userDeckManager.getDeck(deckName);
+            userDeck.updateCardTerm(term, newTerm);
+            //сообщение пользователю о выполнении
+            senderMessages.sendMessage(
+                    chatId,
+                    String.format("Термин карты был успешно изменен: %s", userDeck.getCard(term).toString())
+            );
+        } catch (NoSuchElementException | IllegalArgumentException e) {
             senderMessages.sendMessage(chatId, e.getMessage());
-            return;
         }
-        //сообщение пользователю о выполнении
-        //TODO вместо термина показывать всю карточку
-        senderMessages.sendMessage(chatId, deckName + ": " + term);
     }
 
-    /**
-     * возвращает количество параметров нужных команде для выполнения
-     *
-     * @return количество параметров
-     */
     @Override
     public int getCountParams() {
         return COUNT_PARAMS;
