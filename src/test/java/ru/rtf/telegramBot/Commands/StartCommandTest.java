@@ -6,11 +6,17 @@ import org.junit.jupiter.api.Test;
 import ru.rtf.DeckManager;
 
 /**
- * Тестирования команды старт. Приветственное сообщение
+ * Тест команды инициализации пользователя {@link StartCommand}
  */
 public class StartCommandTest {
-    private StartCommand startCommand;
+    /**
+     * id пользователя, для которого было инициализировано хранилище колод
+     */
     private final Long existUser = 987654321L;
+    /**
+     * Команда для инициализации пользователя
+     */
+    private StartCommand startCommand;
 
     @BeforeEach
     void setUp() {
@@ -22,7 +28,7 @@ public class StartCommandTest {
      */
     @Test
     void testCorrectHelloText() {
-        String ans = startCommand.execution(new DeckManager(),null);
+        String ans = startCommand.execute(new DeckManager(), null);
         Assertions.assertEquals("Добро пожаловать в AnkiBot. Введите команду /help, " +
                 "чтобы посмотреть доступные команды", ans);
     }

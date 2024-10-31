@@ -7,11 +7,20 @@ import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
- * Тесты для команды удаления карты из колоды
+ * Тест команды удаления карты из колоды {@link DeleteCardCommand}
  */
 public class DeleteCardCommandTest {
+    /**
+     * id пользователя, для которого было инициализировано хранилище колод
+     */
     private final Long existUser = 987654321L;
+    /**
+     * Хранилище колод пользователей
+     */
     private UserDecksData userDecksData;
+    /**
+     * Команда для удаления карты из колоды
+     */
     private DeleteCardCommand deleteCardCommand;
 
     @BeforeEach
@@ -29,7 +38,7 @@ public class DeleteCardCommandTest {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Deck");
         decks.getDeck("Deck").addCard("del term", "def");
-        String ans = deleteCardCommand.execution(decks, new String[]{"Deck", "del term"});
+        String ans = deleteCardCommand.execute(decks, new String[]{"Deck", "del term"});
 
         Assertions.assertEquals(0, decks.getDeck("Deck").getCards().size());
         Assertions.assertEquals("Карта с термином \"del term\" была успешно удалена из колоды Deck", ans);
@@ -43,7 +52,7 @@ public class DeleteCardCommandTest {
 
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Deck");
-        String ans = deleteCardCommand.execution(decks, new String[]{"Deck", "term"});
+        String ans = deleteCardCommand.execute(decks, new String[]{"Deck", "term"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("Карта с термином term не существует в колоде", ans);
@@ -55,7 +64,7 @@ public class DeleteCardCommandTest {
     @Test
     void testIncorrectDeck() {
 
-        String ans = deleteCardCommand.execution(userDecksData.getUserDecks(existUser), new String[]{"Deck", "term"});
+        String ans = deleteCardCommand.execute(userDecksData.getUserDecks(existUser), new String[]{"Deck", "term"});
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("Колода с именем Deck не существует в менеджере", ans);
     }

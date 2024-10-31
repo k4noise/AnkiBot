@@ -6,7 +6,8 @@ import ru.rtf.telegramBot.Command;
 import java.util.NoSuchElementException;
 
 /**
- * Класс команды добавления новой колоды
+ * Команда добавления новой колоды
+ * <p>/create_deck название колоды</p>
  */
 public class CreateDeckCommand implements Command {
 
@@ -17,7 +18,7 @@ public class CreateDeckCommand implements Command {
     private final int COUNT_PARAMS = 1;
 
     @Override
-    public String execution(DeckManager usersDecks, String[] params) {
+    public String execute(DeckManager usersDecks, String[] params) {
         String deckName = params[0];
 
         //попытка добавить колоду
@@ -31,7 +32,7 @@ public class CreateDeckCommand implements Command {
     }
 
     @Override
-    public int getCountParams() {
+    public int getParamsCount() {
         return COUNT_PARAMS;
     }
 }

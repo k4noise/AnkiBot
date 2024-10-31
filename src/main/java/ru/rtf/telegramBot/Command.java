@@ -12,13 +12,13 @@ public interface Command {
      *
      * @param usersDecks - колоды пользователя
      * @param params - параметры необходимые команде
-     * @return сообщение об успешном завершении или об ошибке
+     * @return сообщение с результатом выполнения команды
      */
-    String execution(DeckManager usersDecks, String[] params);
+    String execute(DeckManager usersDecks, String[] params);
 
     /**
      * Возвращает количество параметров нужных команде для выполнения
      * @return количество параметров
      */
-    int getCountParams();
+    int getParamsCount();
 }

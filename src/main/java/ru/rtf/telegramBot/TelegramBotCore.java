@@ -68,7 +68,7 @@ public class TelegramBotCore extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             Message message = update.getMessage();
             Long chatId = message.getChatId();
-            String messageResultExecution = commandManager.execution(chatId, message.getText());
+            String messageResultExecution = commandManager.execute(chatId, message.getText());
             sendMessage(chatId, messageResultExecution);
         }
     }
@@ -107,7 +107,7 @@ public class TelegramBotCore extends TelegramLongPollingBot {
         commands.put("/rename_deck", new RenameDeckCommand());
         commands.put("/delete_deck", new DeleteDeckCommand());
         // команды для работы с картами
-        commands.put("/list_cards", new ListCardsCommands());
+        commands.put("/list_cards", new ListCardsCommand());
         commands.put("/create_card", new CreateCardCommand());
         commands.put("/edit_card_term", new EditCardTermCommand());
         commands.put("/edit_card_def", new EditCardDefCommand());

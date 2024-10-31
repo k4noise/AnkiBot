@@ -2,17 +2,25 @@ package ru.rtf.telegramBot.Commands;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import ru.rtf.DeckManager;
 import org.junit.jupiter.api.Assertions;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
- * Тесты для команды переименование колоды
+ * Тест команды переименования колоды {@link RenameDeckCommand}
  */
 class RenameDeckCommandTest {
+    /**
+     * id пользователя, для которого было инициализировано хранилище колод
+     */
     private final Long existUser = 987654321L;
+    /**
+     * Хранилище колод пользователей
+     */
     private UserDecksData userDecksData;
+    /**
+     * Команда для переименования колоды
+     */
     private RenameDeckCommand renameDeckCommand;
 
     @BeforeEach
@@ -30,7 +38,7 @@ class RenameDeckCommandTest {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("OldName");
 
-        String ans = renameDeckCommand.execution(decks, new String[]{"OldName", "NewName"});
+        String ans = renameDeckCommand.execute(decks, new String[]{"OldName", "NewName"});
 
         Assertions.assertEquals("Колода успешно переименована: OldName -> NewName", ans);
     }
@@ -43,7 +51,7 @@ class RenameDeckCommandTest {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Old big Name");
 
-        String ans = renameDeckCommand.execution(decks, new String[]{"Old big Name", "New Name"});
+        String ans = renameDeckCommand.execute(decks, new String[]{"Old big Name", "New Name"});
 
         Assertions.assertEquals("Колода успешно переименована: Old big Name -> New Name", ans);
     }
@@ -52,9 +60,9 @@ class RenameDeckCommandTest {
      * Тест с пустой коллекцией колод
      */
     @Test
-    void testExecutionWithNoDecks() {
+    void testExecuteWithNoDecks() {
 
-        String ans = renameDeckCommand.execution(userDecksData.getUserDecks(existUser),
+        String ans = renameDeckCommand.execute(userDecksData.getUserDecks(existUser),
                 new String[]{"OldName", "NewName"});
         Assertions.assertEquals("Колода с именем OldName не существует в менеджере", ans);
     }

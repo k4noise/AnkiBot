@@ -8,8 +8,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Команда изменения термина карты
- * /edit-card-term название колоды: термин
- * ожидает ответ пользователя
+ * /edit-card-term название колоды:термин
  */
 public class EditCardTermCommand implements Command {
 
@@ -22,7 +21,7 @@ public class EditCardTermCommand implements Command {
     private final int COUNT_PARAMS = 3;
 
     @Override
-    public String execution(DeckManager usersDecks, String[] params) {
+    public String execute(DeckManager usersDecks, String[] params) {
         //обработка параметров
         String deckName = params[0];
         String term = params[1];
@@ -40,7 +39,7 @@ public class EditCardTermCommand implements Command {
     }
 
     @Override
-    public int getCountParams() {
+    public int getParamsCount() {
         return COUNT_PARAMS;
     }
 }

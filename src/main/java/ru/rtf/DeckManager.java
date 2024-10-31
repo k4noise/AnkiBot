@@ -12,6 +12,9 @@ import java.util.NoSuchElementException;
  * @since 21.10.2024
  */
 public class DeckManager {
+    /**
+     * Колоды менеджера, где ключ - имя колоды, значение - сама колода
+     */
     private final Map<String, Deck> decks;
 
     /**

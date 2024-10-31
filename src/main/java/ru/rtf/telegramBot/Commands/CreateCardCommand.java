@@ -7,8 +7,8 @@ import ru.rtf.telegramBot.Command;
 import java.util.NoSuchElementException;
 
 /**
- * Добавление новой карты в конкретную колоду пользователя
- * /create-card название колоды: термин - определение
+ * Команда добавления новой карты в конкретную колоду пользователя
+ * <p>/create-card название колоды: термин - определение</p>
  */
 public class CreateCardCommand implements Command {
 
@@ -21,7 +21,7 @@ public class CreateCardCommand implements Command {
     private final int COUNT_PARAMS = 3;
 
     @Override
-    public String execution(DeckManager usersDecks, String[] params) {
+    public String execute(DeckManager usersDecks, String[] params) {
         String deckName = params[0];
         Card newCard = new Card(params[1], params[2]);
 
@@ -36,7 +36,7 @@ public class CreateCardCommand implements Command {
     }
 
     @Override
-    public int getCountParams() {
+    public int getParamsCount() {
         return COUNT_PARAMS;
     }
 }

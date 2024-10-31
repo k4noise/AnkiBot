@@ -4,8 +4,7 @@ import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.Command;
 
 /**
- * Класс команды /start
- * обычно используется при начале диалога с ботом
+ * Команда /start
  * выводит приветственное сообщение
  */
 public class StartCommand implements Command {
@@ -17,12 +16,12 @@ public class StartCommand implements Command {
     private final int COUNT_PARAMS = 0;
 
     @Override
-    public String execution(DeckManager usersDecks, String[] params) {
+    public String execute(DeckManager usersDecks, String[] params) {
         return "Добро пожаловать в AnkiBot. Введите команду /help, чтобы посмотреть доступные команды";
     }
 
     @Override
-    public int getCountParams() {
+    public int getParamsCount() {
         return COUNT_PARAMS;
     }
 }

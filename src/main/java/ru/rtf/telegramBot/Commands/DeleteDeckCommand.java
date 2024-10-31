@@ -6,7 +6,8 @@ import ru.rtf.telegramBot.Command;
 import java.util.NoSuchElementException;
 
 /**
- * Класс команды удаления колоды у пользователя
+ * Команда удаления колоды у пользователя
+ * <p>/delete_deck название колоды</p>
  */
 public class DeleteDeckCommand implements Command {
 
@@ -17,7 +18,7 @@ public class DeleteDeckCommand implements Command {
     private final int COUNT_PARAMS = 1;
 
     @Override
-    public String execution(DeckManager usersDecks, String[] params) {
+    public String execute(DeckManager usersDecks, String[] params) {
         //обработка параметров
         String deckName = params[0];
 
@@ -32,7 +33,7 @@ public class DeleteDeckCommand implements Command {
     }
 
     @Override
-    public int getCountParams() {
+    public int getParamsCount() {
         return COUNT_PARAMS;
     }
 }

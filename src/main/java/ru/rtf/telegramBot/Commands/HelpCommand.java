@@ -4,7 +4,7 @@ import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.Command;
 
 /**
- * Класс команды /help
+ * Команда справки /help
  */
 public class HelpCommand implements Command {
 
@@ -15,7 +15,7 @@ public class HelpCommand implements Command {
     private final int COUNT_PARAMS = 0;
 
     @Override
-    public String execution(DeckManager usersDecks, String[] params) {
+    public String execute(DeckManager usersDecks, String[] params) {
         String help = """
                 Anki — это телеграм бот для изучения карточек - их термина и определения, которое может использоваться для изучения новых языков, памяти, подготовки к экзаменам и других целях.
                 
@@ -35,7 +35,7 @@ public class HelpCommand implements Command {
     }
 
     @Override
-    public int getCountParams() {
+    public int getParamsCount() {
         return COUNT_PARAMS;
     }
 }

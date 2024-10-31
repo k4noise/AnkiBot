@@ -6,7 +6,8 @@ import ru.rtf.telegramBot.Command;
 import java.util.NoSuchElementException;
 
 /**
- * Класс команды переименования колоды /rename-deck (старое название) (новое название)
+ * Команда переименования колоды
+ * <p>/rename-deck старое название := новое название</p>
  */
 public class RenameDeckCommand implements Command {
 
@@ -18,7 +19,7 @@ public class RenameDeckCommand implements Command {
     private final int COUNT_PARAMS = 2;
 
     @Override
-    public String execution(DeckManager usersDecks, String[] params) {
+    public String execute(DeckManager usersDecks, String[] params) {
         //обработка параметров
         String oldDeckName = params[0];
         String newDeckName = params[1];
@@ -34,7 +35,7 @@ public class RenameDeckCommand implements Command {
     }
 
     @Override
-    public int getCountParams() {
+    public int getParamsCount() {
         return COUNT_PARAMS;
     }
 }

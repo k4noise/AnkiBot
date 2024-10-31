@@ -7,7 +7,8 @@ import ru.rtf.telegramBot.Command;
 import java.util.NoSuchElementException;
 
 /**
- * Выводит карточку из колоды
+ * Команда просмотра карточки из колоды
+ * <p>/list_card название колоды : термин</p>
  */
 public class ListCardCommand implements Command {
     /**
@@ -18,7 +19,7 @@ public class ListCardCommand implements Command {
     private final int COUNT_PARAMS = 2;
 
     @Override
-    public String execution(DeckManager usersDecks, String[] params) {
+    public String execute(DeckManager usersDecks, String[] params) {
         //обработка параметров
         String deckName = params[0];
         String term = params[1];
@@ -34,7 +35,7 @@ public class ListCardCommand implements Command {
     }
 
     @Override
-    public int getCountParams() {
+    public int getParamsCount() {
         return COUNT_PARAMS;
     }
 }

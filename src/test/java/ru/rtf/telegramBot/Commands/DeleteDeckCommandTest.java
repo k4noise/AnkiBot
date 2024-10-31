@@ -3,16 +3,24 @@ package ru.rtf.telegramBot.Commands;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import ru.rtf.telegramBot.UserDecksData;
 import ru.rtf.DeckManager;
+import ru.rtf.telegramBot.UserDecksData;
 
 /**
- * Тесты для команды удаление колоды
+ * Тест команды удаления колоды {@link DeleteDeckCommand}
  */
 class DeleteDeckCommandTest {
+    /**
+     * id пользователя, для которого было инициализировано хранилище колод
+     */
     private final Long existUser = 987654321L;
+    /**
+     * Хранилище колод пользователей
+     */
     private UserDecksData userDecksData;
+    /**
+     * Команда для удаления колоды
+     */
     private DeleteDeckCommand deleteDeckCommand;
 
     @BeforeEach
@@ -23,14 +31,14 @@ class DeleteDeckCommandTest {
     }
 
     /**
-     * тест на корректных данных
+     * Тест на корректных данных
      */
     @Test
     void testExistingDeck() {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("DelDeck");
 
-        String ans = deleteDeckCommand.execution(decks, new String[]{"DelDeck"});
+        String ans = deleteDeckCommand.execute(decks, new String[]{"DelDeck"});
         Assertions.assertEquals("Колода DelDeck была успешно удалена", ans);
     }
 
@@ -41,7 +49,7 @@ class DeleteDeckCommandTest {
     void testEmptyDeckList() {
         DeckManager decks = userDecksData.getUserDecks(existUser);
 
-        String ans = deleteDeckCommand.execution(decks, new String[]{"MyDeck"});
+        String ans = deleteDeckCommand.execute(decks, new String[]{"MyDeck"});
         Assertions.assertEquals("Колода с именем MyDeck не существует в менеджере", ans);
     }
 }

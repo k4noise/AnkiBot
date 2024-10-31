@@ -33,7 +33,7 @@ public class CommandManager {
      * @param nameCommand название команды (начинается с "/")
      * @return экземпляр команды
      */
-    public Command getCommand(String nameCommand) {
+    public Command getByName(String nameCommand) {
         if (commands.containsKey(nameCommand))
             return commands.get(nameCommand);
         throw new IllegalArgumentException("Команда " + nameCommand + " не распознана");
@@ -44,25 +44,25 @@ public class CommandManager {
      *
      * @param chatId Идентификатор чата телеграма
      * @param text   Сообщение пользователя
-     * @return сообщение об успешном выполнении команды или об ошибке
+     * @return сообщение с результатом выполнения команды
      */
-    public String execution(Long chatId, String text) {
-        ParserMessageCommand partsMessage = new ParserMessageCommand(text);
+    public String execute(Long chatId, String text) {
+        MessageProcessor partsMessage = new MessageProcessor(text);
         //добавление менеджера колод новому пользователю
         if (!userDecksData.containsUser(chatId))
             userDecksData.addUser(chatId);
         //поиск класса введенной команды
         Command command;
         try {
-            command = getCommand(partsMessage.nameCommand());
+            command = getByName(partsMessage.getCommandName());
         } catch (IllegalArgumentException e) {
             return e.getMessage();
         }
         //проверка параметров
-        String[] paramsCommand = partsMessage.paramsCommand();
+        String[] paramsCommand = partsMessage.getCommandParams();
         if (checkParameters(command, paramsCommand)) {
             //Выполнение команды
-            return command.execution(userDecksData.getUserDecks(chatId), paramsCommand);
+            return command.execute(userDecksData.getUserDecks(chatId), paramsCommand);
         }
         return "Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)";
     }
@@ -76,7 +76,7 @@ public class CommandManager {
      * @return Достаточно ли количества параметров для запуска команды
      */
     private boolean checkParameters(Command command, String[] paramsCommand) {
-        int correctCountParams = command.getCountParams();
+        int correctCountParams = command.getParamsCount();
         return (paramsCommand == null && correctCountParams == 0) ||
                 (paramsCommand != null && paramsCommand.length >= correctCountParams);
     }

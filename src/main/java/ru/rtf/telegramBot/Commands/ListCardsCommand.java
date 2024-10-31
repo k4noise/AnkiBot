@@ -7,9 +7,10 @@ import ru.rtf.telegramBot.Command;
 import java.util.NoSuchElementException;
 
 /**
- * Выводит список всех карт колоды
+ * Команда для отображения всех карт конкретной колоды
+ * <p>/list_cards <название колоды></p>
  */
-public class ListCardsCommands implements Command {
+public class ListCardsCommand implements Command {
 
     /**
      * Количество параметров команды
@@ -18,7 +19,7 @@ public class ListCardsCommands implements Command {
     public final int COUNT_PARAMS = 1;
 
     @Override
-    public String execution(DeckManager usersDecks, String[] params) {
+    public String execute(DeckManager usersDecks, String[] params) {
         //обработка параметров
         String deckName = params[0];
 
@@ -36,7 +37,7 @@ public class ListCardsCommands implements Command {
     }
 
     @Override
-    public int getCountParams() {
+    public int getParamsCount() {
         return COUNT_PARAMS;
     }
 }
