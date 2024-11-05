@@ -15,6 +15,7 @@ public class Deck {
     private final String name;
     /**
      * Карты колоды, где ключ - термин карты, значение - сама карта
+     * Термин карты хранится в нижнем регистре для обеспечения регистронезависимости при получении карты
      */
     private final Map<String, Card> cards;
 
@@ -85,7 +86,7 @@ public class Deck {
      */
     public void addCard(String term, String definition) {
         validateUnique(term);
-        cards.put(term, new Card(term, definition));
+        cards.put(term.toLowerCase(), new Card(term, definition));
     }
 
     /**
@@ -95,8 +96,9 @@ public class Deck {
      * @throws IllegalArgumentException Карта с таким термином существует в колоде
      */
     public void addCard(Card card) {
-        validateUnique(card.getTerm());
-        cards.put(card.getTerm(), card);
+        String term = card.getTerm();
+        validateUnique(term);
+        cards.put(term.toLowerCase(), card);
     }
 
     /**
@@ -112,9 +114,9 @@ public class Deck {
         validateExists(oldTerm);
         validateUnique(newTerm);
 
-        Card oldCard = cards.get(oldTerm);
-        cards.remove(oldTerm);
-        cards.put(newTerm, oldCard.changeTerm(newTerm));
+        Card oldCard = cards.get(oldTerm.toLowerCase());
+        cards.remove(oldTerm.toLowerCase());
+        cards.put(newTerm.toLowerCase(), oldCard.changeTerm(newTerm));
     }
 
     /**
@@ -126,7 +128,7 @@ public class Deck {
      */
     public void updateCardDefinition(String term, String newDefinition) {
         validateExists(term);
-        cards.get(term).changeDefinition(newDefinition);
+        cards.get(term.toLowerCase()).changeDefinition(newDefinition);
     }
 
     /**
@@ -137,7 +139,7 @@ public class Deck {
      */
     public Card getCard(String term) {
         validateExists(term);
-        return cards.get(term);
+        return cards.get(term.toLowerCase());
     }
 
     /**
@@ -157,7 +159,7 @@ public class Deck {
      */
     public void removeCard(String term) {
         validateExists(term);
-        cards.remove(term);
+        cards.remove(term.toLowerCase());
     }
 
     /**
@@ -198,7 +200,7 @@ public class Deck {
      * @throws IllegalArgumentException Карта с таким термином существует в колоде
      */
     private void validateUnique(String term) {
-        if (cards.containsKey(term))
+        if (cards.containsKey(term.toLowerCase()))
             throw new IllegalArgumentException("Карта с термином " + term + " существует в колоде");
 
     }
@@ -210,7 +212,7 @@ public class Deck {
      * @throws NoSuchElementException Карта с таким термином не существует в колоде
      */
     private void validateExists(String term) {
-        if (!cards.containsKey(term))
+        if (!cards.containsKey(term.toLowerCase()))
             throw new NoSuchElementException("Карта с термином " + term + " не существует в колоде");
     }
 }
