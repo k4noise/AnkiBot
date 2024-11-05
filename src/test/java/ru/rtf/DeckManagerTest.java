@@ -66,6 +66,22 @@ class DeckManagerTest {
     }
 
     /**
+     * Тестирование регистронезависимости метода {@link DeckManager#addDeck}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при добавлении колоды с существующим именем")
+    void testAddDeckWithDuplicateNameIgnoreCase() {
+        String deckName = "Deck";
+        deckManager.addDeck(deckName);
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> deckManager.addDeck(deckName.toUpperCase()),
+                "Колода с существующим именем не может быть добавлена"
+        );
+    }
+
+    /**
      * Тестирование метода {@link DeckManager#removeDeck} на корректных данных
      */
     @Test
@@ -98,7 +114,21 @@ class DeckManagerTest {
     }
 
     /**
-     * Тестирование метода {@link DeckManager#getDeck}
+     * Тестирование регистронезависимости метода {@link DeckManager#removeDeck}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при удалении созданной колоды")
+    void testRemoveDeckIgnoreCase() {
+        String deckName = "Deck";
+        deckManager.addDeck(deckName);
+        deckManager.removeDeck(deckName.toUpperCase());
+        Collection<Deck> decks = deckManager.getDecks();
+
+        Assertions.assertTrue(decks.isEmpty(), "Не должно быть сохраненных колод в менеджере");
+    }
+
+    /**
+     * Тестирование метода {@link DeckManager#getDeck} на уникальных данных
      */
     @Test
     @DisplayName("Получение созданной колоды")
@@ -115,7 +145,7 @@ class DeckManagerTest {
     }
 
     /**
-     * Тестирование метода {@link DeckManager#getDeck}
+     * Тестирование метода {@link DeckManager#getDeck} на отсутствующих данных
      */
     @Test
     @DisplayName("Получение несуществующей колоды")
@@ -128,6 +158,23 @@ class DeckManagerTest {
                 NoSuchElementException.class,
                 () -> deckManager.getDeck(wrongDeckName),
                 "Невозможно получить не сохраненную в менеджере колод колоду"
+        );
+    }
+
+    /**
+     * Тестирование регистронезависимости метода {@link DeckManager#getDeck}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости получения созданной колоды")
+    void testGetDeckIgnoreCase() {
+        String deckName = "Deck";
+        deckManager.addDeck(deckName);
+
+        Deck deck = deckManager.getDeck(deckName.toUpperCase());
+        Assertions.assertEquals(
+                deckName,
+                deck.getName(),
+                "Колода должна иметь имя, указанное при создании"
         );
     }
 
@@ -163,8 +210,8 @@ class DeckManagerTest {
         String deckName = "Deck";
         deckManager.addDeck(deckName);
         String newDeckName = deckName + '1';
-        deckManager.updateDeckName(deckName, newDeckName);
 
+        deckManager.updateDeckName(deckName, newDeckName);
         Deck deck = deckManager.getDeck(newDeckName);
 
         Assertions.assertThrows(NoSuchElementException.class,
@@ -208,5 +255,26 @@ class DeckManagerTest {
                 () -> deckManager.updateDeckName(deckName, newDeckName),
                 "Невозможно изменить имя, так как оно уже используется другой колодой"
         );
+    }
+
+    /**
+     * Тестирование регистронезависимости метода {@link DeckManager#updateDeckName}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при изменении имени у созданной колоды")
+    void testUpdateNameDeckIgnoreCase() {
+        String deckName = "Deck";
+        deckManager.addDeck(deckName);
+        String newDeckName = deckName + '1';
+
+        deckManager.updateDeckName(deckName.toUpperCase(), newDeckName);
+        Deck deck = deckManager.getDeck(newDeckName);
+
+        Assertions.assertThrows(NoSuchElementException.class,
+                () -> deckManager.getDeck(deckName),
+                "Невозможно получить колоду по старому имени"
+        );
+        Assertions.assertNotEquals(deckName, deck.getName(), "Колода не должна иметь старое имя");
+        Assertions.assertEquals(newDeckName, deck.getName(), "Колода должна иметь новое имя");
     }
 }
