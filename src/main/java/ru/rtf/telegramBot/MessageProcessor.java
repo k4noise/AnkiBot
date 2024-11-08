@@ -3,9 +3,9 @@ package ru.rtf.telegramBot;
 import java.util.Arrays;
 
 /**
- * Обработка сообщения пользователя
+ * Обработчик сообщений пользователя
  */
-public class ParserMessageCommand {
+public class MessageProcessor {
     /**
      * Хранит в себе составляющие сообщения
      */
@@ -16,28 +16,28 @@ public class ParserMessageCommand {
      *
      * @param text Сообщение пользователя
      */
-    public ParserMessageCommand(String text) {
+    public MessageProcessor(String text) {
         messageParts = parseUsersMessage(text);
     }
 
     /**
-     * Вернуть имя команды
-     * всегда должно стоять первым в сообщении
+     * <p>Вернуть имя команды</p>
+     * <p>всегда должно стоять первым в сообщении</p>
      *
      * @return имя команды
      */
-    public String nameCommand() {
+    public String getCommandName() {
         if (messageParts == null || messageParts.length == 0)
             return null;
         return messageParts[0];
     }
 
     /**
-     * Возвращает массив параметров для команды без ее названия
+     * Возвращает массив параметров команды без ее названия
      *
-     * @return массив параметров для команды
+     * @return массив параметров команды
      */
-    public String[] paramsCommand() {
+    public String[] getCommandParams() {
         if (messageParts == null || messageParts.length <= 1)
             return null;
         return Arrays.copyOfRange(messageParts, 1, messageParts.length);
@@ -49,7 +49,7 @@ public class ParserMessageCommand {
      * @param text сообщение пользователя
      * @return массив слов
      */
-    public String[] parseUsersMessage(String text) {
+    String[] parseUsersMessage(String text) {
         if (text == null || text.isEmpty() || text.trim().isEmpty())
             return null;
 

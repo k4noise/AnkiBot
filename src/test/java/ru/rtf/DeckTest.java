@@ -1,6 +1,7 @@
 package ru.rtf;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +15,15 @@ import java.util.NoSuchElementException;
  * @since 22.10.2024
  */
 class DeckTest {
+    /**
+     * Экземпляр колоды
+     */
+    private Deck deck;
+
+    @BeforeEach
+    void createDeck() {
+        deck = new Deck("Deck");
+    }
 
     /**
      * Тестирование конструктора {@link Deck} на корректных данных
@@ -21,10 +31,7 @@ class DeckTest {
     @Test
     @DisplayName("Корректная инициализация колоды")
     void testDeckCorrectInit() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-
-        Assertions.assertEquals(deckName, deck.getName(), "Колода не может быть создана без имени");
+        Assertions.assertEquals("Deck", deck.getName(), "Колода должна быть создана с указанным именем");
     }
 
     /**
@@ -33,12 +40,15 @@ class DeckTest {
     @Test
     @DisplayName("Некорректная инициализация колоды")
     void testDeckIncorrectInit() {
-        String deckName = "";
-
-        Assertions.assertThrows(
+        IllegalArgumentException exception = Assertions.assertThrows(
                 IllegalArgumentException.class,
-                () -> new Deck(deckName),
+                () -> new Deck(""),
                 "Создание колоды с пустым именем невозможно"
+        );
+        Assertions.assertEquals(
+                "Имя колоды не может быть пустым",
+                exception.getMessage(),
+                "Невозможно создать колоду с пустым именем"
         );
     }
 
@@ -48,14 +58,7 @@ class DeckTest {
     @Test
     @DisplayName("Получение имени колоды")
     void testGetName() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-
-        Assertions.assertEquals(
-                deckName,
-                deck.getName(),
-                "Имя колоды должно соответствовать первоначальному имени"
-        );
+        Assertions.assertEquals("Deck", deck.getName(), "Имя колоды должно соответствовать первоначальному имени");
     }
 
     /**
@@ -64,19 +67,15 @@ class DeckTest {
     @Test
     @DisplayName("Изменение имени колоды")
     void testChangeName() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
         deck.addCard("term", "definition");
-
-        String newDeckName = deckName + '1';
-        Deck deckWithNewName = deck.updateName(newDeckName);
+        Deck deckWithNewName = deck.updateName("Deck1");
 
         Assertions.assertEquals(
-                deckName,
+                "Deck",
                 deck.getName(),
                 "Имя у первоначального экземпляра колоды не должно измениться"
         );
-        Assertions.assertNotEquals(deck, deckWithNewName, "Колоды не могут быть равные, так как термин разный");
+        Assertions.assertNotEquals(deck, deckWithNewName, "Колоды не могут быть равными, так как термин разный");
         Assertions.assertEquals(deck.getCardsDescription(),
                 deckWithNewName.getCardsDescription(),
                 "Все карты должны сохраняться"
@@ -84,38 +83,29 @@ class DeckTest {
     }
 
     /**
-     * Тестирование метода {@link Deck#getCardsCount()}
+     * Тестирование метода {@link Deck#getCardsCount}
      */
     @Test
     @DisplayName("Получение количества карт в колоде")
     void testCardCount() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-
-        Assertions.assertEquals(0, deck.getCardsCount(), "Колода должна быть пустой");
         deck.addCard("term", "definition");
         Assertions.assertEquals(1, deck.getCardsCount(), "В колоде должна быть только одна карта");
     }
 
     /**
-     * Тестирование метода {@link Deck#addCard} с корректными данными
+     * Тестирование метода {@link Deck#addCard} и {@link Deck#getCard}
      */
     @Test
-    @DisplayName("Добавление карты в колоду")
-    void testCorrectAddCard() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-        int deckInitCardsCount = deck.getCardsCount();
-        String term = "term", definition = "definition";
-        deck.addCard(term, definition);
+    @DisplayName("Добавление и получение карты из колоды")
+    void testAddGetCard() {
+        deck.addCard("term", "definition");
 
-        Card card = deck.getCard(term);
-        Assertions.assertEquals(term, card.getTerm(), "Термин должен соответствовать указанному при создании");
-        Assertions.assertEquals(definition,
+        Card card = deck.getCard("term");
+        Assertions.assertEquals("term", card.getTerm(), "Термин должен соответствовать указанному при создании");
+        Assertions.assertEquals("definition",
                 card.getDefinition(),
                 "Определение должен соответствовать указанному при создании"
         );
-        Assertions.assertEquals(deckInitCardsCount + 1, deck.getCardsCount(), "Должна добавиться только одна карта");
     }
 
     /**
@@ -124,18 +114,32 @@ class DeckTest {
     @Test
     @DisplayName("Повторное добавление карты в колоду")
     void testAddRepeatCard() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-        String term = "term", definition = "definition";
-        deck.addCard(term, definition);
+        deck.addCard("term", "definition");
         int deckCardsCount = deck.getCardsCount();
 
-        Assertions.assertThrows(
+        IllegalArgumentException exception = Assertions.assertThrows(
                 IllegalArgumentException.class,
-                () -> deck.addCard(term, definition),
+                () -> deck.addCard("term", "definition"),
                 "Добавление карты с существующим термином невозможно"
         );
+        Assertions.assertEquals("Карта с термином term существует в колоде", exception.getMessage());
         Assertions.assertEquals(deckCardsCount, deck.getCardsCount(), "Количество карт не должно измениться");
+    }
+
+    /**
+     * Тестирование регистронезависимости метода {@link Deck#addCard}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при добавлении карты в колоду")
+    void testCorrectAddCardIgnoreCase() {
+        deck.addCard("term", "definition");
+
+        IllegalArgumentException exception = Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> deck.addCard("TERM", "definition"),
+                "Добавление карты с существующим термином невозможно"
+        );
+        Assertions.assertEquals("Карта с термином TERM существует в колоде", exception.getMessage());
     }
 
     /**
@@ -144,15 +148,10 @@ class DeckTest {
     @Test
     @DisplayName("Добавление экземпляра карты в колоду")
     void testAddCardInstance() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-        int deckInitCardsCount = deck.getCardsCount();
-        String term = "term", definition = "definition";
-        Card card = new Card(term, definition);
+        Deck deck = new Deck("Deck");
+        Card card = new Card("term", "definition");
         deck.addCard(card);
-
-        Assertions.assertEquals(card, deck.getCard(term), "Карта не должна измениться при добавлении");
-        Assertions.assertEquals(deckInitCardsCount + 1, deck.getCardsCount(), "Должна добавиться только одна карта");
+        Assertions.assertEquals(card, deck.getCard("term"), "Карта не должна измениться при добавлении");
     }
 
     /**
@@ -161,19 +160,33 @@ class DeckTest {
     @Test
     @DisplayName("Добавление дубля экземпляра карты в колоду")
     void testAddCardRepeatInstance() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-        String term = "term", definition = "definition";
-        Card card = new Card(term, definition);
+        Deck deck = new Deck("Deck");
+        Card card = new Card("term", "definition");
         deck.addCard(card);
-        int deckCardsCount = deck.getCardsCount();
 
-        Assertions.assertThrows(
+        IllegalArgumentException exception = Assertions.assertThrows(
                 IllegalArgumentException.class,
                 () -> deck.addCard(card),
                 "Повторное добавление карты запрещено"
         );
-        Assertions.assertEquals(deckCardsCount, deck.getCardsCount(), "Количество карт не должно измениться");
+        Assertions.assertEquals("Карта с термином term существует в колоде", exception.getMessage());
+    }
+
+    /**
+     * Тестирование регистронезависимости перегрузки метода {@link Deck#addCard}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при добавлении экземпляра карты в колоду")
+    void testAddCardInstanceIgnoreCase() {
+        Card card = new Card("TERM", "definition");
+        deck.addCard(card);
+
+        IllegalArgumentException exception = Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> deck.addCard(card),
+                "Повторное добавление карты запрещено"
+        );
+        Assertions.assertEquals("Карта с термином TERM существует в колоде", exception.getMessage());
     }
 
     /**
@@ -182,24 +195,17 @@ class DeckTest {
     @Test
     @DisplayName("Изменение термина у карты")
     void testUpdateCardTerm() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-        String term = "term", definition = "definition";
-        Card card = new Card(term, definition);
+        Card card = new Card("term", "definition");
         deck.addCard(card);
-        int deckCardsCount = deck.getCardsCount();
 
-        String newTerm = term + '1';
-        deck.updateCardTerm(term, newTerm);
+        deck.updateCardTerm("term", "newTerm");
 
-        Assertions.assertThrows(
+        NoSuchElementException exception = Assertions.assertThrows(
                 NoSuchElementException.class,
-                () -> deck.getCard(term),
+                () -> deck.getCard("term"),
                 "Старый экземпляр карты не должен существовать"
         );
-        Assertions.assertNotEquals(card, deck.getCard(newTerm), "Экземпляр карты должен измениться");
-        Assertions.assertEquals(definition, deck.getCard(newTerm).getDefinition(), "Определение должно сохраниться");
-        Assertions.assertEquals(deckCardsCount, deck.getCardsCount(), "Количество карт в колоде не должно измениться");
+        Assertions.assertEquals("Карта с термином term не существует в колоде", exception.getMessage());
     }
 
     /**
@@ -208,22 +214,14 @@ class DeckTest {
     @Test
     @DisplayName("Изменение термина у отсутствующей карты")
     void testUpdateNonExistentCardTerm() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-        String term = "term", definition = "definition";
-        Card card = new Card(term, definition);
-        deck.addCard(card);
-        int deckCardsCount = deck.getCardsCount();
+        Deck deck = new Deck("Deck");
 
-        String newTerm = term + '1';
-        deck.updateCardTerm(term, newTerm);
-
-        Assertions.assertThrows(
+        NoSuchElementException exception = Assertions.assertThrows(
                 NoSuchElementException.class,
-                () -> deck.updateCardTerm(term, newTerm),
+                () -> deck.updateCardTerm("term", "newTerm"),
                 "Невозможно изменить термин у отсутствующей карты"
         );
-        Assertions.assertEquals(deckCardsCount, deck.getCardsCount(), "Количество карт в колоде не должно измениться");
+        Assertions.assertEquals("Карта с термином term не существует в колоде", exception.getMessage());
     }
 
     /**
@@ -232,21 +230,28 @@ class DeckTest {
     @Test
     @DisplayName("Изменение термина у карты на повторный")
     void testUpdateCardRepeatTerm() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-        String term = "term", definition = "definition";
-        String newTerm = term + '1';
-        Card card = new Card(term, definition);
-        deck.addCard(card);
-        deck.addCard(newTerm, definition);
-        int deckCardsCount = deck.getCardsCount();
+        deck.addCard("term", "definition");
+        deck.addCard("newTerm", "definition");
 
-        Assertions.assertThrows(
+        IllegalArgumentException exception = Assertions.assertThrows(
                 IllegalArgumentException.class,
-                () -> deck.updateCardTerm(term, newTerm),
+                () -> deck.updateCardTerm("term", "newTerm"),
                 "Невозможно изменить термин на повторный"
         );
-        Assertions.assertEquals(deckCardsCount, deck.getCardsCount(), "Количество карт в колоде не должно измениться");
+        Assertions.assertEquals("Карта с термином newTerm существует в колоде", exception.getMessage());
+    }
+
+    /**
+     * Тестирование регистронезависимости метода {@link Deck#updateCardTerm}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при изменении термина у карты")
+    void testUpdateCardTermIgnoreCase() {
+        Card card = new Card("term", "definition");
+        deck.addCard(card);
+        deck.updateCardTerm("TERM", "newTerm");
+
+        Assertions.assertEquals("definition", deck.getCard("newTerm").getDefinition(), "Определение должно сохраниться");
     }
 
     /**
@@ -255,18 +260,12 @@ class DeckTest {
     @Test
     @DisplayName("Изменение определения у карты")
     void testUpdateCardDefinition() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-        String term = "term", definition = "definition";
-        Card card = new Card(term, definition);
-        deck.addCard(card);
+        deck.addCard("term", "definition");
 
-        String newDefinition = definition + '1';
-        deck.updateCardDefinition(term, newDefinition);
-        Card updatedCard = deck.getCard(term);
+        deck.updateCardDefinition("term", "newDefinition");
+        Card updatedCard = deck.getCard("term");
 
-        Assertions.assertEquals(card, updatedCard, "Экземпляр карты не должен измениться");
-        Assertions.assertEquals(card.getDefinition(), updatedCard.getDefinition(), "Определение должно было измениться");
+        Assertions.assertEquals("newDefinition", updatedCard.getDefinition(), "Определение должно было измениться");
     }
 
     /**
@@ -275,34 +274,27 @@ class DeckTest {
     @Test
     @DisplayName("Изменение определения у отсутствующей карты")
     void testUpdateCardNonExistentDefinition() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-        String term = "term", definition = "definition";
-        String newDefinition = definition + '1';
+        Deck deck = new Deck("Deck");
 
-
-        Assertions.assertThrows(
+        NoSuchElementException exception = Assertions.assertThrows(
                 NoSuchElementException.class,
-                () -> deck.updateCardDefinition(term, newDefinition),
-                "Невозможно изменить определение у отстутствующей карты"
+                () -> deck.updateCardDefinition("term", "newDefinition"),
+                "Невозможно изменить определение у отсутствующей карты"
         );
+        Assertions.assertEquals("Карта с термином term не существует в колоде", exception.getMessage());
     }
 
     /**
-     * Тестирование метода {@link Deck#getCard} на существующих данных
+     * Тестирование регистронезависимости метода {@link Deck#updateCardDefinition}
      */
     @Test
-    @DisplayName("Получение карты")
-    void testGetCard() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-        String term = "term", definition = "definition";
-        Card card = new Card(term, definition);
+    @DisplayName("Проверка регистронезависимости при изменении определения у карты")
+    void testUpdateCardDefinitionIgnoreCase() {
+        Card card = new Card("term", "definition");
         deck.addCard(card);
+        deck.updateCardDefinition("TERM", "newDefinition");
 
-        Card actualCard = deck.getCard(term);
-
-        Assertions.assertEquals(card, actualCard, "Карты должны быть одинаковыми");
+        Assertions.assertEquals("newDefinition", deck.getCard("term").getDefinition(), "Определение должно было измениться");
     }
 
     /**
@@ -311,15 +303,25 @@ class DeckTest {
     @Test
     @DisplayName("Получение отсутствующей карты")
     void testGetNonExistentCard() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-        String term = "term";
-
-        Assertions.assertThrows(
+        NoSuchElementException exception = Assertions.assertThrows(
                 NoSuchElementException.class,
-                () -> deck.getCard(term),
+                () -> deck.getCard("term"),
                 "Невозможно получить данные отсутствующей карты"
         );
+        Assertions.assertEquals("Карта с термином term не существует в колоде", exception.getMessage());
+    }
+
+    /**
+     * Тестирование регистронезависимости метода {@link Deck#getCard}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при получении карты")
+    void testGetCardIgnoreCase() {
+        Card card = new Card("term", "definition");
+        deck.addCard(card);
+
+        Card actualCard = deck.getCard("TERM");
+        Assertions.assertEquals(card, actualCard, "Карты должны быть одинаковыми");
     }
 
     /**
@@ -328,42 +330,11 @@ class DeckTest {
     @Test
     @DisplayName("Получение всех карт")
     void testGetCards() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-
-        Assertions.assertEquals(0, deck.getCards().size(), "В колоде не должно быть карт");
-
-        String term = "term", definition = "definition";
-        Card card = new Card(term, definition);
+        Card card = new Card("term", "definition");
         deck.addCard(card);
 
         Assertions.assertEquals(1, deck.getCards().size(), "Должна быть добавлена карта");
         Assertions.assertEquals(card, deck.getCards().iterator().next(), "Карта должна находиться в колоде");
-    }
-
-    /**
-     * Тестирование метода {@link Deck#hashCode}
-     */
-    @Test
-    @DisplayName("Сравнение хешей колод")
-    void testHashCode() {
-        String deckName = "Deck";
-        String anotherDeckName = deckName + '1';
-        Deck deck1 = new Deck(deckName);
-        Deck deck2 = new Deck(deckName);
-        Deck deck3 = new Deck(anotherDeckName);
-
-        Assertions.assertEquals(
-                deck1.hashCode(),
-                deck2.hashCode(),
-                "Хеши колод с одинаковым именем должны быть равны"
-        );
-
-        Assertions.assertNotEquals(
-                deck2.hashCode(),
-                deck3.hashCode(),
-                "Хеши колод с разными именами должны быть разными"
-        );
     }
 
     /**
@@ -372,18 +343,16 @@ class DeckTest {
     @Test
     @DisplayName("Удаление карты")
     void testRemoveCard() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
         String term = "term", definition = "definition";
         deck.addCard(term, definition);
-
         deck.removeCard(term);
 
-        Assertions.assertThrows(
+        NoSuchElementException exception = Assertions.assertThrows(
                 NoSuchElementException.class,
                 () -> deck.getCard(term),
                 "Удаленная карта не должна существовать в колоде после ее удаления"
         );
+        Assertions.assertEquals("Карта с термином term не существует в колоде", exception.getMessage());
     }
 
     /**
@@ -397,36 +366,71 @@ class DeckTest {
         String term = "term";
 
 
-        Assertions.assertThrows(
+        NoSuchElementException exception = Assertions.assertThrows(
                 NoSuchElementException.class,
                 () -> deck.removeCard(term),
                 "Невозможно удалить отсутствующую карту"
         );
+        Assertions.assertEquals("Карта с термином term не существует в колоде", exception.getMessage());
     }
 
     /**
-     * Тестирование метода {@link Deck#getCardsDescription()}
+     * Тестирование регистронезависимости метода {@link Deck#removeCard}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при удалении карты")
+    void testRemoveCardIgnoreCase() {
+        deck.addCard("term", "definition");
+
+        deck.removeCard("TERM");
+        NoSuchElementException exception = Assertions.assertThrows(
+                NoSuchElementException.class,
+                () -> deck.getCard("term"),
+                "Удаленная карта не должна существовать в колоде после ее удаления"
+        );
+        Assertions.assertEquals("Карта с термином term не существует в колоде", exception.getMessage());
+    }
+
+    /**
+     * Тестирование метода {@link Deck#getCardsDescription}
      */
     @Test
     @DisplayName("Получение определений карт")
     void testGetCardsDescription() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
         List<Card> cards = List.of(new Card("a", "a"),
-                new Card("b", "b"),
-                new Card("c", "c")
+                new Card("b", "b")
         );
-
-        StringBuilder sb = new StringBuilder();
-        for (Card card : cards) {
-            deck.addCard(card);
-            sb.append(card).append("\n");
-        }
+        cards.forEach(card -> deck.addCard(card));
 
         Assertions.assertEquals(
-                sb.toString(),
+                """
+                        "a" = a
+                        "b" = b
+                        """,
                 deck.getCardsDescription(),
                 "Должно быть описание всех карт колоды без изменения их порядка"
+        );
+    }
+
+    /**
+     * Тестирование метода {@link Deck#hashCode}
+     */
+    @Test
+    @DisplayName("Сравнение хешей колод")
+    void testHashCode() {
+        Deck deck2 = new Deck("Deck");
+        Deck deck3 = new Deck("anotherDeckName");
+
+        Assertions.assertEquals(
+                deck.hashCode(),
+                deck2.hashCode(),
+                "Хеши колод с одинаковым именем должны быть равны"
+        );
+
+        Assertions.assertNotEquals(
+                deck2.hashCode(),
+                deck3.hashCode(),
+                "Хеши колод с разными именами должны быть разными"
         );
     }
 
@@ -436,14 +440,11 @@ class DeckTest {
     @Test
     @DisplayName("Сравнение колод")
     void testEquals() {
-        String deckName = "Deck";
-        String anotherDeckName = deckName + '1';
-        Deck deck1 = new Deck(deckName);
-        Deck deck2 = new Deck(deckName);
-        Deck deck3 = new Deck(anotherDeckName);
+        Deck deck2 = new Deck("Deck");
+        Deck deck3 = new Deck("anotherDeckName");
 
-        Assertions.assertEquals(deck1, deck2, "Колоды с одинаковым именем должны быть равны");
-        Assertions.assertNotEquals(deck1, deck3, "Колоды с разными именами не должны быть равны");
+        Assertions.assertEquals(deck, deck2, "Колоды с одинаковым именем должны быть равны");
+        Assertions.assertNotEquals(deck, deck3, "Колоды с разными именами не должны быть равны");
     }
 
     /**
@@ -452,15 +453,10 @@ class DeckTest {
     @Test
     @DisplayName("Превращение колоды в строку")
     void testToString() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-
-        Assertions.assertEquals(String.format("%s: 0 карт", deckName), deck.toString(), "Колода не должна содержать карты");
-
         String term = "term", definition = "definition";
         Card card = new Card(term, definition);
         deck.addCard(card);
 
-        Assertions.assertEquals(String.format("%s: 1 карт", deckName), deck.toString(), "Колода не должна содержать карты");
+        Assertions.assertEquals("Deck: 1 карт", deck.toString(), "Колода не должна содержать карты");
     }
 }

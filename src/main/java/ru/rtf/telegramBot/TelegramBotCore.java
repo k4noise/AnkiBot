@@ -68,7 +68,7 @@ public class TelegramBotCore extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             Message message = update.getMessage();
             Long chatId = message.getChatId();
-            String messageResultExecution = commandHandlerManager.execution(chatId, message.getText());
+            String messageResultExecution = commandHandlerManager.execute(chatId, message.getText());
             sendMessage(chatId, messageResultExecution);
         }
     }

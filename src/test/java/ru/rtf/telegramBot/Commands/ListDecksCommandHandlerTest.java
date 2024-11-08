@@ -7,11 +7,20 @@ import org.junit.jupiter.api.Assertions;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
- * Тесты для команды просмотра имеющихся у пользователя колод
+ * Тест обработчика команды отображения колод пользователя
  */
 public class ListDecksCommandHandlerTest {
+    /**
+     * id пользователя, для которого было инициализировано хранилище колод
+     */
     private final Long existUser = 987654321L;
+    /**
+     * Хранилище колод пользователей
+     */
     private UserDecksData userDecksData;
+    /**
+     * Обработчик команды для отображения колод
+     */
     private ListDecksCommandHandler listDecksCommandHandler;
 
 
@@ -26,9 +35,9 @@ public class ListDecksCommandHandlerTest {
      * Тест на пустом списке колод
      */
     @Test
-    void testExecutionWithNoDecksEmpty() {
+    void testExecuteWithNoDecksEmpty() {
         // попытка выполнить команду
-        String ans = listDecksCommandHandler.execution(userDecksData.getUserDecks(existUser), null);
+        String ans = listDecksCommandHandler.execute(userDecksData.getUserDecks(existUser), null);
 
         // Проверка, что отправляется корректное сообщение
         Assertions.assertEquals("У Вас пока нет ни одной колоды, создайте первую /create_deck <название>", ans);
@@ -38,14 +47,14 @@ public class ListDecksCommandHandlerTest {
      * Тест на непустом списке колод
      */
     @Test
-    void testExecutionWithDecks() {
+    void testExecuteWithDecks() {
 
         DeckManager deckManager = userDecksData.getUserDecks(existUser);
         deckManager.addDeck("first");
         deckManager.addDeck("second");
 
         // попытка выполнить команду
-        String ans = listDecksCommandHandler.execution(deckManager, null);
+        String ans = listDecksCommandHandler.execute(deckManager, null);
 
         Assertions.assertEquals("""
                 Ваши колоды:

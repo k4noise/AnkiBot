@@ -22,29 +22,23 @@ class DeckManagerTest {
     private DeckManager deckManager;
 
     /**
-     * Создание нового экземпляра тестируемого класса для каждого теста
+     * Создание нового экземпляра менеджера колод и добавление колоды для каждого теста
      */
     @BeforeEach
     void setUp() {
         deckManager = new DeckManager();
+        deckManager.addDeck("Deck");
     }
 
     /**
-     * Тестирование метода {@link DeckManager#addDeck} на уникальных данных
+     * Тестирование метода {@link DeckManager#addDeck} и {@link DeckManager#getDeck}
      */
     @Test
-    @DisplayName("Добавление новой колоды")
-    void testAddDeck() {
-        String deckName = "Deck";
-        deckManager.addDeck(deckName);
-
-        Collection<Deck> decks = deckManager.getDecks();
-
-        Assertions.assertFalse(decks.isEmpty());
-        Assertions.assertEquals(1, decks.size(), "Должна быть сохранена только одна колода в менеджере");
+    @DisplayName("Добавление и получение новой колоды")
+    void testAddGetDeck() {
         Assertions.assertEquals(
-                deckName,
-                deckManager.getDeck(deckName).getName(),
+                "Deck",
+                deckManager.getDeck("Deck").getName(),
                 "Имя колоды должно соответствовать изначальному"
         );
     }
@@ -55,14 +49,26 @@ class DeckManagerTest {
     @Test
     @DisplayName("Добавление колоды с существующим именем")
     void testAddDeckWithDuplicateName() {
-        String deckName = "Deck";
-        deckManager.addDeck(deckName);
-
-        Assertions.assertThrows(
+        IllegalArgumentException exception = Assertions.assertThrows(
                 IllegalArgumentException.class,
-                () -> deckManager.addDeck(deckName),
+                () -> deckManager.addDeck("Deck"),
                 "Колода с существующим именем не может быть добавлена"
         );
+        Assertions.assertEquals("Колода с именем Deck существует в менеджере", exception.getMessage());
+    }
+
+    /**
+     * Тестирование регистронезависимости метода {@link DeckManager#addDeck}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при добавлении колоды с существующим именем")
+    void testAddDeckWithDuplicateNameIgnoreCase() {
+        IllegalArgumentException exception = Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> deckManager.addDeck("DECK"),
+                "Колода с существующим именем не может быть добавлена"
+        );
+        Assertions.assertEquals("Колода с именем DECK существует в менеджере", exception.getMessage());
     }
 
     /**
@@ -71,9 +77,7 @@ class DeckManagerTest {
     @Test
     @DisplayName("Удаление созданной колоды")
     void testRemoveDeck() {
-        String deckName = "Deck";
-        deckManager.addDeck(deckName);
-        deckManager.removeDeck(deckName);
+        deckManager.removeDeck("Deck");
         Collection<Deck> decks = deckManager.getDecks();
 
         Assertions.assertTrue(decks.isEmpty(), "Не должно быть сохраненных колод в менеджере");
@@ -86,48 +90,65 @@ class DeckManagerTest {
     @Test
     @DisplayName("Удаление несуществующей колоды")
     void testRemoveNonExistentDeck() {
-        String deckName = "Deck";
-        String wrongDeckName = deckName + '1';
-        deckManager.addDeck(deckName);
-
-        Assertions.assertThrows(
+        NoSuchElementException exception = Assertions.assertThrows(
                 NoSuchElementException.class,
-                () -> deckManager.removeDeck(wrongDeckName),
+                () -> deckManager.removeDeck("wrongDeckName"),
                 "Невозможно удалить не сохраненную в менеджере колод колоду"
         );
+        Assertions.assertEquals("Колода с именем wrongDeckName не существует в менеджере", exception.getMessage());
     }
 
     /**
-     * Тестирование метода {@link DeckManager#getDeck}
+     * Тестирование регистронезависимости метода {@link DeckManager#removeDeck}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при удалении созданной колоды")
+    void testRemoveDeckIgnoreCase() {
+        deckManager.removeDeck("DECK");
+        Collection<Deck> decks = deckManager.getDecks();
+
+        Assertions.assertTrue(decks.isEmpty(), "Не должно быть сохраненных колод в менеджере");
+    }
+
+    /**
+     * Тестирование метода {@link DeckManager#getDeck} на уникальных данных
      */
     @Test
     @DisplayName("Получение созданной колоды")
     void testGetDeck() {
-        String deckName = "Deck";
-        deckManager.addDeck(deckName);
-
-        Deck deck = deckManager.getDeck(deckName);
+        Deck deck = deckManager.getDeck("Deck");
         Assertions.assertEquals(
-                deckName,
+                "Deck",
                 deck.getName(),
-                "Колода должна иметь имя, указанное при создании"
+                "Колода с именем Deck существует в менеджере"
         );
     }
 
     /**
-     * Тестирование метода {@link DeckManager#getDeck}
+     * Тестирование метода {@link DeckManager#getDeck} на отсутствующих данных
      */
     @Test
     @DisplayName("Получение несуществующей колоды")
     void testGetNonExistentDeck() {
-        String deckName = "Deck";
-        String wrongDeckName = deckName + '1';
-        deckManager.addDeck(deckName);
-
-        Assertions.assertThrows(
+        NoSuchElementException exception = Assertions.assertThrows(
                 NoSuchElementException.class,
-                () -> deckManager.getDeck(wrongDeckName),
+                () -> deckManager.getDeck("wrongDeckName"),
                 "Невозможно получить не сохраненную в менеджере колод колоду"
+        );
+        Assertions.assertEquals("Колода с именем wrongDeckName не существует в менеджере", exception.getMessage());
+    }
+
+    /**
+     * Тестирование регистронезависимости метода {@link DeckManager#getDeck}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости получения созданной колоды")
+    void testGetDeckIgnoreCase() {
+        Deck deck = deckManager.getDeck("DECK");
+        Assertions.assertEquals(
+                "Deck",
+                deck.getName(),
+                "Колода должна иметь имя, указанное при создании"
         );
     }
 
@@ -137,6 +158,7 @@ class DeckManagerTest {
     @Test
     @DisplayName("Получение созданных колод")
     void testGetDecks() {
+        deckManager.removeDeck("Deck");
         List<String> deckNames = List.of("Deck1", "Deck2");
         deckNames.forEach(deckName -> deckManager.addDeck(deckName));
         Collection<Deck> decks = deckManager.getDecks();
@@ -146,11 +168,10 @@ class DeckManagerTest {
                 decks.size(),
                 "Количество созданных колод должно совпадать с количеством полученных колод"
         );
-        Assertions.assertTrue(
-                deckNames.stream().allMatch(deckName ->
-                        decks.stream().anyMatch(deck -> deck.getName().equals(deckName))
-                ),
-                "Все созданные колоды должны присутствовать в списке полученных колод"
+        Assertions.assertIterableEquals(
+                deckNames,
+                deckManager.getDecks().stream().map(Deck::getName).toList(),
+                "Созданные колоды должны совпадать с полученными"
         );
     }
 
@@ -160,19 +181,16 @@ class DeckManagerTest {
     @Test
     @DisplayName("Изменение имени у созданной колоды")
     void testUpdateNameDeck() {
-        String deckName = "Deck";
-        deckManager.addDeck(deckName);
-        String newDeckName = deckName + '1';
-        deckManager.updateDeckName(deckName, newDeckName);
+        deckManager.updateDeckName("Deck", "Deck1");
+        Deck deck = deckManager.getDeck("Deck1");
 
-        Deck deck = deckManager.getDeck(newDeckName);
-
-        Assertions.assertThrows(NoSuchElementException.class,
-                () -> deckManager.getDeck(deckName),
+        NoSuchElementException exception = Assertions.assertThrows(
+                NoSuchElementException.class,
+                () -> deckManager.getDeck("wrongDeckName"),
                 "Невозможно получить колоду по старому имени"
         );
-        Assertions.assertNotEquals(deckName, deck.getName(), "Колода не должна иметь старое имя");
-        Assertions.assertEquals(newDeckName, deck.getName(), "Колода должна иметь новое имя");
+        Assertions.assertEquals("Колода с именем wrongDeckName не существует в менеджере", exception.getMessage());
+        Assertions.assertEquals("Deck1", deck.getName(), "Колода должна иметь новое имя");
     }
 
 
@@ -182,14 +200,12 @@ class DeckManagerTest {
     @Test
     @DisplayName("Изменение имени у несуществующей колоды")
     void testUpdateNonExistentDeckName() {
-        String deckName = "Deck";
-        String newDeckName = deckName + '1';
-
-        Assertions.assertThrows(
+        NoSuchElementException exception = Assertions.assertThrows(
                 NoSuchElementException.class,
-                () -> deckManager.updateDeckName(deckName, newDeckName),
+                () -> deckManager.updateDeckName("Deck1", "newDeckName"),
                 "Невозможно изменить имя у несуществующей колоды"
         );
+        Assertions.assertEquals("Колода с именем Deck1 не существует в менеджере", exception.getMessage());
     }
 
     /**
@@ -198,15 +214,25 @@ class DeckManagerTest {
     @Test
     @DisplayName("Изменение имени у колоды на повторяющееся")
     void testUpdateExistentDeckName() {
-        String deckName = "Deck";
-        String newDeckName = deckName + '1';
-        deckManager.addDeck(deckName);
-        deckManager.addDeck(newDeckName);
+        deckManager.addDeck("newDeckName");
 
-        Assertions.assertThrows(
+        IllegalArgumentException exception = Assertions.assertThrows(
                 IllegalArgumentException.class,
-                () -> deckManager.updateDeckName(deckName, newDeckName),
+                () -> deckManager.updateDeckName("Deck", "newDeckName"),
                 "Невозможно изменить имя, так как оно уже используется другой колодой"
         );
+        Assertions.assertEquals("Колода с именем newDeckName существует в менеджере", exception.getMessage());
+    }
+
+    /**
+     * Тестирование регистронезависимости метода {@link DeckManager#updateDeckName}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при изменении имени у созданной колоды")
+    void testUpdateNameDeckIgnoreCase() {
+        deckManager.updateDeckName("DECK", "Deck1");
+        Deck deck = deckManager.getDeck("Deck1");
+
+        Assertions.assertEquals("Deck1", deck.getName(), "Колода должна иметь новое имя");
     }
 }

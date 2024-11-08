@@ -18,7 +18,7 @@ public class ListDecksCommandHandler implements CommandHandler {
     public final int COUNT_PARAMS = 0;
 
     @Override
-    public String execution(DeckManager usersDecks, String[] params) {
+    public String execute(DeckManager usersDecks, String[] params) {
 
         //сообщение пользователю о выполнении
         if (usersDecks.getDecks().isEmpty())
@@ -27,7 +27,7 @@ public class ListDecksCommandHandler implements CommandHandler {
     }
 
     @Override
-    public int getCountParams() {
+    public int getParamsCount() {
         return COUNT_PARAMS;
     }
 

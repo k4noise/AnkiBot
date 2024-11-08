@@ -7,17 +7,28 @@ import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
- * Тест команды вывод карт колоды
+ * Тест команды редактирования карты в колоде
  */
 public class ListCardsCommandsHandlerTest {
+
+    /**
+     * id пользователя, для которого было инициализировано хранилище колод
+     */
     private final Long existUser = 987654321L;
+    /**
+     * Хранилище колод пользователей
+     */
     private UserDecksData userDecksData;
+    /**
+     * Команда для отображения всех карт в колоде
+     */
     private ListCardsCommandsHandler listCardsCommandsHandler;
 
     @BeforeEach
     void setUp() {
         userDecksData = new UserDecksData();
         userDecksData.addUser(existUser);
+
         listCardsCommandsHandler = new ListCardsCommandsHandler();
     }
 
@@ -31,7 +42,8 @@ public class ListCardsCommandsHandlerTest {
         decks.getDeck("Deck").addCard("term1", "def 1");
         decks.getDeck("Deck").addCard("term2", "def 2");
         decks.getDeck("Deck").addCard("term3", "def 3");
-        String ans = listCardsCommandsHandler.execution(decks, new String[]{"Deck"});
+
+        String ans = listCardsCommandsHandler.execute(decks, new String[]{"Deck"});
         Assertions.assertEquals("""
                 Deck:
                 "term1" = def 1
@@ -48,7 +60,8 @@ public class ListCardsCommandsHandlerTest {
 
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Deck");
-        String ans = listCardsCommandsHandler.execution(decks, new String[]{"Deck"});
+
+        String ans = listCardsCommandsHandler.execute(decks, new String[]{"Deck"});
 
         Assertions.assertEquals("Deck:\n" +
                 "В этой колоде пока нет карточек", ans);
@@ -60,7 +73,7 @@ public class ListCardsCommandsHandlerTest {
     @Test
     void testIncorrectDeck() {
 
-        String ans = listCardsCommandsHandler.execution(userDecksData.getUserDecks(existUser), new String[]{"Deck"});
+        String ans = listCardsCommandsHandler.execute(userDecksData.getUserDecks(existUser), new String[]{"Deck"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""

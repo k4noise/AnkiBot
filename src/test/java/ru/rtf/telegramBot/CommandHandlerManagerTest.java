@@ -32,7 +32,7 @@ class CommandHandlerManagerTest {
      */
     @Test
     void testReturnsCorrectCommand() {
-        CommandHandler startCommandHandler = commandHandlerManager.getCommand("/start");
+        CommandHandler startCommandHandler = commandHandlerManager.getByName("/start");
         Assertions.assertNotNull(startCommandHandler);
         Assertions.assertTrue(startCommandHandler instanceof StartCommandHandler);
     }
@@ -44,7 +44,7 @@ class CommandHandlerManagerTest {
     void testUnknownCommand() {
         IllegalArgumentException exception = Assertions.assertThrows(
                 IllegalArgumentException.class,
-                () -> commandHandlerManager.getCommand("/unknown")
+                () -> commandHandlerManager.getByName("/unknown")
         );
         Assertions.assertEquals("Команда /unknown не распознана", exception.getMessage());
     }
@@ -58,7 +58,7 @@ class CommandHandlerManagerTest {
         userDecksData.addUser(chatId);
         DeckManager decks = userDecksData.getUserDecks(chatId);
         decks.addDeck("old name");
-        String res = commandHandlerManager.execution(chatId, "/rename_deck old name:=new name");
+        String res = commandHandlerManager.execute(chatId, "/rename_deck old name:=new name");
         Assertions.assertEquals("Колода успешно переименована: old name -> new name", res);
     }
 
@@ -68,7 +68,7 @@ class CommandHandlerManagerTest {
     @Test
     void testNoCorrectCountParams() {
         Long chatId = 123456789L;
-        String res = commandHandlerManager.execution(chatId, "/rename_deck old name:=");
+        String res = commandHandlerManager.execute(chatId, "/rename_deck old name:=");
         Assertions.assertEquals("Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)", res);
     }
 
@@ -80,12 +80,12 @@ class CommandHandlerManagerTest {
     @Test
     void createDeckAndPrintDecksTest() {
         Long chatId = 123456789L;
-        String messageToUserEmpty = commandHandlerManager.execution(chatId, "/list_decks");
+        String messageToUserEmpty = commandHandlerManager.execute(chatId, "/list_decks");
         Assertions.assertEquals("У Вас пока нет ни одной колоды, создайте первую /create_deck <название>",
                 messageToUserEmpty);
-        commandHandlerManager.execution(chatId, "/create_deck First Deck");
-        commandHandlerManager.execution(chatId, "/create_deck Another");
-        String messageToUserListDeck = commandHandlerManager.execution(chatId, "/list_decks");
+        commandHandlerManager.execute(chatId, "/create_deck First Deck");
+        commandHandlerManager.execute(chatId, "/create_deck Another");
+        String messageToUserListDeck = commandHandlerManager.execute(chatId, "/list_decks");
         Assertions.assertEquals("""
                 Ваши колоды:
                 First Deck: 0 карт
@@ -98,13 +98,13 @@ class CommandHandlerManagerTest {
     @Test
     void renameDeckTest() {
         Long chatId = 123456789L;
-        commandHandlerManager.execution(chatId, "/create_deck wrong name");
-        String messageToUserListDeck = commandHandlerManager.execution(chatId, "/list_decks");
+        commandHandlerManager.execute(chatId, "/create_deck wrong name");
+        String messageToUserListDeck = commandHandlerManager.execute(chatId, "/list_decks");
         Assertions.assertEquals("""
                 Ваши колоды:
                 wrong name: 0 карт""", messageToUserListDeck);
-        commandHandlerManager.execution(chatId, "/rename_deck wrong name := correct name");
-        String anotherMessageToUser = commandHandlerManager.execution(chatId, "/list_decks");
+        commandHandlerManager.execute(chatId, "/rename_deck wrong name := correct name");
+        String anotherMessageToUser = commandHandlerManager.execute(chatId, "/list_decks");
         Assertions.assertEquals("""
                 Ваши колоды:
                 correct name: 0 карт""", anotherMessageToUser);
@@ -116,10 +116,10 @@ class CommandHandlerManagerTest {
     @Test
     void deleteDeckTest() {
         Long chatId = 15461521L;
-        commandHandlerManager.execution(chatId, "/create_deck DelName");
-        commandHandlerManager.execution(chatId, "/create_deck AnotherName");
-        commandHandlerManager.execution(chatId, "/delete_deck DelName");
-        String messageToUserListDecks = commandHandlerManager.execution(chatId, "/list_decks");
+        commandHandlerManager.execute(chatId, "/create_deck DelName");
+        commandHandlerManager.execute(chatId, "/create_deck AnotherName");
+        commandHandlerManager.execute(chatId, "/delete_deck DelName");
+        String messageToUserListDecks = commandHandlerManager.execute(chatId, "/list_decks");
         Assertions.assertEquals("""
                 Ваши колоды:
                 AnotherName: 0 карт""", messageToUserListDecks);
@@ -131,14 +131,14 @@ class CommandHandlerManagerTest {
     @Test
     void createCardAndPrintCardsTest() {
         Long chatId = 15461521L;
-        commandHandlerManager.execution(chatId, "/create_deck SomeDeck");
-        String messageToUserListCards = commandHandlerManager.execution(chatId, "/list_cards SomeDeck");
+        commandHandlerManager.execute(chatId, "/create_deck SomeDeck");
+        String messageToUserListCards = commandHandlerManager.execute(chatId, "/list_cards SomeDeck");
         Assertions.assertEquals("""
                 SomeDeck:
                 В этой колоде пока нет карточек""", messageToUserListCards);
-        commandHandlerManager.execution(chatId, "/create_card SomeDeck: first = first def");
-        commandHandlerManager.execution(chatId, "/create_card SomeDeck: second = second def");
-        String messageToUserListCardsWithCards = commandHandlerManager.execution(chatId, "/list_cards SomeDeck");
+        commandHandlerManager.execute(chatId, "/create_card SomeDeck: first = first def");
+        commandHandlerManager.execute(chatId, "/create_card SomeDeck: second = second def");
+        String messageToUserListCardsWithCards = commandHandlerManager.execute(chatId, "/list_cards SomeDeck");
         Assertions.assertEquals("""
                 SomeDeck:
                 "first" = first def
@@ -152,21 +152,21 @@ class CommandHandlerManagerTest {
     @Test
     void deleteCardTest() {
         Long chatId = 15461521L;
-        commandHandlerManager.execution(chatId, "/create_deck SomeDeck");
-        commandHandlerManager.execution(chatId, "/create_card SomeDeck: first = first def");
-        commandHandlerManager.execution(chatId, "/create_card SomeDeck: second = second def");
+        commandHandlerManager.execute(chatId, "/create_deck SomeDeck");
+        commandHandlerManager.execute(chatId, "/create_card SomeDeck: first = first def");
+        commandHandlerManager.execute(chatId, "/create_card SomeDeck: second = second def");
 
-        String messageFindCard = commandHandlerManager.execution(chatId, "/list_card SomeDeck: first");
+        String messageFindCard = commandHandlerManager.execute(chatId, "/list_card SomeDeck: first");
         Assertions.assertEquals("\"first\" = first def", messageFindCard);
 
-        commandHandlerManager.execution(chatId, "/delete_card SomeDeck: first");
+        commandHandlerManager.execute(chatId, "/delete_card SomeDeck: first");
 
-        String messageNoFindCard = commandHandlerManager.execution(chatId, "/list_card SomeDeck: first");
+        String messageNoFindCard = commandHandlerManager.execute(chatId, "/list_card SomeDeck: first");
         Assertions.assertEquals("""
                 Ошибка выполнения команды. Подробности:
                 Карта с термином first не существует в колоде""", messageNoFindCard);
 
-        String messageToUserListCards = commandHandlerManager.execution(chatId, "/list_cards SomeDeck");
+        String messageToUserListCards = commandHandlerManager.execute(chatId, "/list_cards SomeDeck");
         Assertions.assertEquals("""
                 SomeDeck:
                 "second" = second def
@@ -179,15 +179,15 @@ class CommandHandlerManagerTest {
     @Test
     void editCardDefAndPrintCardTest() {
         Long chatId = 15461521L;
-        commandHandlerManager.execution(chatId, "/create_deck SomeDeck");
-        commandHandlerManager.execution(chatId, "/create_card SomeDeck: first = first def");
-        commandHandlerManager.execution(chatId, "/create_card SomeDeck: second = second def");
-        String messageFirstCard = commandHandlerManager.execution(chatId, "/list_card SomeDeck: first");
+        commandHandlerManager.execute(chatId, "/create_deck SomeDeck");
+        commandHandlerManager.execute(chatId, "/create_card SomeDeck: first = first def");
+        commandHandlerManager.execute(chatId, "/create_card SomeDeck: second = second def");
+        String messageFirstCard = commandHandlerManager.execute(chatId, "/list_card SomeDeck: first");
         Assertions.assertEquals("\"first\" = first def", messageFirstCard);
 
         //изменение определения
-        commandHandlerManager.execution(chatId, "/edit_card_def SomeDeck: first = another def");
-        String messageFirstCardWithAnotherDef = commandHandlerManager.execution(chatId,
+        commandHandlerManager.execute(chatId, "/edit_card_def SomeDeck: first = another def");
+        String messageFirstCardWithAnotherDef = commandHandlerManager.execute(chatId,
                 "/list_card SomeDeck: first");
         Assertions.assertEquals("\"first\" = another def", messageFirstCardWithAnotherDef);
     }
@@ -198,17 +198,17 @@ class CommandHandlerManagerTest {
     @Test
     void editCardTermAndPrintCardTest() {
         Long chatId = 15461521L;
-        commandHandlerManager.execution(chatId, "/create_deck SomeDeck");
-        commandHandlerManager.execution(chatId, "/create_card SomeDeck: first = first def");
-        commandHandlerManager.execution(chatId, "/create_card SomeDeck: second = second def");
+        commandHandlerManager.execute(chatId, "/create_deck SomeDeck");
+        commandHandlerManager.execute(chatId, "/create_card SomeDeck: first = first def");
+        commandHandlerManager.execute(chatId, "/create_card SomeDeck: second = second def");
 
         //изменение термина
-        commandHandlerManager.execution(chatId, "/edit_card_term SomeDeck: second = last");
-        String messageCardWithAnotherTerm = commandHandlerManager.execution(chatId,
+        commandHandlerManager.execute(chatId, "/edit_card_term SomeDeck: second = last");
+        String messageCardWithAnotherTerm = commandHandlerManager.execute(chatId,
                 "/list_card SomeDeck: last");
         Assertions.assertEquals("\"last\" = second def", messageCardWithAnotherTerm);
         //обращение к старому значению
-        String messageCardWithOldTerm = commandHandlerManager.execution(chatId,
+        String messageCardWithOldTerm = commandHandlerManager.execute(chatId,
                 "/list_card SomeDeck: second");
         Assertions.assertEquals("""
                 Ошибка выполнения команды. Подробности:

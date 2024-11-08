@@ -1,20 +1,29 @@
 package ru.rtf.telegramBot.Commands;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.UserDecksData;
-import org.junit.jupiter.api.Assertions;
-
 
 /**
- * Тесты для команды создание новой колоды
+ * Тест обработчика команды создания новой колоды
  */
 class CreateDeckCommandHandlerTest {
 
-    private UserDecksData userDecksData;
-    private CreateDeckCommandHandler createDeckCommandHandler;
+    /**
+     * id пользователя, для которого было инициализировано хранилище колод
+     */
     private final Long existUser = 987654321L;
+    /**
+     * Хранилище колод пользователей
+     */
+    private UserDecksData userDecksData;
+    /**
+     * Обработчик команды для создания новой колоды
+     */
+    private CreateDeckCommandHandler createDeckCommandHandler;
+
 
     @BeforeEach
     void setUp() {
@@ -29,7 +38,7 @@ class CreateDeckCommandHandlerTest {
     @Test
     void testSimpleAddDeck() {
         DeckManager decks = userDecksData.getUserDecks(existUser);
-        String ans = createDeckCommandHandler.execution(decks, new String[]{"Deck"});
+        String ans = createDeckCommandHandler.execute(decks, new String[]{"Deck"});
 
         Assertions.assertEquals(1, decks.getDecks().size());
         Assertions.assertEquals("Колода Deck успешно добавлена", ans);
@@ -43,7 +52,7 @@ class CreateDeckCommandHandlerTest {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("name");
 
-        String ans = createDeckCommandHandler.execution(decks, new String[]{"name"});
+        String ans = createDeckCommandHandler.execute(decks, new String[]{"name"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""

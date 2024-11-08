@@ -7,11 +7,16 @@ import java.util.NoSuchElementException;
 
 /**
  * Менеджер управления колодами пользователя
+ * <p>Для работы с картами колоды следует получить экземпляр колоды через метод {@link DeckManager#getDeck}</p>
  *
  * @author k4noise
  * @since 21.10.2024
  */
 public class DeckManager {
+    /**
+     * Колоды менеджера, где ключ - имя колоды, значение - сама колода
+     * Имя колоды хранится в нижнем регистре для обеспечения регистронезависимости при получении колоды
+     */
     private final Map<String, Deck> decks;
 
     /**
@@ -26,56 +31,52 @@ public class DeckManager {
      * Колода может быть создана, если имя колоды не используется другими колодами
      *
      * @param name Имя новой колоды
-     * @throws IllegalArgumentException Колода с таким именем уже существует
+     * @throws IllegalArgumentException Колода с именем name существует в менеджере
      */
     public void addDeck(String name) {
         validateUnique(name);
-        decks.put(name, new Deck(name));
+        decks.put(name.toLowerCase(), new Deck(name));
     }
 
     /**
      * Получить колоду из менеджера с указанным именем
      *
-     * @return Найденная колода
-     * @throws NoSuchElementException Колоды с таким именем не существует
+     * @throws NoSuchElementException Колода с именем name не существует в менеджере
      */
     public Deck getDeck(String name) {
         validateExists(name);
-        return decks.get(name);
+        return decks.get(name.toLowerCase());
     }
 
     /**
      * Изменить имя колоды
-     * Имя изменяется в менеджере колод и внутри самой колоды
+     * <p>Имя изменяется в менеджере колод и внутри самой колоды</p>
      *
      * @param oldName Старое имя колоды
      * @param newName Новое имя колоды
-     * @throws NoSuchElementException   Колоды с таким именем не существует
-     * @throws IllegalArgumentException Колода с таким именем уже существует
+     * @throws NoSuchElementException   Колода с именем name не существует в менеджере
+     * @throws IllegalArgumentException Колода с именем name существует в менеджере
      */
     public void updateDeckName(String oldName, String newName) {
         validateExists(oldName);
         validateUnique(newName);
 
-        Deck deck = decks.remove(oldName);
-        decks.put(newName, deck.updateName(newName));
+        Deck deck = decks.remove(oldName.toLowerCase());
+        decks.put(newName.toLowerCase(), deck.updateName(newName));
     }
 
     /**
-     * Удалить колоду из менеджера
+     * Удалить колоду из менеджера по имени
      *
-     * @param name Имя колоды для удаления
-     * @throws NoSuchElementException Колоды с таким именем не существует
+     * @throws NoSuchElementException Колода с именем name не существует в менеджере
      */
     public void removeDeck(String name) {
         validateExists(name);
-        decks.remove(name);
+        decks.remove(name.toLowerCase());
     }
 
     /**
      * Получить все колоды из менеджера
-     *
-     * @return Все сохраненные колоды
      */
     public Collection<Deck> getDecks() {
         return decks.values();
@@ -84,22 +85,20 @@ public class DeckManager {
     /**
      * Проверяет менеджер на уникальность колоды по имени
      *
-     * @param name Имя колоды
-     * @throws IllegalArgumentException Колода с таким именем существует в менеджере
+     * @throws IllegalArgumentException Колода с именем name существует в менеджере
      */
     private void validateUnique(String name) {
-        if (decks.containsKey(name))
+        if (decks.containsKey(name.toLowerCase()))
             throw new IllegalArgumentException("Колода с именем " + name + " существует в менеджере");
     }
 
     /**
      * Проверяет менеджер на существование колоды по имени
      *
-     * @param name Имя колоды
-     * @throws NoSuchElementException Колода с таким именем не существует в менеджере
+     * @throws NoSuchElementException Колода с именем name не существует в менеджере
      */
     private void validateExists(String name) {
-        if (!decks.containsKey(name))
+        if (!decks.containsKey(name.toLowerCase()))
             throw new NoSuchElementException("Колода с именем " + name + " не существует в менеджере");
     }
 }

@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Обработчик команды удаления карты из колоды
+ * <p>/delete_card название колоды : термин</p>
  */
 public class DeleteCardCommandHandler implements CommandHandler {
 
@@ -18,7 +19,7 @@ public class DeleteCardCommandHandler implements CommandHandler {
     private final int COUNT_PARAMS = 2;
 
     @Override
-    public String execution(DeckManager usersDecks, String[] params) {
+    public String execute(DeckManager usersDecks, String[] params) {
         String deckName = params[0];
         String term = params[1];
 
@@ -34,7 +35,7 @@ public class DeleteCardCommandHandler implements CommandHandler {
     }
 
     @Override
-    public int getCountParams() {
+    public int getParamsCount() {
         return COUNT_PARAMS;
     }
 }

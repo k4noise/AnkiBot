@@ -9,7 +9,9 @@ import ru.rtf.DeckManager;
  * Тесты для класса связи пользователей и их колод
  */
 class UserDecksDataTest {
-
+    /**
+     * Хранилище колод пользователей
+     */
     private UserDecksData userDecksData;
 
     @BeforeEach
@@ -18,7 +20,7 @@ class UserDecksDataTest {
     }
 
     /**
-     * user при добавлении должен сохраняться в userDecksData
+     * User при добавлении должен сохраняться в userDecksData
      */
     @Test
     void testAddUser() {
@@ -30,7 +32,7 @@ class UserDecksDataTest {
     }
 
     /**
-     * автоматическое создание deckManager вместе с пользователем
+     * Автоматическое создание deckManager вместе с пользователем
      */
     @Test
     void testCreatesNewDeckManager() {
@@ -42,7 +44,7 @@ class UserDecksDataTest {
     }
 
     /**
-     * возвращает null для не добавленного пользователя
+     * Возвращает null для не добавленного пользователя
      */
     @Test
     void testDecksForNonExistingUser() {

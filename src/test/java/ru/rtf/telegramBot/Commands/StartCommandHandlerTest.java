@@ -6,9 +6,13 @@ import org.junit.jupiter.api.Test;
 import ru.rtf.DeckManager;
 
 /**
- * Тестирования команды старт. Приветственное сообщение
+ * Тест обработчика команды инициализации пользователя
  */
 public class StartCommandHandlerTest {
+
+    /**
+     * Команда для инициализации пользователя
+     */
     private StartCommandHandler startCommandHandler;
 
     @BeforeEach
@@ -21,7 +25,7 @@ public class StartCommandHandlerTest {
      */
     @Test
     void testCorrectHelloText() {
-        String ans = startCommandHandler.execution(new DeckManager(),null);
+        String ans = startCommandHandler.execute(new DeckManager(),null);
         Assertions.assertEquals("Добро пожаловать в AnkiBot. Введите команду /help, " +
                 "чтобы посмотреть доступные команды", ans);
     }

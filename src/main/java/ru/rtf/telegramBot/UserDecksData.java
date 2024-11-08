@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Класс для хранения соответствий между пользователями и их колодами
+ * Хранилище колод пользователей
  */
 public class UserDecksData {
     /**
@@ -14,6 +14,9 @@ public class UserDecksData {
      */
     private final Map<Long, DeckManager> userDecks;
 
+    /**
+     * Инициализировать хранилище колод
+     */
     public UserDecksData() {
         userDecks = new HashMap<>();
     }

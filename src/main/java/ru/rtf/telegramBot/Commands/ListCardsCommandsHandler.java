@@ -19,7 +19,7 @@ public class ListCardsCommandsHandler implements CommandHandler {
     public final int COUNT_PARAMS = 1;
 
     @Override
-    public String execution(DeckManager usersDecks, String[] params) {
+    public String execute(DeckManager usersDecks, String[] params) {
         //обработка параметров
         String deckName = params[0];
 
@@ -37,7 +37,7 @@ public class ListCardsCommandsHandler implements CommandHandler {
     }
 
     @Override
-    public int getCountParams() {
+    public int getParamsCount() {
         return COUNT_PARAMS;
     }
 }

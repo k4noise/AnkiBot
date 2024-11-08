@@ -1,7 +1,9 @@
 package ru.rtf;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 /**
  * Класс для тестирования класса карт
  */
@@ -23,12 +25,13 @@ public class CardTest {
                 IllegalArgumentException.class, () -> new Card("term", ""), "Карта с пустым определением не может быть создана"
         );
     }
+
     /**
      * Проверка работы геттеров - термин
      */
     @Test
     @DisplayName("работа метода get() для термина")
-    void testGetTerm(){
+    void testGetTerm() {
         Card card = new Card("cat", "кошка");
         String actualTerm = card.getTerm();
         Assertions.assertEquals("cat", actualTerm,
@@ -40,18 +43,19 @@ public class CardTest {
      */
     @Test
     @DisplayName("работа метода get() для определения")
-    void testGetDefinition(){
+    void testGetDefinition() {
         Card card = new Card("fish", "рыба");
         String actualDefinition = card.getDefinition();
         Assertions.assertEquals("рыба", actualDefinition,
                 "Возвращаемое определение не совпадает с заданным");
     }
+
     /**
      * Создание карты из существующей с новым термином и старым определением
      */
     @Test
     @DisplayName("изменение термина (новая карта)")
-    void testChangeTerm(){
+    void testChangeTerm() {
         Card originalCard = new Card("hero", "person who kill people");
         Card changedCard = originalCard.changeTerm("villain");
         Assertions.assertNotEquals(originalCard, changedCard,
@@ -61,12 +65,13 @@ public class CardTest {
         Assertions.assertEquals("villain", changedCard.getTerm(),
                 "Термин должен совпадать с переданным значением");
     }
+
     /**
      * Изменение определения
      */
     @Test
     @DisplayName("изменение определения")
-    void testChangeDefinition(){
+    void testChangeDefinition() {
         Card card = new Card("hero", "person who kill people");
         Card changedCard = new Card(card.getTerm(), card.getDefinition());
         changedCard.changeDefinition("person who saves people");
@@ -77,12 +82,13 @@ public class CardTest {
         Assertions.assertEquals("person who saves people", changedCard.getDefinition(),
                 "Определение должно совпадать с переданным значением");
     }
+
     /**
      * Проверка корректности сравнения
      */
     @Test
     @DisplayName("Сравнение карт")
-    void testEquals(){
+    void testEquals() {
         Card exCard = new Card("term", "definition");
         Card actCard1 = new Card("term", "definition");
         Card actCard2 = new Card("term", "else");
@@ -94,12 +100,13 @@ public class CardTest {
         Assertions.assertNotEquals(exCard, actCard3,
                 "Карты с разными терминами не могут совпадать");
     }
+
     /**
      * Проверка хеш кода
      */
     @Test
     @DisplayName("хеш код")
-    void testHashCode(){
+    void testHashCode() {
         Card exCard = new Card("term", "definition");
         Card actCard1 = new Card("term", "definition");
         Card actCard2 = new Card("term", "else");
@@ -117,7 +124,7 @@ public class CardTest {
      */
     @Test
     @DisplayName("Строковое представление")
-    void testToString(){
+    void testToString() {
         Card card = new Card("commit", "фиксация изменений");
         Assertions.assertEquals("\"commit\" = фиксация изменений", card.toString(),
                 "строковое представление не совпадает с ожидаемым");

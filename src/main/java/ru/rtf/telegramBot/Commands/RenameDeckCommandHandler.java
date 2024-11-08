@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Обработчик команды переименования колоды
+ * <p>/rename_deck старое название := новое название</p>
  */
 public class RenameDeckCommandHandler implements CommandHandler {
 
@@ -18,7 +19,7 @@ public class RenameDeckCommandHandler implements CommandHandler {
     private final int COUNT_PARAMS = 2;
 
     @Override
-    public String execution(DeckManager usersDecks, String[] params) {
+    public String execute(DeckManager usersDecks, String[] params) {
         //обработка параметров
         String oldDeckName = params[0];
         String newDeckName = params[1];
@@ -34,7 +35,7 @@ public class RenameDeckCommandHandler implements CommandHandler {
     }
 
     @Override
-    public int getCountParams() {
+    public int getParamsCount() {
         return COUNT_PARAMS;
     }
 }

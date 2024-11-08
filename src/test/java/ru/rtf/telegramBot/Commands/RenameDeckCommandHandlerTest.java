@@ -7,11 +7,20 @@ import org.junit.jupiter.api.Assertions;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
- * Тесты для команды переименование колоды
+ * Тест обработчика команды переименования колоды
  */
 class RenameDeckCommandHandlerTest {
+    /**
+     * id пользователя, для которого было инициализировано хранилище колод
+     */
     private final Long existUser = 987654321L;
+    /**
+     * Хранилище колод пользователей
+     */
     private UserDecksData userDecksData;
+    /**
+     * Обработчик команды для переименования колоды
+     */
     private RenameDeckCommandHandler renameDeckCommandHandler;
 
     @BeforeEach
@@ -29,7 +38,7 @@ class RenameDeckCommandHandlerTest {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("OldName");
 
-        String ans = renameDeckCommandHandler.execution(decks, new String[]{"OldName", "NewName"});
+        String ans = renameDeckCommandHandler.execute(decks, new String[]{"OldName", "NewName"});
 
         Assertions.assertEquals("Колода успешно переименована: OldName -> NewName", ans);
     }
@@ -42,7 +51,7 @@ class RenameDeckCommandHandlerTest {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Old big Name");
 
-        String ans = renameDeckCommandHandler.execution(decks, new String[]{"Old big Name", "New Name"});
+        String ans = renameDeckCommandHandler.execute(decks, new String[]{"Old big Name", "New Name"});
 
         Assertions.assertEquals("Колода успешно переименована: Old big Name -> New Name", ans);
     }
@@ -51,9 +60,9 @@ class RenameDeckCommandHandlerTest {
      * Тест с пустой коллекцией колод
      */
     @Test
-    void testExecutionWithNoDecks() {
+    void testExecuteWithNoDecks() {
 
-        String ans = renameDeckCommandHandler.execution(userDecksData.getUserDecks(existUser),
+        String ans = renameDeckCommandHandler.execute(userDecksData.getUserDecks(existUser),
                 new String[]{"OldName", "NewName"});
         Assertions.assertEquals("""
                 Ошибка выполнения команды. Подробности:

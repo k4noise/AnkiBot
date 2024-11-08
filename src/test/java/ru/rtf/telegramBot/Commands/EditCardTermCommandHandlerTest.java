@@ -6,9 +6,21 @@ import org.junit.jupiter.api.Test;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.UserDecksData;
 
+/**
+ * Тест обработчика команды редактирования термина карты
+ */
 public class EditCardTermCommandHandlerTest {
+    /**
+     * id пользователя, для которого было инициализировано хранилище колод
+     */
     private final Long existUser = 987654321L;
+    /**
+     * Хранилище колод пользователей
+     */
     private UserDecksData userDecksData;
+    /**
+     * Обработчик команды для редактирования термина карты
+     */
     private EditCardTermCommandHandler editCardTermCommandHandler;
 
     @BeforeEach
@@ -31,7 +43,7 @@ public class EditCardTermCommandHandlerTest {
         decks.getDeck(deckName).addCard(term, definition);
 
         String newTerm = "new term";
-        String ans = editCardTermCommandHandler.execution(decks, new String[]{deckName, term, newTerm});
+        String ans = editCardTermCommandHandler.execute(decks, new String[]{deckName, term, newTerm});
         Assertions.assertEquals("Термин карты был успешно изменен: \"new term\" = def", ans);
     }
 
@@ -43,7 +55,7 @@ public class EditCardTermCommandHandlerTest {
 
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Deck");
-        String ans = editCardTermCommandHandler.execution(decks, new String[]{"Deck", "term", "new term"});
+        String ans = editCardTermCommandHandler.execute(decks, new String[]{"Deck", "term", "new term"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""
@@ -57,7 +69,7 @@ public class EditCardTermCommandHandlerTest {
     @Test
     void testIncorrectDeck() {
 
-        String ans = editCardTermCommandHandler.execution(userDecksData.getUserDecks(existUser),
+        String ans = editCardTermCommandHandler.execute(userDecksData.getUserDecks(existUser),
                 new String[]{"Deck", "term", "new term"});
 
         // Проверяем отправку сообщения об ошибке

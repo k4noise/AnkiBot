@@ -6,9 +6,21 @@ import ru.rtf.DeckManager;
 import org.junit.jupiter.api.Assertions;
 import ru.rtf.telegramBot.UserDecksData;
 
+/**
+ * Тест обработчика команды редактирования карты в колоде
+ */
 public class ListCardCommandHandlerTest {
+    /**
+     * id пользователя, для которого было инициализировано хранилище колод
+     */
     private final Long existUser = 987654321L;
+    /**
+     * Хранилище колод пользователей
+     */
     private UserDecksData userDecksData;
+    /**
+     * Обработчик команды для отображения карты
+     */
     private ListCardCommandHandler listCardCommandHandler;
 
     @BeforeEach
@@ -26,7 +38,7 @@ public class ListCardCommandHandlerTest {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Deck");
         decks.getDeck("Deck").addCard("term", "какое-то описание");
-        String ans = listCardCommandHandler.execution(decks, new String[]{"Deck", "term"});
+        String ans = listCardCommandHandler.execute(decks, new String[]{"Deck", "term"});
         Assertions.assertEquals("\"term\" = какое-то описание", ans);
     }
 
@@ -38,7 +50,7 @@ public class ListCardCommandHandlerTest {
 
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Deck");
-        String ans = listCardCommandHandler.execution(decks, new String[]{"Deck", "term"});
+        String ans = listCardCommandHandler.execute(decks, new String[]{"Deck", "term"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""
@@ -52,7 +64,7 @@ public class ListCardCommandHandlerTest {
     @Test
     void testIncorrectDeck() {
 
-        String ans = listCardCommandHandler.execution(userDecksData.getUserDecks(existUser), new String[]{"Deck", "term"});
+        String ans = listCardCommandHandler.execute(userDecksData.getUserDecks(existUser), new String[]{"Deck", "term"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""

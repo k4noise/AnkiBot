@@ -9,11 +9,20 @@ import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
- * Тесты на редактирование карты в колоде
+ * Тесты обработчика команды редактирования определения карты
  */
 public class EditCardDefCommandHandlerTest {
+    /**
+     * id пользователя, для которого было инициализировано хранилище колод
+     */
     private final Long existUser = 987654321L;
+    /**
+     * Хранилище колод пользователей
+     */
     private UserDecksData userDecksData;
+    /**
+     * Обработчик команды для редактирования определения карты
+     */
     private EditCardDefCommandHandler editCardDefCommandHandler;
 
     @BeforeEach
@@ -38,7 +47,7 @@ public class EditCardDefCommandHandlerTest {
         deck.addCard(term, definition);
         String newDefinition = "new def";
 
-        String ans = editCardDefCommandHandler.execution(decks, new String[]{deckName, term, newDefinition});
+        String ans = editCardDefCommandHandler.execute(decks, new String[]{deckName, term, newDefinition});
         Card modifiedCard = deck.getCard(term);
         Assertions.assertEquals(newDefinition, modifiedCard.getDefinition(), "Определение должно измениться");
         Assertions.assertEquals("Определение карты было успешно изменено: \"term\" = new def", ans);
@@ -52,7 +61,7 @@ public class EditCardDefCommandHandlerTest {
 
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Deck");
-        String ans = editCardDefCommandHandler.execution(decks, new String[]{"Deck", "term", "new def"});
+        String ans = editCardDefCommandHandler.execute(decks, new String[]{"Deck", "term", "new def"});
 
         Assertions.assertEquals("""
                 Ошибка выполнения команды. Подробности:
@@ -65,7 +74,7 @@ public class EditCardDefCommandHandlerTest {
     @Test
     void testIncorrectDeck() {
 
-        String ans = editCardDefCommandHandler.execution(userDecksData.getUserDecks(existUser),
+        String ans = editCardDefCommandHandler.execute(userDecksData.getUserDecks(existUser),
                 new String[]{"Deck", "term", "new def"});
 
         Assertions.assertEquals("""
