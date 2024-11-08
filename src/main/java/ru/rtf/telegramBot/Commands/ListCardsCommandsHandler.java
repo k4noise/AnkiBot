@@ -27,13 +27,13 @@ public class ListCardsCommandsHandler implements CommandHandler {
         //попытка найти колоду
         try {
             deck = usersDecks.getDeck(deckName);
-        } catch (NoSuchElementException | IllegalArgumentException e) {
-            return e.getMessage();
+        } catch (NoSuchElementException e) {
+            return handleDeckError(deckName, false);
         }
         String cardsDescription = deck.getCardsDescription();
-        if(cardsDescription.isEmpty())
+        if (cardsDescription.isEmpty())
             return deckName + ":\n" + "В этой колоде пока нет карточек";
-        return String.format("%s:\n%s",deckName,cardsDescription);
+        return String.format("%s:\n%s", deckName, cardsDescription);
     }
 
     @Override

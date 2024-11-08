@@ -25,8 +25,15 @@ public class DeleteCardCommandHandler implements CommandHandler {
         //попытка удалить карту из колоды
         try {
             usersDecks.getDeck(deckName).removeCard(term);
-        } catch (NoSuchElementException | IllegalArgumentException e) {
-            return e.getMessage();
+        } catch (NoSuchElementException e) {
+            StackTraceElement[] stackTrace = e.getStackTrace();
+            String callingClass = stackTrace.length > 1
+                    ? stackTrace[1].getClassName()
+                    : "Неизвестный класс";
+
+            if(callingClass.equals("ru.rtf.Deck"))
+                return handleCardError(term, deckName, false);
+            return handleDeckError(deckName, false);
         }
         //сообщение пользователю о выполнении
         return String.format("Карта с термином \"%s\" была успешно удалена из колоды %s", term, deckName);

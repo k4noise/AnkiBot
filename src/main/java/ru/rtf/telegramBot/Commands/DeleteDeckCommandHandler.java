@@ -24,8 +24,8 @@ public class DeleteDeckCommandHandler implements CommandHandler {
         //попытка удалить колоду
         try {
             usersDecks.removeDeck(deckName);
-        } catch (NoSuchElementException | IllegalArgumentException e) {
-            return e.getMessage();
+        } catch (NoSuchElementException e) {
+            return handleDeckError(deckName, false);
         }
         //сообщение пользователю о выполнении
         return String.format("Колода %s была успешно удалена", deckName);

@@ -41,7 +41,7 @@ public class ListCardCommandHandlerTest {
         String ans = listCardCommandHandler.execution(decks, new String[]{"Deck", "term"});
 
         // Проверяем отправку сообщения об ошибке
-        Assertions.assertEquals("Карта с термином term не существует в колоде", ans);
+        Assertions.assertEquals("Карта с термином term не существует в колоде Deck", ans);
     }
 
     /**

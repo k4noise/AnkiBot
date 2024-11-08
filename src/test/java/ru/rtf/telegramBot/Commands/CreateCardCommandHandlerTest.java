@@ -43,7 +43,7 @@ public class CreateCardCommandHandlerTest {
         String ans = createCardCommandHandler.execution(deckManager, new String[]{"Deck", "old term", "Hello world"});
 
         // Проверяем отправку сообщения об ошибке
-        Assertions.assertEquals("Карта с термином old term существует в колоде", ans);
+        Assertions.assertEquals("Карта с термином old term уже существует в колоде Deck", ans);
     }
 
     /**

@@ -46,6 +46,6 @@ class CreateDeckCommandHandlerTest {
         String ans = createDeckCommandHandler.execution(decks, new String[]{"name"});
 
         // Проверяем отправку сообщения об ошибке
-        Assertions.assertEquals("Колода с именем name существует в менеджере", ans);
+        Assertions.assertEquals("Колода с именем name уже существует в менеджере", ans);
     }
 }

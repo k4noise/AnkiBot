@@ -54,7 +54,7 @@ public class EditCardDefCommandHandlerTest {
         decks.addDeck("Deck");
         String ans = editCardDefCommandHandler.execution(decks, new String[]{"Deck", "term", "new def"});
 
-        Assertions.assertEquals("Карта с термином term не существует в колоде", ans);
+        Assertions.assertEquals("Карта с термином term не существует в колоде Deck", ans);
     }
 
     /**
