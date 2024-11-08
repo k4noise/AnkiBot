@@ -32,19 +32,8 @@ public class EditCardTermCommandHandler implements CommandHandler {
             userDeck.updateCardTerm(term, newTerm);
             //сообщение пользователю о выполнении
             return String.format("Термин карты был успешно изменен: %s", userDeck.getCard(newTerm).toString());
-        } catch (NoSuchElementException eNoSuch) {
-            // не существует колода или карта
-            StackTraceElement[] stackTrace = eNoSuch.getStackTrace();
-            String callingClass = stackTrace.length > 1
-                    ? stackTrace[1].getClassName()
-                    : "Неизвестный класс";
-
-            if (callingClass.equals("ru.rtf.Deck"))
-                return handleCardError(term, deckName, false);
-            return handleDeckError(deckName, false);
-
-        } catch (IllegalArgumentException eIllegalArg) {
-            return handleCardError(newTerm, deckName, true);
+        } catch (NoSuchElementException | IllegalArgumentException eNoSuch) {
+            return MessageComandError.formatted(eNoSuch.getMessage());
         }
     }
 

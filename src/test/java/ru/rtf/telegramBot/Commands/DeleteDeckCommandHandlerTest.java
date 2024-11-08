@@ -41,6 +41,8 @@ class DeleteDeckCommandHandlerTest {
         DeckManager decks = userDecksData.getUserDecks(existUser);
 
         String ans = deleteDeckCommandHandler.execution(decks, new String[]{"MyDeck"});
-        Assertions.assertEquals("Колода с именем MyDeck не существует в менеджере", ans);
+        Assertions.assertEquals("""
+                Ошибка выполнения команды. Подробности:
+                Колода с именем MyDeck не существует в менеджере""", ans);
     }
 }

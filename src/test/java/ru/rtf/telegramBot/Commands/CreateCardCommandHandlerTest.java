@@ -43,7 +43,9 @@ public class CreateCardCommandHandlerTest {
         String ans = createCardCommandHandler.execution(deckManager, new String[]{"Deck", "old term", "Hello world"});
 
         // Проверяем отправку сообщения об ошибке
-        Assertions.assertEquals("Карта с термином old term уже существует в колоде Deck", ans);
+        Assertions.assertEquals("""
+                Ошибка выполнения команды. Подробности:
+                Карта с термином old term существует в колоде""", ans);
     }
 
     /**
@@ -55,6 +57,8 @@ public class CreateCardCommandHandlerTest {
         String ans = createCardCommandHandler.execution(userDecksData.getUserDecks(existUser), new String[]{"Deck", "term", "Hello world"});
 
         // Проверяем отправку сообщения об ошибке
-        Assertions.assertEquals("Колода с именем Deck не существует в менеджере", ans);
+        Assertions.assertEquals("""
+                Ошибка выполнения команды. Подробности:
+                Колода с именем Deck не существует в менеджере""", ans);
     }
 }

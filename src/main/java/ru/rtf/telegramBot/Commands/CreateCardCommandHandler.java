@@ -24,19 +24,24 @@ public class CreateCardCommandHandler implements CommandHandler {
     public String execution(DeckManager usersDecks, String[] params) {
         String deckName = params[0];
         String term = params[1];
-        Card newCard = new Card(term, params[2]);
+
+        Card newCard;
+        try{
+            newCard = new Card(term, params[2]);
+        }catch (IllegalArgumentException e){
+            return MessageComandError.formatted(e.getMessage());
+        }
 
         //попытка добавить карту в колоду
         try {
             usersDecks.getDeck(deckName).addCard(newCard);
 
-        } catch (NoSuchElementException eNoSuch) {
-            return handleDeckError(deckName, false);
-        } catch (IllegalArgumentException eIllegalArg) {
-            return handleCardError(term, deckName, true);
+        } catch (NoSuchElementException | IllegalArgumentException eNoSuch) {
+            return MessageComandError.formatted(eNoSuch.getMessage());
         }
         //сообщение пользователю о выполнении
-        return "Карта с термином %s была успешно добавлена в колоду %s".formatted(newCard.getTerm(), deckName);
+        return "Карта с термином %s была успешно добавлена в колоду %s"
+                .formatted(newCard.getTerm(), deckName);
     }
 
     @Override

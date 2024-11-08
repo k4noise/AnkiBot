@@ -22,7 +22,7 @@ public class CreateDeckCommandHandler implements CommandHandler {
         try {
             usersDecks.addDeck(deckName);
         } catch (IllegalArgumentException e) {
-            return handleDeckError(deckName, true);
+            return MessageComandError.formatted(e.getMessage());
         }
         //сообщение пользователю о выполнении
         return "Колода " + deckName + " успешно добавлена";

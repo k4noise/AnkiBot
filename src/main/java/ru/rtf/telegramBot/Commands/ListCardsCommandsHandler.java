@@ -28,7 +28,7 @@ public class ListCardsCommandsHandler implements CommandHandler {
         try {
             deck = usersDecks.getDeck(deckName);
         } catch (NoSuchElementException e) {
-            return handleDeckError(deckName, false);
+            return MessageComandError.formatted(e.getMessage());
         }
         String cardsDescription = deck.getCardsDescription();
         if (cardsDescription.isEmpty())

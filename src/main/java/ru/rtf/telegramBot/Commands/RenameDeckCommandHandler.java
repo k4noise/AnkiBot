@@ -26,10 +26,8 @@ public class RenameDeckCommandHandler implements CommandHandler {
         //попытка изменить имя колоды
         try {
             usersDecks.updateDeckName(oldDeckName, newDeckName);
-        } catch (NoSuchElementException eNoSuch) {
-            return handleDeckError(oldDeckName, false);
-        } catch (IllegalArgumentException eIllegalArg) {
-            return handleDeckError(newDeckName, true);
+        } catch (NoSuchElementException | IllegalArgumentException e) {
+            return MessageComandError.formatted(e.getMessage());
         }
         //сообщение пользователю о выполнении
         return "Колода успешно переименована: " + oldDeckName + " -> " + newDeckName;

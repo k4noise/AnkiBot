@@ -54,7 +54,9 @@ public class EditCardDefCommandHandlerTest {
         decks.addDeck("Deck");
         String ans = editCardDefCommandHandler.execution(decks, new String[]{"Deck", "term", "new def"});
 
-        Assertions.assertEquals("Карта с термином term не существует в колоде Deck", ans);
+        Assertions.assertEquals("""
+                Ошибка выполнения команды. Подробности:
+                Карта с термином term не существует в колоде""", ans);
     }
 
     /**
@@ -66,6 +68,8 @@ public class EditCardDefCommandHandlerTest {
         String ans = editCardDefCommandHandler.execution(userDecksData.getUserDecks(existUser),
                 new String[]{"Deck", "term", "new def"});
 
-        Assertions.assertEquals("Колода с именем Deck не существует в менеджере", ans);
+        Assertions.assertEquals("""
+                Ошибка выполнения команды. Подробности:
+                Колода с именем Deck не существует в менеджере""", ans);
     }
 }

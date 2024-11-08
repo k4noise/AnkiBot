@@ -61,6 +61,8 @@ public class ListCardsCommandsHandlerTest {
         String ans = listCardsCommandsHandler.execution(userDecksData.getUserDecks(existUser), new String[]{"Deck"});
 
         // Проверяем отправку сообщения об ошибке
-        Assertions.assertEquals("Колода с именем Deck не существует в менеджере", ans);
+        Assertions.assertEquals("""
+                Ошибка выполнения команды. Подробности:
+                Колода с именем Deck не существует в менеджере""", ans);
     }
 }
