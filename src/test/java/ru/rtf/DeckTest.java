@@ -418,14 +418,11 @@ class DeckTest {
     @Test
     @DisplayName("Сравнение хешей колод")
     void testHashCode() {
-        String deckName = "Deck";
-        String anotherDeckName = deckName + '1';
-        Deck deck1 = new Deck(deckName);
-        Deck deck2 = new Deck(deckName);
-        Deck deck3 = new Deck(anotherDeckName);
+        Deck deck2 = new Deck("Deck");
+        Deck deck3 = new Deck("anotherDeckName");
 
         Assertions.assertEquals(
-                deck1.hashCode(),
+                deck.hashCode(),
                 deck2.hashCode(),
                 "Хеши колод с одинаковым именем должны быть равны"
         );
