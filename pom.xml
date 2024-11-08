@@ -15,7 +15,6 @@
 
         <junit.version>5.11.2</junit.version>
         <telegrambot.version>6.9.7.1</telegrambot.version>
-        <mockito.version>5.11.0</mockito.version>
     </properties>
 
     <dependencies>
