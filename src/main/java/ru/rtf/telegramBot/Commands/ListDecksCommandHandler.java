@@ -23,7 +23,7 @@ public class ListDecksCommandHandler implements CommandHandler {
         //сообщение пользователю о выполнении
         if (usersDecks.getDecks().isEmpty())
             return "У Вас пока нет ни одной колоды, создайте первую /create_deck <название>";
-        return "Ваши колоды:\n" + collectionDeckToSting(usersDecks.getDecks());
+        return "Ваши колоды:" + collectionDeckToSting(usersDecks.getDecks());
     }
 
     @Override
@@ -40,8 +40,8 @@ public class ListDecksCommandHandler implements CommandHandler {
     private String collectionDeckToSting(Collection<Deck> decks) {
         StringBuilder decksToSting = new StringBuilder();
         for (Deck deck : decks) {
-            decksToSting.append(deck);
             decksToSting.append("\n");
+            decksToSting.append(deck);
         }
         return decksToSting.toString();
     }

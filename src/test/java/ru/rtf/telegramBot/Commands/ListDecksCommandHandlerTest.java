@@ -47,7 +47,10 @@ public class ListDecksCommandHandlerTest {
         // попытка выполнить команду
         String ans = listDecksCommandHandler.execution(deckManager, null);
 
-        Assertions.assertEquals("Ваши колоды:\nfirst: 0 карт\n" +
-                "second: 0 карт\n", ans);
+        Assertions.assertEquals("""
+                Ваши колоды:
+                first: 0 карт
+                second: 0 карт"""
+                , ans);
     }
 }

@@ -32,10 +32,12 @@ public class ListCardsCommandsHandlerTest {
         decks.getDeck("Deck").addCard("term2", "def 2");
         decks.getDeck("Deck").addCard("term3", "def 3");
         String ans = listCardsCommandsHandler.execution(decks, new String[]{"Deck"});
-        Assertions.assertEquals("Deck:\n" +
-                "\"term1\" = def 1\n" +
-                "\"term2\" = def 2\n" +
-                "\"term3\" = def 3\n", ans);
+        Assertions.assertEquals("""
+                Deck:
+                "term1" = def 1
+                "term2" = def 2
+                "term3" = def 3
+                """, ans);
     }
 
     /**
