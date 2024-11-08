@@ -29,7 +29,7 @@ public class DeckManager {
      * Колода может быть создана, если имя колоды не используется другими колодами
      *
      * @param name Имя новой колоды
-     * @throws IllegalArgumentException Колода с таким именем уже существует
+     * @throws IllegalArgumentException Колода с именем name существует в менеджере
      */
     public void addDeck(String name) {
         validateUnique(name);
@@ -39,8 +39,7 @@ public class DeckManager {
     /**
      * Получить колоду из менеджера с указанным именем
      *
-     * @return Найденная колода
-     * @throws NoSuchElementException Колоды с таким именем не существует
+     * @throws NoSuchElementException Колода с именем name не существует в менеджере
      */
     public Deck getDeck(String name) {
         validateExists(name);
@@ -49,12 +48,12 @@ public class DeckManager {
 
     /**
      * Изменить имя колоды
-     * Имя изменяется в менеджере колод и внутри самой колоды
+     * <p>Имя изменяется в менеджере колод и внутри самой колоды</p>
      *
      * @param oldName Старое имя колоды
      * @param newName Новое имя колоды
-     * @throws NoSuchElementException   Колоды с таким именем не существует
-     * @throws IllegalArgumentException Колода с таким именем уже существует
+     * @throws NoSuchElementException   Колода с именем name не существует в менеджере
+     * @throws IllegalArgumentException Колода с именем name существует в менеджере
      */
     public void updateDeckName(String oldName, String newName) {
         validateExists(oldName);
@@ -65,10 +64,9 @@ public class DeckManager {
     }
 
     /**
-     * Удалить колоду из менеджера
+     * Удалить колоду из менеджера по имени
      *
-     * @param name Имя колоды для удаления
-     * @throws NoSuchElementException Колоды с таким именем не существует
+     * @throws NoSuchElementException Колода с именем name не существует в менеджере
      */
     public void removeDeck(String name) {
         validateExists(name);
@@ -77,8 +75,6 @@ public class DeckManager {
 
     /**
      * Получить все колоды из менеджера
-     *
-     * @return Все сохраненные колоды
      */
     public Collection<Deck> getDecks() {
         return decks.values();
@@ -87,8 +83,7 @@ public class DeckManager {
     /**
      * Проверяет менеджер на уникальность колоды по имени
      *
-     * @param name Имя колоды
-     * @throws IllegalArgumentException Колода с таким именем существует в менеджере
+     * @throws IllegalArgumentException Колода с именем name существует в менеджере
      */
     private void validateUnique(String name) {
         if (decks.containsKey(name))
@@ -98,8 +93,7 @@ public class DeckManager {
     /**
      * Проверяет менеджер на существование колоды по имени
      *
-     * @param name Имя колоды
-     * @throws NoSuchElementException Колода с таким именем не существует в менеджере
+     * @throws NoSuchElementException Колода с именем name не существует в менеджере
      */
     private void validateExists(String name) {
         if (!decks.containsKey(name))
