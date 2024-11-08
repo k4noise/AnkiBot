@@ -127,6 +127,22 @@ class DeckTest {
     }
 
     /**
+     * Тестирование регистронезависимости метода {@link Deck#addCard}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при добавлении карты в колоду")
+    void testCorrectAddCardIgnoreCase() {
+        deck.addCard("term", "definition");
+
+        IllegalArgumentException exception = Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> deck.addCard("TERM", "definition"),
+                "Добавление карты с существующим термином невозможно"
+        );
+        Assertions.assertEquals("Карта с термином TERM существует в колоде", exception.getMessage());
+    }
+
+    /**
      * Тестирование перегрузки метода {@link Deck#addCard} с корректными данными
      */
     @Test
@@ -154,6 +170,23 @@ class DeckTest {
                 "Повторное добавление карты запрещено"
         );
         Assertions.assertEquals("Карта с термином term существует в колоде", exception.getMessage());
+    }
+
+    /**
+     * Тестирование регистронезависимости перегрузки метода {@link Deck#addCard}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при добавлении экземпляра карты в колоду")
+    void testAddCardInstanceIgnoreCase() {
+        Card card = new Card("TERM", "definition");
+        deck.addCard(card);
+
+        IllegalArgumentException exception = Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> deck.addCard(card),
+                "Повторное добавление карты запрещено"
+        );
+        Assertions.assertEquals("Карта с термином TERM существует в колоде", exception.getMessage());
     }
 
     /**
@@ -209,6 +242,19 @@ class DeckTest {
     }
 
     /**
+     * Тестирование регистронезависимости метода {@link Deck#updateCardTerm}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при изменении термина у карты")
+    void testUpdateCardTermIgnoreCase() {
+        Card card = new Card("term", "definition");
+        deck.addCard(card);
+        deck.updateCardTerm("TERM", "newTerm");
+
+        Assertions.assertEquals("definition", deck.getCard("newTerm").getDefinition(), "Определение должно сохраниться");
+    }
+
+    /**
      * Тестирование метода {@link Deck#updateCardDefinition} на корректных данных
      */
     @Test
@@ -239,6 +285,19 @@ class DeckTest {
     }
 
     /**
+     * Тестирование регистронезависимости метода {@link Deck#updateCardDefinition}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при изменении определения у карты")
+    void testUpdateCardDefinitionIgnoreCase() {
+        Card card = new Card("term", "definition");
+        deck.addCard(card);
+        deck.updateCardDefinition("TERM", "newDefinition");
+
+        Assertions.assertEquals("newDefinition", deck.getCard("term").getDefinition(), "Определение должно было измениться");
+    }
+
+    /**
      * Тестирование метода {@link Deck#getCard} на отсутствующих данных
      */
     @Test
@@ -253,6 +312,19 @@ class DeckTest {
     }
 
     /**
+     * Тестирование регистронезависимости метода {@link Deck#getCard}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при получении карты")
+    void testGetCardIgnoreCase() {
+        Card card = new Card("term", "definition");
+        deck.addCard(card);
+
+        Card actualCard = deck.getCard("TERM");
+        Assertions.assertEquals(card, actualCard, "Карты должны быть одинаковыми");
+    }
+
+    /**
      * Тестирование метода {@link Deck#getCards}
      */
     @Test
@@ -263,28 +335,6 @@ class DeckTest {
 
         Assertions.assertEquals(1, deck.getCards().size(), "Должна быть добавлена карта");
         Assertions.assertEquals(card, deck.getCards().iterator().next(), "Карта должна находиться в колоде");
-    }
-
-    /**
-     * Тестирование метода {@link Deck#hashCode}
-     */
-    @Test
-    @DisplayName("Сравнение хешей колод")
-    void testHashCode() {
-        Deck deck2 = new Deck("Deck");
-        Deck deck3 = new Deck("Deck1");
-
-        Assertions.assertEquals(
-                deck.hashCode(),
-                deck2.hashCode(),
-                "Хеши колод с одинаковым именем должны быть равны"
-        );
-
-        Assertions.assertNotEquals(
-                deck2.hashCode(),
-                deck3.hashCode(),
-                "Хеши колод с разными именами должны быть разными"
-        );
     }
 
     /**
@@ -325,6 +375,23 @@ class DeckTest {
     }
 
     /**
+     * Тестирование регистронезависимости метода {@link Deck#removeCard}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при удалении карты")
+    void testRemoveCardIgnoreCase() {
+        deck.addCard("term", "definition");
+
+        deck.removeCard("TERM");
+        NoSuchElementException exception = Assertions.assertThrows(
+                NoSuchElementException.class,
+                () -> deck.getCard("term"),
+                "Удаленная карта не должна существовать в колоде после ее удаления"
+        );
+        Assertions.assertEquals("Карта с термином term не существует в колоде", exception.getMessage());
+    }
+
+    /**
      * Тестирование метода {@link Deck#getCardsDescription}
      */
     @Test
@@ -342,6 +409,28 @@ class DeckTest {
                         """,
                 deck.getCardsDescription(),
                 "Должно быть описание всех карт колоды без изменения их порядка"
+        );
+    }
+
+    /**
+     * Тестирование метода {@link Deck#hashCode}
+     */
+    @Test
+    @DisplayName("Сравнение хешей колод")
+    void testHashCode() {
+        Deck deck2 = new Deck("Deck");
+        Deck deck3 = new Deck("anotherDeckName");
+
+        Assertions.assertEquals(
+                deck.hashCode(),
+                deck2.hashCode(),
+                "Хеши колод с одинаковым именем должны быть равны"
+        );
+
+        Assertions.assertNotEquals(
+                deck2.hashCode(),
+                deck3.hashCode(),
+                "Хеши колод с разными именами должны быть разными"
         );
     }
 

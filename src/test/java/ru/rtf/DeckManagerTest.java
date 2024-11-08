@@ -58,6 +58,20 @@ class DeckManagerTest {
     }
 
     /**
+     * Тестирование регистронезависимости метода {@link DeckManager#addDeck}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при добавлении колоды с существующим именем")
+    void testAddDeckWithDuplicateNameIgnoreCase() {
+        IllegalArgumentException exception = Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> deckManager.addDeck("DECK"),
+                "Колода с существующим именем не может быть добавлена"
+        );
+        Assertions.assertEquals("Колода с именем DECK существует в менеджере", exception.getMessage());
+    }
+
+    /**
      * Тестирование метода {@link DeckManager#removeDeck} на корректных данных
      */
     @Test
@@ -65,8 +79,10 @@ class DeckManagerTest {
     void testRemoveDeck() {
         deckManager.removeDeck("Deck");
         Collection<Deck> decks = deckManager.getDecks();
+
         Assertions.assertTrue(decks.isEmpty(), "Не должно быть сохраненных колод в менеджере");
     }
+
 
     /**
      * Тестирование метода {@link DeckManager#removeDeck} на несуществующих данных
@@ -83,7 +99,33 @@ class DeckManagerTest {
     }
 
     /**
-     * Тестирование метода {@link DeckManager#getDeck}
+     * Тестирование регистронезависимости метода {@link DeckManager#removeDeck}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при удалении созданной колоды")
+    void testRemoveDeckIgnoreCase() {
+        deckManager.removeDeck("DECK");
+        Collection<Deck> decks = deckManager.getDecks();
+
+        Assertions.assertTrue(decks.isEmpty(), "Не должно быть сохраненных колод в менеджере");
+    }
+
+    /**
+     * Тестирование метода {@link DeckManager#getDeck} на уникальных данных
+     */
+    @Test
+    @DisplayName("Получение созданной колоды")
+    void testGetDeck() {
+        Deck deck = deckManager.getDeck("Deck");
+        Assertions.assertEquals(
+                "Deck",
+                deck.getName(),
+                "Колода с именем Deck существует в менеджере"
+        );
+    }
+
+    /**
+     * Тестирование метода {@link DeckManager#getDeck} на отсутствующих данных
      */
     @Test
     @DisplayName("Получение несуществующей колоды")
@@ -94,6 +136,20 @@ class DeckManagerTest {
                 "Невозможно получить не сохраненную в менеджере колод колоду"
         );
         Assertions.assertEquals("Колода с именем wrongDeckName не существует в менеджере", exception.getMessage());
+    }
+
+    /**
+     * Тестирование регистронезависимости метода {@link DeckManager#getDeck}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости получения созданной колоды")
+    void testGetDeckIgnoreCase() {
+        Deck deck = deckManager.getDeck("DECK");
+        Assertions.assertEquals(
+                "Deck",
+                deck.getName(),
+                "Колода должна иметь имя, указанное при создании"
+        );
     }
 
     /**
@@ -166,5 +222,17 @@ class DeckManagerTest {
                 "Невозможно изменить имя, так как оно уже используется другой колодой"
         );
         Assertions.assertEquals("Колода с именем newDeckName существует в менеджере", exception.getMessage());
+    }
+
+    /**
+     * Тестирование регистронезависимости метода {@link DeckManager#updateDeckName}
+     */
+    @Test
+    @DisplayName("Проверка регистронезависимости при изменении имени у созданной колоды")
+    void testUpdateNameDeckIgnoreCase() {
+        deckManager.updateDeckName("DECK", "Deck1");
+        Deck deck = deckManager.getDeck("Deck1");
+
+        Assertions.assertEquals("Deck1", deck.getName(), "Колода должна иметь новое имя");
     }
 }

@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Менеджер управления колодами пользователя
+ * <p>Для работы с картами колоды следует получить экземпляр колоды через метод {@link DeckManager#getDeck}</p>
  *
  * @author k4noise
  * @since 21.10.2024
@@ -14,6 +15,7 @@ import java.util.NoSuchElementException;
 public class DeckManager {
     /**
      * Колоды менеджера, где ключ - имя колоды, значение - сама колода
+     * Имя колоды хранится в нижнем регистре для обеспечения регистронезависимости при получении колоды
      */
     private final Map<String, Deck> decks;
 
@@ -33,7 +35,7 @@ public class DeckManager {
      */
     public void addDeck(String name) {
         validateUnique(name);
-        decks.put(name, new Deck(name));
+        decks.put(name.toLowerCase(), new Deck(name));
     }
 
     /**
@@ -43,7 +45,7 @@ public class DeckManager {
      */
     public Deck getDeck(String name) {
         validateExists(name);
-        return decks.get(name);
+        return decks.get(name.toLowerCase());
     }
 
     /**
@@ -59,8 +61,8 @@ public class DeckManager {
         validateExists(oldName);
         validateUnique(newName);
 
-        Deck deck = decks.remove(oldName);
-        decks.put(newName, deck.updateName(newName));
+        Deck deck = decks.remove(oldName.toLowerCase());
+        decks.put(newName.toLowerCase(), deck.updateName(newName));
     }
 
     /**
@@ -70,7 +72,7 @@ public class DeckManager {
      */
     public void removeDeck(String name) {
         validateExists(name);
-        decks.remove(name);
+        decks.remove(name.toLowerCase());
     }
 
     /**
@@ -86,7 +88,7 @@ public class DeckManager {
      * @throws IllegalArgumentException Колода с именем name существует в менеджере
      */
     private void validateUnique(String name) {
-        if (decks.containsKey(name))
+        if (decks.containsKey(name.toLowerCase()))
             throw new IllegalArgumentException("Колода с именем " + name + " существует в менеджере");
     }
 
@@ -96,7 +98,7 @@ public class DeckManager {
      * @throws NoSuchElementException Колода с именем name не существует в менеджере
      */
     private void validateExists(String name) {
-        if (!decks.containsKey(name))
+        if (!decks.containsKey(name.toLowerCase()))
             throw new NoSuchElementException("Колода с именем " + name + " не существует в менеджере");
     }
 }
