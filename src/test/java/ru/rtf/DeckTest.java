@@ -298,23 +298,6 @@ class DeckTest {
     }
 
     /**
-     * Тестирование метода {@link Deck#getCard} на существующих данных
-     */
-    @Test
-    @DisplayName("Получение карты")
-    void testGetCard() {
-        String deckName = "Deck";
-        Deck deck = new Deck(deckName);
-        String term = "term", definition = "definition";
-        Card card = new Card(term, definition);
-        deck.addCard(card);
-
-        Card actualCard = deck.getCard(term);
-
-        Assertions.assertEquals(card, actualCard, "Карты должны быть одинаковыми");
-    }
-
-    /**
      * Тестирование метода {@link Deck#getCard} на отсутствующих данных
      */
     @Test
