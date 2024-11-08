@@ -20,6 +20,7 @@ public class Card {
      *
      * @param term       термин
      * @param definition определение
+     * @throws IllegalArgumentException Термин и определение не могут быть пустыми
      */
     public Card(String term, String definition) {
         if (term.isEmpty() || definition.isEmpty())
@@ -30,8 +31,6 @@ public class Card {
 
     /**
      * Возвращает термин
-     *
-     * @return термин
      */
     public String getTerm() {
         return term;
@@ -39,8 +38,6 @@ public class Card {
 
     /**
      * Возвращает определение
-     *
-     * @return определние
      */
     public String getDefinition() {
         return definition;
