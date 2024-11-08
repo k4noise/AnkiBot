@@ -1,14 +1,14 @@
 package ru.rtf.telegramBot.Commands;
 
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.Command;
+import ru.rtf.telegramBot.CommandHandler;
 
 import java.util.NoSuchElementException;
 
 /**
- * Класс команды переименования колоды /rename-deck (старое название) (новое название)
+ * Обработчик команды переименования колоды
  */
-public class RenameDeckCommand implements Command {
+public class RenameDeckCommandHandler implements CommandHandler {
 
     /**
      * Количество параметров команды

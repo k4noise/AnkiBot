@@ -1,33 +1,37 @@
 package ru.rtf.telegramBot.Commands;
 
-import ru.rtf.Card;
+import ru.rtf.Deck;
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.Command;
+import ru.rtf.telegramBot.CommandHandler;
 
 import java.util.NoSuchElementException;
 
 /**
- * Выводит карточку из колоды
+ * Обработчик команды изменения определения карточки
  */
-public class ListCardCommand implements Command {
+public class EditCardDefCommandHandler implements CommandHandler {
+
     /**
      * Количество параметров команды
      * 1.имя колоды
      * 2.термин
+     * 3.новое определение
      */
-    private final int COUNT_PARAMS = 2;
+    private final int COUNT_PARAMS = 3;
 
     @Override
     public String execution(DeckManager usersDecks, String[] params) {
         //обработка параметров
         String deckName = params[0];
         String term = params[1];
+        String newDef = params[2];
 
-        //попытка найти карту
+        //попытка изменить определение карты
         try {
-            Card card = usersDecks.getDeck(deckName).getCard(term);
+            Deck userDeck = usersDecks.getDeck(deckName);
+            userDeck.updateCardDefinition(term, newDef);
             //сообщение пользователю о выполнении
-            return String.format(card.toString());
+            return String.format("Определение карты было успешно изменено: %s", userDeck.getCard(term).toString());
         } catch (NoSuchElementException | IllegalArgumentException e) {
             return e.getMessage();
         }

@@ -10,17 +10,17 @@ import org.junit.jupiter.api.Assertions;
 /**
  * Тесты для команды создание новой колоды
  */
-class CreateDeckCommandTest {
+class CreateDeckCommandHandlerTest {
 
     private UserDecksData userDecksData;
-    private CreateDeckCommand createDeckCommand;
+    private CreateDeckCommandHandler createDeckCommandHandler;
     private final Long existUser = 987654321L;
 
     @BeforeEach
     void setUp() {
         userDecksData = new UserDecksData();
         userDecksData.addUser(existUser);
-        createDeckCommand = new CreateDeckCommand();
+        createDeckCommandHandler = new CreateDeckCommandHandler();
     }
 
     /**
@@ -29,7 +29,7 @@ class CreateDeckCommandTest {
     @Test
     void testSimpleAddDeck() {
         DeckManager decks = userDecksData.getUserDecks(existUser);
-        String ans = createDeckCommand.execution(decks, new String[]{"Deck"});
+        String ans = createDeckCommandHandler.execution(decks, new String[]{"Deck"});
 
         Assertions.assertEquals(1, decks.getDecks().size());
         Assertions.assertEquals("Колода Deck успешно добавлена", ans);
@@ -43,7 +43,7 @@ class CreateDeckCommandTest {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("name");
 
-        String ans = createDeckCommand.execution(decks, new String[]{"name"});
+        String ans = createDeckCommandHandler.execution(decks, new String[]{"name"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("Колода с именем name существует в менеджере", ans);

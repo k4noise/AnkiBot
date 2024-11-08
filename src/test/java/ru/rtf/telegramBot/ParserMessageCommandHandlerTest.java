@@ -3,7 +3,7 @@ package ru.rtf.telegramBot;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class ParserMessageCommandTest {
+class ParserMessageCommandHandlerTest {
 
     @Test
     void testNameCommandCorrect() {

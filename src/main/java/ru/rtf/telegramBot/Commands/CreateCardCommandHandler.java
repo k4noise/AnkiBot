@@ -2,15 +2,15 @@ package ru.rtf.telegramBot.Commands;
 
 import ru.rtf.Card;
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.Command;
+import ru.rtf.telegramBot.CommandHandler;
 
 import java.util.NoSuchElementException;
 
 /**
+ * Обработчик команды
  * Добавление новой карты в конкретную колоду пользователя
- * /create-card название колоды: термин - определение
  */
-public class CreateCardCommand implements Command {
+public class CreateCardCommandHandler implements CommandHandler {
 
     /**
      * Количество параметров команды

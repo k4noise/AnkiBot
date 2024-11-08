@@ -2,14 +2,14 @@ package ru.rtf.telegramBot.Commands;
 
 import ru.rtf.Deck;
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.Command;
+import ru.rtf.telegramBot.CommandHandler;
 
 import java.util.Collection;
 
 /**
- * Класс просмотра всех колод /list-decks
+ * Обработчик команды просмотра всех колод пользователя
  */
-public class ListDecksCommand implements Command {
+public class ListDecksCommandHandler implements CommandHandler {
 
     /**
      * Количество параметров команды

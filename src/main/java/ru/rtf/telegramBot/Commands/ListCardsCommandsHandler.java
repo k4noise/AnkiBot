@@ -2,14 +2,15 @@ package ru.rtf.telegramBot.Commands;
 
 import ru.rtf.Deck;
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.Command;
+import ru.rtf.telegramBot.CommandHandler;
 
 import java.util.NoSuchElementException;
 
 /**
- * Выводит список всех карт колоды
+ * Обработчик команды
+ * Вывода списка всех карт колоды
  */
-public class ListCardsCommands implements Command {
+public class ListCardsCommandsHandler implements CommandHandler {
 
     /**
      * Количество параметров команды

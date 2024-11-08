@@ -11,16 +11,16 @@ import ru.rtf.telegramBot.UserDecksData;
 /**
  * Тесты на редактирование карты в колоде
  */
-public class EditCardDefCommandTest {
+public class EditCardDefCommandHandlerTest {
     private final Long existUser = 987654321L;
     private UserDecksData userDecksData;
-    private EditCardDefCommand editCardDefCommand;
+    private EditCardDefCommandHandler editCardDefCommandHandler;
 
     @BeforeEach
     void setUp() {
         userDecksData = new UserDecksData();
         userDecksData.addUser(existUser);
-        editCardDefCommand = new EditCardDefCommand();
+        editCardDefCommandHandler = new EditCardDefCommandHandler();
     }
 
     /**
@@ -38,7 +38,7 @@ public class EditCardDefCommandTest {
         deck.addCard(term, definition);
         String newDefinition = "new def";
 
-        String ans = editCardDefCommand.execution(decks, new String[]{deckName, term, newDefinition});
+        String ans = editCardDefCommandHandler.execution(decks, new String[]{deckName, term, newDefinition});
         Card modifiedCard = deck.getCard(term);
         Assertions.assertEquals(newDefinition, modifiedCard.getDefinition(), "Определение должно измениться");
         Assertions.assertEquals("Определение карты было успешно изменено: \"term\" = new def", ans);
@@ -52,7 +52,7 @@ public class EditCardDefCommandTest {
 
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Deck");
-        String ans = editCardDefCommand.execution(decks, new String[]{"Deck", "term", "new def"});
+        String ans = editCardDefCommandHandler.execution(decks, new String[]{"Deck", "term", "new def"});
 
         Assertions.assertEquals("Карта с термином term не существует в колоде", ans);
     }
@@ -63,7 +63,7 @@ public class EditCardDefCommandTest {
     @Test
     void testIncorrectDeck() {
 
-        String ans = editCardDefCommand.execution(userDecksData.getUserDecks(existUser),
+        String ans = editCardDefCommandHandler.execution(userDecksData.getUserDecks(existUser),
                 new String[]{"Deck", "term", "new def"});
 
         Assertions.assertEquals("Колода с именем Deck не существует в менеджере", ans);

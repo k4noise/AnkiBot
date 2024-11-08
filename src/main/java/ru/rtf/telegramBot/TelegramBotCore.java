@@ -23,7 +23,7 @@ public class TelegramBotCore extends TelegramLongPollingBot {
     /**
      * Хранит в себе список команд для бота
      */
-    private final CommandManager commandManager;
+    private final CommandHandlerManager commandHandlerManager;
     /**
      * Может возвращать список колод пользователя по id чата
      */
@@ -31,7 +31,7 @@ public class TelegramBotCore extends TelegramLongPollingBot {
     /**
      * Хранилище текстовой команды бота и команды для выполнения
      */
-    private final Map<String, Command> commands = new LinkedHashMap<>();
+    private final Map<String, CommandHandler> commands = new LinkedHashMap<>();
 
     /**
      * Создание экземпляра бота
@@ -47,7 +47,7 @@ public class TelegramBotCore extends TelegramLongPollingBot {
         userDecksData = new UserDecksData();
         //создать команды
         uploadCommands();
-        commandManager = new CommandManager(commands, userDecksData);
+        commandHandlerManager = new CommandHandlerManager(commands, userDecksData);
     }
 
     /**
@@ -68,7 +68,7 @@ public class TelegramBotCore extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             Message message = update.getMessage();
             Long chatId = message.getChatId();
-            String messageResultExecution = commandManager.execution(chatId, message.getText());
+            String messageResultExecution = commandHandlerManager.execution(chatId, message.getText());
             sendMessage(chatId, messageResultExecution);
         }
     }
@@ -99,19 +99,19 @@ public class TelegramBotCore extends TelegramLongPollingBot {
      * Добавление команд, их имени и экземпляра соответствующего класса в список команд
      */
     private void uploadCommands() {
-        commands.put("/start", new StartCommand());
-        commands.put("/help", new HelpCommand());
+        commands.put("/start", new StartCommandHandler());
+        commands.put("/help", new HelpCommandHandler());
         // команды для работы с колодами
-        commands.put("/list_decks", new ListDecksCommand());
-        commands.put("/create_deck", new CreateDeckCommand());
-        commands.put("/rename_deck", new RenameDeckCommand());
-        commands.put("/delete_deck", new DeleteDeckCommand());
+        commands.put("/list_decks", new ListDecksCommandHandler());
+        commands.put("/create_deck", new CreateDeckCommandHandler());
+        commands.put("/rename_deck", new RenameDeckCommandHandler());
+        commands.put("/delete_deck", new DeleteDeckCommandHandler());
         // команды для работы с картами
-        commands.put("/list_cards", new ListCardsCommands());
-        commands.put("/create_card", new CreateCardCommand());
-        commands.put("/edit_card_term", new EditCardTermCommand());
-        commands.put("/edit_card_def", new EditCardDefCommand());
-        commands.put("/delete_card", new DeleteCardCommand());
-        commands.put("/list_card", new ListCardCommand());
+        commands.put("/list_cards", new ListCardsCommandsHandler());
+        commands.put("/create_card", new CreateCardCommandHandler());
+        commands.put("/edit_card_term", new EditCardTermCommandHandler());
+        commands.put("/edit_card_def", new EditCardDefCommandHandler());
+        commands.put("/delete_card", new DeleteCardCommandHandler());
+        commands.put("/list_card", new ListCardCommandHandler());
     }
 }

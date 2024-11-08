@@ -12,17 +12,17 @@ import java.util.Map;
 /**
  * Тесты для класса управления командами
  */
-class CommandManagerTest {
+class CommandHandlerManagerTest {
 
-    private final Map<String, Command> commands = new LinkedHashMap<>();
-    private CommandManager commandManager;
+    private final Map<String, CommandHandler> commands = new LinkedHashMap<>();
+    private CommandHandlerManager commandHandlerManager;
     private UserDecksData userDecksData;
 
     @BeforeEach
     void setUp() {
         userDecksData = new UserDecksData();
         uploadCommands();
-        commandManager = new CommandManager(commands, userDecksData);
+        commandHandlerManager = new CommandHandlerManager(commands, userDecksData);
     }
 
     /**
@@ -30,9 +30,9 @@ class CommandManagerTest {
      */
     @Test
     void testReturnsCorrectCommand() {
-        Command startCommand = commandManager.getCommand("/start");
-        Assertions.assertNotNull(startCommand);
-        Assertions.assertTrue(startCommand instanceof StartCommand);
+        CommandHandler startCommandHandler = commandHandlerManager.getCommand("/start");
+        Assertions.assertNotNull(startCommandHandler);
+        Assertions.assertTrue(startCommandHandler instanceof StartCommandHandler);
     }
 
     /**
@@ -42,7 +42,7 @@ class CommandManagerTest {
     void testUnknownCommand() {
         IllegalArgumentException exception = Assertions.assertThrows(
                 IllegalArgumentException.class,
-                () -> commandManager.getCommand("/unknown")
+                () -> commandHandlerManager.getCommand("/unknown")
         );
         Assertions.assertEquals("Команда /unknown не распознана", exception.getMessage());
     }
@@ -56,7 +56,7 @@ class CommandManagerTest {
         userDecksData.addUser(chatId);
         DeckManager decks = userDecksData.getUserDecks(chatId);
         decks.addDeck("old name");
-        String res = commandManager.execution(chatId, "/rename_deck old name:=new name");
+        String res = commandHandlerManager.execution(chatId, "/rename_deck old name:=new name");
         Assertions.assertEquals("Колода успешно переименована: old name -> new name", res);
     }
 
@@ -66,7 +66,7 @@ class CommandManagerTest {
     @Test
     void testNoCorrectCountParams() {
         Long chatId = 123456789L;
-        String res = commandManager.execution(chatId, "/rename_deck old name:=");
+        String res = commandHandlerManager.execution(chatId, "/rename_deck old name:=");
         Assertions.assertEquals("Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)", res);
     }
 
@@ -74,19 +74,19 @@ class CommandManagerTest {
      * Добавление команд, их имени и экземпляра соответствующего класса в список команд
      */
     private void uploadCommands() {
-        commands.put("/start", new StartCommand());
-        commands.put("/help", new HelpCommand());
+        commands.put("/start", new StartCommandHandler());
+        commands.put("/help", new HelpCommandHandler());
         // команды для работы с колодами
-        commands.put("/list_decks", new ListDecksCommand());
-        commands.put("/create_deck", new CreateDeckCommand());
-        commands.put("/rename_deck", new RenameDeckCommand());
-        commands.put("/delete_deck", new DeleteDeckCommand());
+        commands.put("/list_decks", new ListDecksCommandHandler());
+        commands.put("/create_deck", new CreateDeckCommandHandler());
+        commands.put("/rename_deck", new RenameDeckCommandHandler());
+        commands.put("/delete_deck", new DeleteDeckCommandHandler());
         // команды для работы с картами
-        commands.put("/list_cards", new ListCardsCommands());
-        commands.put("/create_card", new CreateCardCommand());
-        commands.put("/edit_card_term", new EditCardTermCommand());
-        commands.put("/edit_card_def", new EditCardDefCommand());
-        commands.put("/delete_card", new DeleteCardCommand());
-        commands.put("/list_card", new ListCardCommand());
+        commands.put("/list_cards", new ListCardsCommandsHandler());
+        commands.put("/create_card", new CreateCardCommandHandler());
+        commands.put("/edit_card_term", new EditCardTermCommandHandler());
+        commands.put("/edit_card_def", new EditCardDefCommandHandler());
+        commands.put("/delete_card", new DeleteCardCommandHandler());
+        commands.put("/list_card", new ListCardCommandHandler());
     }
 }

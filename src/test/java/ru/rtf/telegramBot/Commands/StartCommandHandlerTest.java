@@ -8,13 +8,12 @@ import ru.rtf.DeckManager;
 /**
  * Тестирования команды старт. Приветственное сообщение
  */
-public class StartCommandTest {
-    private StartCommand startCommand;
-    private final Long existUser = 987654321L;
+public class StartCommandHandlerTest {
+    private StartCommandHandler startCommandHandler;
 
     @BeforeEach
     void setUp() {
-        startCommand = new StartCommand();
+        startCommandHandler = new StartCommandHandler();
     }
 
     /**
@@ -22,7 +21,7 @@ public class StartCommandTest {
      */
     @Test
     void testCorrectHelloText() {
-        String ans = startCommand.execution(new DeckManager(),null);
+        String ans = startCommandHandler.execution(new DeckManager(),null);
         Assertions.assertEquals("Добро пожаловать в AnkiBot. Введите команду /help, " +
                 "чтобы посмотреть доступные команды", ans);
     }

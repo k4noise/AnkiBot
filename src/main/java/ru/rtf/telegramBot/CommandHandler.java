@@ -3,9 +3,9 @@ package ru.rtf.telegramBot;
 import ru.rtf.DeckManager;
 
 /**
- * Интерфейс для команд бота
+ * Интерфейс для обработчиков команд бота
  */
-public interface Command {
+public interface CommandHandler {
 
     /**
      * Выполняет команду.
