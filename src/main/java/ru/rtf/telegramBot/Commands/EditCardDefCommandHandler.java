@@ -2,15 +2,15 @@ package ru.rtf.telegramBot.Commands;
 
 import ru.rtf.Deck;
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.Command;
+import ru.rtf.telegramBot.CommandHandler;
 
 import java.util.NoSuchElementException;
 
 /**
- * Команда изменения определения карточки
+ * Обработчик команды изменения определения карточки
  * <p>/edit_card_def название колоды:термин = новое определение</p>
  */
-public class EditCardDefCommand implements Command {
+public class EditCardDefCommandHandler implements CommandHandler {
 
     /**
      * Количество параметров команды
@@ -33,8 +33,9 @@ public class EditCardDefCommand implements Command {
             userDeck.updateCardDefinition(term, newDef);
             //сообщение пользователю о выполнении
             return String.format("Определение карты было успешно изменено: %s", userDeck.getCard(term).toString());
-        } catch (NoSuchElementException | IllegalArgumentException e) {
-            return e.getMessage();
+        } catch (NoSuchElementException e) {
+            // не существует колода или карта
+            return MessageComandError.formatted(e.getMessage());
         }
     }
 

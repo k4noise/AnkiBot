@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Assertions;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
- * Тест команды переименования колоды {@link RenameDeckCommand}
+ * Тест обработчика команды переименования колоды
  */
-class RenameDeckCommandTest {
+class RenameDeckCommandHandlerTest {
     /**
      * id пользователя, для которого было инициализировано хранилище колод
      */
@@ -19,15 +19,15 @@ class RenameDeckCommandTest {
      */
     private UserDecksData userDecksData;
     /**
-     * Команда для переименования колоды
+     * Обработчик команды для переименования колоды
      */
-    private RenameDeckCommand renameDeckCommand;
+    private RenameDeckCommandHandler renameDeckCommandHandler;
 
     @BeforeEach
     void setUp() {
         userDecksData = new UserDecksData();
         userDecksData.addUser(existUser);
-        renameDeckCommand = new RenameDeckCommand();
+        renameDeckCommandHandler = new RenameDeckCommandHandler();
     }
 
     /**
@@ -38,7 +38,7 @@ class RenameDeckCommandTest {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("OldName");
 
-        String ans = renameDeckCommand.execute(decks, new String[]{"OldName", "NewName"});
+        String ans = renameDeckCommandHandler.execute(decks, new String[]{"OldName", "NewName"});
 
         Assertions.assertEquals("Колода успешно переименована: OldName -> NewName", ans);
     }
@@ -51,7 +51,7 @@ class RenameDeckCommandTest {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Old big Name");
 
-        String ans = renameDeckCommand.execute(decks, new String[]{"Old big Name", "New Name"});
+        String ans = renameDeckCommandHandler.execute(decks, new String[]{"Old big Name", "New Name"});
 
         Assertions.assertEquals("Колода успешно переименована: Old big Name -> New Name", ans);
     }
@@ -62,9 +62,11 @@ class RenameDeckCommandTest {
     @Test
     void testExecuteWithNoDecks() {
 
-        String ans = renameDeckCommand.execute(userDecksData.getUserDecks(existUser),
+        String ans = renameDeckCommandHandler.execute(userDecksData.getUserDecks(existUser),
                 new String[]{"OldName", "NewName"});
-        Assertions.assertEquals("Колода с именем OldName не существует в менеджере", ans);
+        Assertions.assertEquals("""
+                Ошибка выполнения команды. Подробности:
+                Колода с именем OldName не существует в менеджере""", ans);
     }
 }
 

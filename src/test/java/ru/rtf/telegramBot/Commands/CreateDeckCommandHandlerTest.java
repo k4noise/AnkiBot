@@ -7,9 +7,10 @@ import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
- * Тест команды создания новой колоды {@link CreateDeckCommand}
+ * Тест обработчика команды создания новой колоды
  */
-class CreateDeckCommandTest {
+class CreateDeckCommandHandlerTest {
+
     /**
      * id пользователя, для которого было инициализировано хранилище колод
      */
@@ -19,15 +20,16 @@ class CreateDeckCommandTest {
      */
     private UserDecksData userDecksData;
     /**
-     * Команда для создания новой колоды
+     * Обработчик команды для создания новой колоды
      */
-    private CreateDeckCommand createDeckCommand;
+    private CreateDeckCommandHandler createDeckCommandHandler;
+
 
     @BeforeEach
     void setUp() {
         userDecksData = new UserDecksData();
         userDecksData.addUser(existUser);
-        createDeckCommand = new CreateDeckCommand();
+        createDeckCommandHandler = new CreateDeckCommandHandler();
     }
 
     /**
@@ -36,7 +38,7 @@ class CreateDeckCommandTest {
     @Test
     void testSimpleAddDeck() {
         DeckManager decks = userDecksData.getUserDecks(existUser);
-        String ans = createDeckCommand.execute(decks, new String[]{"Deck"});
+        String ans = createDeckCommandHandler.execute(decks, new String[]{"Deck"});
 
         Assertions.assertEquals(1, decks.getDecks().size());
         Assertions.assertEquals("Колода Deck успешно добавлена", ans);
@@ -50,9 +52,11 @@ class CreateDeckCommandTest {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("name");
 
-        String ans = createDeckCommand.execute(decks, new String[]{"name"});
+        String ans = createDeckCommandHandler.execute(decks, new String[]{"name"});
 
         // Проверяем отправку сообщения об ошибке
-        Assertions.assertEquals("Колода с именем name существует в менеджере", ans);
+        Assertions.assertEquals("""
+                Ошибка выполнения команды. Подробности:
+                Колода с именем name существует в менеджере""", ans);
     }
 }

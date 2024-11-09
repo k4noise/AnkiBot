@@ -7,9 +7,10 @@ import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
- * Тест команды редактирования карты в колоде {@link ListCardsCommand}
+ * Тест команды редактирования карты в колоде
  */
-public class ListCardsCommandTest {
+public class ListCardsCommandsHandlerTest {
+
     /**
      * id пользователя, для которого было инициализировано хранилище колод
      */
@@ -21,13 +22,14 @@ public class ListCardsCommandTest {
     /**
      * Команда для отображения всех карт в колоде
      */
-    private ListCardsCommand listCardsCommand;
+    private ListCardsCommandsHandler listCardsCommandsHandler;
 
     @BeforeEach
     void setUp() {
         userDecksData = new UserDecksData();
         userDecksData.addUser(existUser);
-        listCardsCommand = new ListCardsCommand();
+
+        listCardsCommandsHandler = new ListCardsCommandsHandler();
     }
 
     /**
@@ -40,11 +42,14 @@ public class ListCardsCommandTest {
         decks.getDeck("Deck").addCard("term1", "def 1");
         decks.getDeck("Deck").addCard("term2", "def 2");
         decks.getDeck("Deck").addCard("term3", "def 3");
-        String ans = listCardsCommand.execute(decks, new String[]{"Deck"});
-        Assertions.assertEquals("Deck:\n" +
-                "\"term1\" = def 1\n" +
-                "\"term2\" = def 2\n" +
-                "\"term3\" = def 3\n", ans);
+
+        String ans = listCardsCommandsHandler.execute(decks, new String[]{"Deck"});
+        Assertions.assertEquals("""
+                Deck:
+                "term1" = def 1
+                "term2" = def 2
+                "term3" = def 3
+                """, ans);
     }
 
     /**
@@ -55,7 +60,8 @@ public class ListCardsCommandTest {
 
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Deck");
-        String ans = listCardsCommand.execute(decks, new String[]{"Deck"});
+
+        String ans = listCardsCommandsHandler.execute(decks, new String[]{"Deck"});
 
         Assertions.assertEquals("Deck:\n" +
                 "В этой колоде пока нет карточек", ans);
@@ -67,9 +73,11 @@ public class ListCardsCommandTest {
     @Test
     void testIncorrectDeck() {
 
-        String ans = listCardsCommand.execute(userDecksData.getUserDecks(existUser), new String[]{"Deck"});
+        String ans = listCardsCommandsHandler.execute(userDecksData.getUserDecks(existUser), new String[]{"Deck"});
 
         // Проверяем отправку сообщения об ошибке
-        Assertions.assertEquals("Колода с именем Deck не существует в менеджере", ans);
+        Assertions.assertEquals("""
+                Ошибка выполнения команды. Подробности:
+                Колода с именем Deck не существует в менеджере""", ans);
     }
 }

@@ -1,12 +1,12 @@
 package ru.rtf.telegramBot.Commands;
 
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.Command;
+import ru.rtf.telegramBot.CommandHandler;
 
 /**
- * Команда справки /help
+ * Обработчик команды справки
  */
-public class HelpCommand implements Command {
+public class HelpCommandHandler implements CommandHandler {
 
     /**
      * Количество параметров команды

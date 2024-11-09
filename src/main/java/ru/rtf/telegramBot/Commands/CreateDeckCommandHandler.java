@@ -1,15 +1,12 @@
 package ru.rtf.telegramBot.Commands;
 
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.Command;
-
-import java.util.NoSuchElementException;
+import ru.rtf.telegramBot.CommandHandler;
 
 /**
- * Команда добавления новой колоды
- * <p>/create_deck название колоды</p>
+ * Обработчик команды добавления новой колоды
  */
-public class CreateDeckCommand implements Command {
+public class CreateDeckCommandHandler implements CommandHandler {
 
     /**
      * Количество параметров команды
@@ -24,8 +21,8 @@ public class CreateDeckCommand implements Command {
         //попытка добавить колоду
         try {
             usersDecks.addDeck(deckName);
-        } catch (NoSuchElementException | IllegalArgumentException e) {
-            return e.getMessage();
+        } catch (IllegalArgumentException e) {
+            return MessageComandError.formatted(e.getMessage());
         }
         //сообщение пользователю о выполнении
         return "Колода " + deckName + " успешно добавлена";

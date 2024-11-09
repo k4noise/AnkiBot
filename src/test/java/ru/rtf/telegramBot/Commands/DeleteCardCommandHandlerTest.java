@@ -7,9 +7,9 @@ import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
- * Тест команды удаления карты из колоды {@link DeleteCardCommand}
+ * Тест обработчика команды удаления карты из колоды
  */
-public class DeleteCardCommandTest {
+public class DeleteCardCommandHandlerTest {
     /**
      * id пользователя, для которого было инициализировано хранилище колод
      */
@@ -19,15 +19,15 @@ public class DeleteCardCommandTest {
      */
     private UserDecksData userDecksData;
     /**
-     * Команда для удаления карты из колоды
+     * Обработчик команды для удаления карты из колоды
      */
-    private DeleteCardCommand deleteCardCommand;
+    private DeleteCardCommandHandler deleteCardCommandHandler;
 
     @BeforeEach
     void setUp() {
         userDecksData = new UserDecksData();
         userDecksData.addUser(existUser);
-        deleteCardCommand = new DeleteCardCommand();
+        deleteCardCommandHandler = new DeleteCardCommandHandler();
     }
 
     /**
@@ -38,7 +38,7 @@ public class DeleteCardCommandTest {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Deck");
         decks.getDeck("Deck").addCard("del term", "def");
-        String ans = deleteCardCommand.execute(decks, new String[]{"Deck", "del term"});
+        String ans = deleteCardCommandHandler.execute(decks, new String[]{"Deck", "del term"});
 
         Assertions.assertEquals(0, decks.getDeck("Deck").getCards().size());
         Assertions.assertEquals("Карта с термином \"del term\" была успешно удалена из колоды Deck", ans);
@@ -52,10 +52,12 @@ public class DeleteCardCommandTest {
 
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Deck");
-        String ans = deleteCardCommand.execute(decks, new String[]{"Deck", "term"});
+        String ans = deleteCardCommandHandler.execute(decks, new String[]{"Deck", "term"});
 
         // Проверяем отправку сообщения об ошибке
-        Assertions.assertEquals("Карта с термином term не существует в колоде", ans);
+        Assertions.assertEquals("""
+                Ошибка выполнения команды. Подробности:
+                Карта с термином term не существует в колоде""", ans);
     }
 
     /**
@@ -64,8 +66,10 @@ public class DeleteCardCommandTest {
     @Test
     void testIncorrectDeck() {
 
-        String ans = deleteCardCommand.execute(userDecksData.getUserDecks(existUser), new String[]{"Deck", "term"});
+        String ans = deleteCardCommandHandler.execute(userDecksData.getUserDecks(existUser), new String[]{"Deck", "term"});
         // Проверяем отправку сообщения об ошибке
-        Assertions.assertEquals("Колода с именем Deck не существует в менеджере", ans);
+        Assertions.assertEquals("""
+                Ошибка выполнения команды. Подробности:
+                Колода с именем Deck не существует в менеджере""", ans);
     }
 }

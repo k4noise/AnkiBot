@@ -1,15 +1,15 @@
 package ru.rtf.telegramBot.Commands;
 
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.Command;
+import ru.rtf.telegramBot.CommandHandler;
 
 import java.util.NoSuchElementException;
 
 /**
- * Команда удаления колоды у пользователя
+ * Обработчик команды удаления колоды у пользователя
  * <p>/delete_deck название колоды</p>
  */
-public class DeleteDeckCommand implements Command {
+public class DeleteDeckCommandHandler implements CommandHandler {
 
     /**
      * Количество параметров команды
@@ -25,8 +25,8 @@ public class DeleteDeckCommand implements Command {
         //попытка удалить колоду
         try {
             usersDecks.removeDeck(deckName);
-        } catch (NoSuchElementException | IllegalArgumentException e) {
-            return e.getMessage();
+        } catch (NoSuchElementException e) {
+            return MessageComandError.formatted(e.getMessage());
         }
         //сообщение пользователю о выполнении
         return String.format("Колода %s была успешно удалена", deckName);

@@ -1,13 +1,12 @@
 package ru.rtf.telegramBot.Commands;
 
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.Command;
+import ru.rtf.telegramBot.CommandHandler;
 
 /**
- * Команда /start
- * выводит приветственное сообщение
+ * Обработчик команды начала диалога с пользователем
  */
-public class StartCommand implements Command {
+public class StartCommandHandler implements CommandHandler {
 
     /**
      * Количество параметров команды

@@ -1,15 +1,15 @@
 package ru.rtf.telegramBot.Commands;
 
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.Command;
+import ru.rtf.telegramBot.CommandHandler;
 
 import java.util.NoSuchElementException;
 
 /**
- * Команда переименования колоды
- * <p>/rename-deck старое название := новое название</p>
+ * Обработчик команды переименования колоды
+ * <p>/rename_deck старое название := новое название</p>
  */
-public class RenameDeckCommand implements Command {
+public class RenameDeckCommandHandler implements CommandHandler {
 
     /**
      * Количество параметров команды
@@ -28,7 +28,7 @@ public class RenameDeckCommand implements Command {
         try {
             usersDecks.updateDeckName(oldDeckName, newDeckName);
         } catch (NoSuchElementException | IllegalArgumentException e) {
-            return e.getMessage();
+            return MessageComandError.formatted(e.getMessage());
         }
         //сообщение пользователю о выполнении
         return "Колода успешно переименована: " + oldDeckName + " -> " + newDeckName;

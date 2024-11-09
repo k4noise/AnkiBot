@@ -5,12 +5,12 @@ import java.util.Map;
 /**
  * Класс управления командами бота
  */
-public class CommandManager {
+public class CommandHandlerManager {
 
     /**
      * Хранилище команд (название, экземпляр соответствующего класса)
      */
-    private final Map<String, Command> commands;
+    private final Map<String, CommandHandler> commands;
     /**
      * Хранилище колод пользователя по id чата
      */
@@ -19,10 +19,10 @@ public class CommandManager {
     /**
      * Инициализирует поля и добавляет команды в список
      *
-     * @param commands словарь команд
+     * @param commands      словарь команд
      * @param userDecksData для доступа к колодам конкретного пользователя
      */
-    public CommandManager(Map<String, Command> commands, UserDecksData userDecksData) {
+    public CommandHandlerManager(Map<String, CommandHandler> commands, UserDecksData userDecksData) {
         this.commands = commands;
         this.userDecksData = userDecksData;
     }
@@ -33,7 +33,7 @@ public class CommandManager {
      * @param nameCommand название команды (начинается с "/")
      * @return экземпляр команды
      */
-    public Command getByName(String nameCommand) {
+    public CommandHandler getByName(String nameCommand) {
         if (commands.containsKey(nameCommand))
             return commands.get(nameCommand);
         throw new IllegalArgumentException("Команда " + nameCommand + " не распознана");
@@ -52,17 +52,17 @@ public class CommandManager {
         if (!userDecksData.containsUser(chatId))
             userDecksData.addUser(chatId);
         //поиск класса введенной команды
-        Command command;
+        CommandHandler commandHandler;
         try {
-            command = getByName(partsMessage.getCommandName());
+            commandHandler = getByName(partsMessage.getCommandName());
         } catch (IllegalArgumentException e) {
             return e.getMessage();
         }
         //проверка параметров
         String[] paramsCommand = partsMessage.getCommandParams();
-        if (checkParameters(command, paramsCommand)) {
+        if (checkParameters(commandHandler, paramsCommand)) {
             //Выполнение команды
-            return command.execute(userDecksData.getUserDecks(chatId), paramsCommand);
+            return commandHandler.execute(userDecksData.getUserDecks(chatId), paramsCommand);
         }
         return "Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)";
     }
@@ -71,12 +71,12 @@ public class CommandManager {
      * <p>Проверка наличия необходимого количества аргументов для команды.</p>
      * <p>Количество аргументов зависит от конкретной команды</p>
      *
-     * @param command       Команда
-     * @param paramsCommand Параметры для запуска команды
+     * @param commandHandler Команда
+     * @param paramsCommand  Параметры для запуска команды
      * @return Достаточно ли количества параметров для запуска команды
      */
-    private boolean checkParameters(Command command, String[] paramsCommand) {
-        int correctCountParams = command.getParamsCount();
+    private boolean checkParameters(CommandHandler commandHandler, String[] paramsCommand) {
+        int correctCountParams = commandHandler.getParamsCount();
         return (paramsCommand == null && correctCountParams == 0) ||
                 (paramsCommand != null && paramsCommand.length >= correctCountParams);
     }

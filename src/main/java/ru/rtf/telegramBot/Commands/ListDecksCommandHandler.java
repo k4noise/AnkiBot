@@ -2,14 +2,14 @@ package ru.rtf.telegramBot.Commands;
 
 import ru.rtf.Deck;
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.Command;
+import ru.rtf.telegramBot.CommandHandler;
 
 import java.util.Collection;
 
 /**
- * Класс просмотра всех колод /list-decks
+ * Обработчик команды просмотра всех колод пользователя
  */
-public class ListDecksCommand implements Command {
+public class ListDecksCommandHandler implements CommandHandler {
 
     /**
      * Количество параметров команды
@@ -23,7 +23,7 @@ public class ListDecksCommand implements Command {
         //сообщение пользователю о выполнении
         if (usersDecks.getDecks().isEmpty())
             return "У Вас пока нет ни одной колоды, создайте первую /create_deck <название>";
-        return "Ваши колоды:\n" + collectionDeckToSting(usersDecks.getDecks());
+        return "Ваши колоды:" + collectionDeckToSting(usersDecks.getDecks());
     }
 
     @Override
@@ -40,8 +40,8 @@ public class ListDecksCommand implements Command {
     private String collectionDeckToSting(Collection<Deck> decks) {
         StringBuilder decksToSting = new StringBuilder();
         for (Deck deck : decks) {
-            decksToSting.append(deck);
             decksToSting.append("\n");
+            decksToSting.append(deck);
         }
         return decksToSting.toString();
     }

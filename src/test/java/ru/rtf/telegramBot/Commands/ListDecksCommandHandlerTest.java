@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Assertions;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
- * Тест команды отображения колод пользователя {@link ListDecksCommand}
+ * Тест обработчика команды отображения колод пользователя
  */
-public class ListDecksCommandTest {
+public class ListDecksCommandHandlerTest {
     /**
      * id пользователя, для которого было инициализировано хранилище колод
      */
@@ -19,16 +19,16 @@ public class ListDecksCommandTest {
      */
     private UserDecksData userDecksData;
     /**
-     * Команда для отображения колод
+     * Обработчик команды для отображения колод
      */
-    private ListDecksCommand listDecksCommand;
+    private ListDecksCommandHandler listDecksCommandHandler;
 
 
     @BeforeEach
     void setUp() {
         userDecksData = new UserDecksData();
         userDecksData.addUser(existUser);
-        listDecksCommand = new ListDecksCommand();
+        listDecksCommandHandler = new ListDecksCommandHandler();
     }
 
     /**
@@ -37,7 +37,7 @@ public class ListDecksCommandTest {
     @Test
     void testExecuteWithNoDecksEmpty() {
         // попытка выполнить команду
-        String ans = listDecksCommand.execute(userDecksData.getUserDecks(existUser), null);
+        String ans = listDecksCommandHandler.execute(userDecksData.getUserDecks(existUser), null);
 
         // Проверка, что отправляется корректное сообщение
         Assertions.assertEquals("У Вас пока нет ни одной колоды, создайте первую /create_deck <название>", ans);
@@ -54,9 +54,12 @@ public class ListDecksCommandTest {
         deckManager.addDeck("second");
 
         // попытка выполнить команду
-        String ans = listDecksCommand.execute(deckManager, null);
+        String ans = listDecksCommandHandler.execute(deckManager, null);
 
-        Assertions.assertEquals("Ваши колоды:\nfirst: 0 карт\n" +
-                "second: 0 карт\n", ans);
+        Assertions.assertEquals("""
+                Ваши колоды:
+                first: 0 карт
+                second: 0 карт"""
+                , ans);
     }
 }

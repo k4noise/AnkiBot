@@ -7,9 +7,9 @@ import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.UserDecksData;
 
 /**
- * Тесты команды редактирования термина карты {@link EditCardTermCommand}
+ * Тест обработчика команды редактирования термина карты
  */
-public class EditCardTermCommandTest {
+public class EditCardTermCommandHandlerTest {
     /**
      * id пользователя, для которого было инициализировано хранилище колод
      */
@@ -19,15 +19,15 @@ public class EditCardTermCommandTest {
      */
     private UserDecksData userDecksData;
     /**
-     * Команда для редактирования термина карты
+     * Обработчик команды для редактирования термина карты
      */
-    private EditCardTermCommand editCardTermCommand;
+    private EditCardTermCommandHandler editCardTermCommandHandler;
 
     @BeforeEach
     void setUp() {
         userDecksData = new UserDecksData();
         userDecksData.addUser(existUser);
-        editCardTermCommand = new EditCardTermCommand();
+        editCardTermCommandHandler = new EditCardTermCommandHandler();
     }
 
     /**
@@ -43,7 +43,7 @@ public class EditCardTermCommandTest {
         decks.getDeck(deckName).addCard(term, definition);
 
         String newTerm = "new term";
-        String ans = editCardTermCommand.execute(decks, new String[]{deckName, term, newTerm});
+        String ans = editCardTermCommandHandler.execute(decks, new String[]{deckName, term, newTerm});
         Assertions.assertEquals("Термин карты был успешно изменен: \"new term\" = def", ans);
     }
 
@@ -55,10 +55,12 @@ public class EditCardTermCommandTest {
 
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("Deck");
-        String ans = editCardTermCommand.execute(decks, new String[]{"Deck", "term", "new term"});
+        String ans = editCardTermCommandHandler.execute(decks, new String[]{"Deck", "term", "new term"});
 
         // Проверяем отправку сообщения об ошибке
-        Assertions.assertEquals("Карта с термином term не существует в колоде", ans);
+        Assertions.assertEquals("""
+                Ошибка выполнения команды. Подробности:
+                Карта с термином term не существует в колоде""", ans);
     }
 
     /**
@@ -67,10 +69,12 @@ public class EditCardTermCommandTest {
     @Test
     void testIncorrectDeck() {
 
-        String ans = editCardTermCommand.execute(userDecksData.getUserDecks(existUser),
+        String ans = editCardTermCommandHandler.execute(userDecksData.getUserDecks(existUser),
                 new String[]{"Deck", "term", "new term"});
 
         // Проверяем отправку сообщения об ошибке
-        Assertions.assertEquals("Колода с именем Deck не существует в менеджере", ans);
+        Assertions.assertEquals("""
+                Ошибка выполнения команды. Подробности:
+                Колода с именем Deck не существует в менеджере""", ans);
     }
 }

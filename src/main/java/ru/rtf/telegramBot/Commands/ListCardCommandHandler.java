@@ -2,15 +2,16 @@ package ru.rtf.telegramBot.Commands;
 
 import ru.rtf.Card;
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.Command;
+import ru.rtf.telegramBot.CommandHandler;
 
 import java.util.NoSuchElementException;
 
 /**
- * Команда просмотра карточки из колоды
+ * Обработчик команды
+ * Вывода карточки из колоды
  * <p>/list_card название колоды : термин</p>
  */
-public class ListCardCommand implements Command {
+public class ListCardCommandHandler implements CommandHandler {
     /**
      * Количество параметров команды
      * 1.имя колоды
@@ -29,8 +30,8 @@ public class ListCardCommand implements Command {
             Card card = usersDecks.getDeck(deckName).getCard(term);
             //сообщение пользователю о выполнении
             return String.format(card.toString());
-        } catch (NoSuchElementException | IllegalArgumentException e) {
-            return e.getMessage();
+        } catch (NoSuchElementException e) {
+            return MessageComandError.formatted(e.getMessage());
         }
     }
 

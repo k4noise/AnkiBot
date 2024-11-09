@@ -2,15 +2,15 @@ package ru.rtf.telegramBot.Commands;
 
 import ru.rtf.Deck;
 import ru.rtf.DeckManager;
-import ru.rtf.telegramBot.Command;
+import ru.rtf.telegramBot.CommandHandler;
 
 import java.util.NoSuchElementException;
 
 /**
- * Команда для отображения всех карт конкретной колоды
- * <p>/list_cards <название колоды></p>
+ * Обработчик команды
+ * Вывода списка всех карт колоды
  */
-public class ListCardsCommand implements Command {
+public class ListCardsCommandsHandler implements CommandHandler {
 
     /**
      * Количество параметров команды
@@ -27,13 +27,13 @@ public class ListCardsCommand implements Command {
         //попытка найти колоду
         try {
             deck = usersDecks.getDeck(deckName);
-        } catch (NoSuchElementException | IllegalArgumentException e) {
-            return e.getMessage();
+        } catch (NoSuchElementException e) {
+            return MessageComandError.formatted(e.getMessage());
         }
         String cardsDescription = deck.getCardsDescription();
-        if(cardsDescription.isEmpty())
+        if (cardsDescription.isEmpty())
             return deckName + ":\n" + "В этой колоде пока нет карточек";
-        return String.format("%s:\n%s",deckName,cardsDescription);
+        return String.format("%s:\n%s", deckName, cardsDescription);
     }
 
     @Override

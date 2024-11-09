@@ -3,13 +3,13 @@ package ru.rtf.telegramBot.Commands;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.UserDecksData;
+import ru.rtf.DeckManager;
 
 /**
- * Тест команды удаления колоды {@link DeleteDeckCommand}
+ * Тест обработчика команды удаление колоды
  */
-class DeleteDeckCommandTest {
+class DeleteDeckCommandHandlerTest {
     /**
      * id пользователя, для которого было инициализировано хранилище колод
      */
@@ -19,15 +19,15 @@ class DeleteDeckCommandTest {
      */
     private UserDecksData userDecksData;
     /**
-     * Команда для удаления колоды
+     * Обработчик команды для удаления колоды
      */
-    private DeleteDeckCommand deleteDeckCommand;
+    private DeleteDeckCommandHandler deleteDeckCommandHandler;
 
     @BeforeEach
     void setUp() {
         userDecksData = new UserDecksData();
         userDecksData.addUser(existUser);
-        deleteDeckCommand = new DeleteDeckCommand();
+        deleteDeckCommandHandler = new DeleteDeckCommandHandler();
     }
 
     /**
@@ -38,7 +38,7 @@ class DeleteDeckCommandTest {
         DeckManager decks = userDecksData.getUserDecks(existUser);
         decks.addDeck("DelDeck");
 
-        String ans = deleteDeckCommand.execute(decks, new String[]{"DelDeck"});
+        String ans = deleteDeckCommandHandler.execute(decks, new String[]{"DelDeck"});
         Assertions.assertEquals("Колода DelDeck была успешно удалена", ans);
     }
 
@@ -49,7 +49,9 @@ class DeleteDeckCommandTest {
     void testEmptyDeckList() {
         DeckManager decks = userDecksData.getUserDecks(existUser);
 
-        String ans = deleteDeckCommand.execute(decks, new String[]{"MyDeck"});
-        Assertions.assertEquals("Колода с именем MyDeck не существует в менеджере", ans);
+        String ans = deleteDeckCommandHandler.execute(decks, new String[]{"MyDeck"});
+        Assertions.assertEquals("""
+                Ошибка выполнения команды. Подробности:
+                Колода с именем MyDeck не существует в менеджере""", ans);
     }
 }
