@@ -1,4 +1,4 @@
-package ru.rtf.telegramBot.Commands;
+package ru.rtf.telegramBot.commands;
 
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.CommandHandler;
@@ -19,7 +19,7 @@ public class DeleteCardCommandHandler implements CommandHandler {
     private final int COUNT_PARAMS = 2;
 
     @Override
-    public String execute(DeckManager usersDecks, String[] params) {
+    public String handle(DeckManager usersDecks, String[] params) {
         String deckName = params[0];
         String term = params[1];
 
@@ -27,7 +27,7 @@ public class DeleteCardCommandHandler implements CommandHandler {
         try {
             usersDecks.getDeck(deckName).removeCard(term);
         } catch (NoSuchElementException e) {
-            return MessageComandError.formatted(e.getMessage());
+            return MESSAGE_COMMAND_ERROR.formatted(e.getMessage());
         }
         //сообщение пользователю о выполнении
         return String.format("Карта с термином \"%s\" была успешно удалена из колоды %s", term, deckName);

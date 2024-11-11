@@ -3,9 +3,9 @@ package ru.rtf.telegramBot;
 import java.util.Arrays;
 
 /**
- * Обработчик сообщений пользователя
+ * Парсер команд из сообщения пользователя
  */
-public class MessageProcessor {
+public class CommandParser {
     /**
      * Хранит в себе составляющие сообщения
      */
@@ -16,7 +16,7 @@ public class MessageProcessor {
      *
      * @param text Сообщение пользователя
      */
-    public MessageProcessor(String text) {
+    public CommandParser(String text) {
         messageParts = parseUsersMessage(text);
     }
 

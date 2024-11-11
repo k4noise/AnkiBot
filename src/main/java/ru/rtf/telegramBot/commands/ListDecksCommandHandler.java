@@ -1,4 +1,4 @@
-package ru.rtf.telegramBot.Commands;
+package ru.rtf.telegramBot.commands;
 
 import ru.rtf.Deck;
 import ru.rtf.DeckManager;
@@ -18,7 +18,7 @@ public class ListDecksCommandHandler implements CommandHandler {
     public final int COUNT_PARAMS = 0;
 
     @Override
-    public String execute(DeckManager usersDecks, String[] params) {
+    public String handle(DeckManager usersDecks, String[] params) {
 
         //сообщение пользователю о выполнении
         if (usersDecks.getDecks().isEmpty())

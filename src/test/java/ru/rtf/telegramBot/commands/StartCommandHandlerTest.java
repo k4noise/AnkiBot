@@ -1,4 +1,4 @@
-package ru.rtf.telegramBot.Commands;
+package ru.rtf.telegramBot.commands;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +25,7 @@ public class StartCommandHandlerTest {
      */
     @Test
     void testCorrectHelloText() {
-        String ans = startCommandHandler.execute(new DeckManager(),null);
+        String ans = startCommandHandler.handle(new DeckManager(),null);
         Assertions.assertEquals("Добро пожаловать в AnkiBot. Введите команду /help, " +
                 "чтобы посмотреть доступные команды", ans);
     }

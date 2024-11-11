@@ -1,4 +1,4 @@
-package ru.rtf.telegramBot.Commands;
+package ru.rtf.telegramBot.commands;
 
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.CommandHandler;
@@ -15,7 +15,7 @@ public class HelpCommandHandler implements CommandHandler {
     private final int COUNT_PARAMS = 0;
 
     @Override
-    public String execute(DeckManager usersDecks, String[] params) {
+    public String handle(DeckManager usersDecks, String[] params) {
         String help = """
                 Anki — это телеграм бот для изучения карточек - их термина и определения, которое может использоваться для изучения новых языков, памяти, подготовки к экзаменам и других целях.
                 
