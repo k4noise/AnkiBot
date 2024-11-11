@@ -12,7 +12,7 @@ public class CreateDeckCommandHandler implements CommandHandler {
      * Количество параметров команды
      * 1.имя новой колоды
      */
-    private final int COUNT_PARAMS = 1;
+    private static final int COUNT_PARAMS = 1;
 
     @Override
     public String handle(DeckManager usersDecks, String[] params) {

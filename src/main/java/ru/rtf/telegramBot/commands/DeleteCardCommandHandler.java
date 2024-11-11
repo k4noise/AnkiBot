@@ -16,7 +16,7 @@ public class DeleteCardCommandHandler implements CommandHandler {
      * 1.имя колоды
      * 2.термин
      */
-    private final int COUNT_PARAMS = 2;
+    private static final int COUNT_PARAMS = 2;
 
     @Override
     public String handle(DeckManager usersDecks, String[] params) {

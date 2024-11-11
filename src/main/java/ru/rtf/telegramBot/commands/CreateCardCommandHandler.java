@@ -18,7 +18,7 @@ public class CreateCardCommandHandler implements CommandHandler {
      * 2.термин
      * 3.определение
      */
-    private final int COUNT_PARAMS = 3;
+    private static final int COUNT_PARAMS = 3;
 
     @Override
     public String handle(DeckManager usersDecks, String[] params) {
