@@ -51,16 +51,16 @@ public class CommandManager {
      * @return сообщение с результатом выполнения команды
      */
     public String handle(Long chatId, String text) {
-        MessageProcessor messageProcessor = new MessageProcessor(text);
+        CommandParser commandParser = new CommandParser(text);
         DeckManager userDeckManager = userDeckManagers.computeIfAbsent(chatId, id -> new DeckManager());
 
-        String commandName = messageProcessor.getCommandName();
+        String commandName = commandParser.getCommandName();
         CommandHandler commandHandler = commands.get(commandName);
         if (commandHandler == null) {
             return "Команда " + commandName + " не распознана";
         }
 
-        String[] commandParams = messageProcessor.getCommandParams();
+        String[] commandParams = commandParser.getCommandParams();
         return checkArgumentsCount(commandHandler, commandParams)
                 ? commandHandler.handle(userDeckManager, commandParams)
                 : "Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)";
