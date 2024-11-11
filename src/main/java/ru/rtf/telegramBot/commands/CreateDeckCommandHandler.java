@@ -1,4 +1,4 @@
-package ru.rtf.telegramBot.Commands;
+package ru.rtf.telegramBot.commands;
 
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.CommandHandler;
@@ -15,14 +15,14 @@ public class CreateDeckCommandHandler implements CommandHandler {
     private final int COUNT_PARAMS = 1;
 
     @Override
-    public String execute(DeckManager usersDecks, String[] params) {
+    public String handle(DeckManager usersDecks, String[] params) {
         String deckName = params[0];
 
         //попытка добавить колоду
         try {
             usersDecks.addDeck(deckName);
         } catch (IllegalArgumentException e) {
-            return MessageComandError.formatted(e.getMessage());
+            return MESSAGE_COMMAND_ERROR.formatted(e.getMessage());
         }
         //сообщение пользователю о выполнении
         return "Колода " + deckName + " успешно добавлена";

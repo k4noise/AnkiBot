@@ -1,4 +1,4 @@
-package ru.rtf.telegramBot.Commands;
+package ru.rtf.telegramBot.commands;
 
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.CommandHandler;
@@ -19,7 +19,7 @@ public class RenameDeckCommandHandler implements CommandHandler {
     private final int COUNT_PARAMS = 2;
 
     @Override
-    public String execute(DeckManager usersDecks, String[] params) {
+    public String handle(DeckManager usersDecks, String[] params) {
         //обработка параметров
         String oldDeckName = params[0];
         String newDeckName = params[1];
@@ -28,7 +28,7 @@ public class RenameDeckCommandHandler implements CommandHandler {
         try {
             usersDecks.updateDeckName(oldDeckName, newDeckName);
         } catch (NoSuchElementException | IllegalArgumentException e) {
-            return MessageComandError.formatted(e.getMessage());
+            return MESSAGE_COMMAND_ERROR.formatted(e.getMessage());
         }
         //сообщение пользователю о выполнении
         return "Колода успешно переименована: " + oldDeckName + " -> " + newDeckName;

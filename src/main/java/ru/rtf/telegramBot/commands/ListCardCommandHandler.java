@@ -1,4 +1,4 @@
-package ru.rtf.telegramBot.Commands;
+package ru.rtf.telegramBot.commands;
 
 import ru.rtf.Card;
 import ru.rtf.DeckManager;
@@ -20,7 +20,7 @@ public class ListCardCommandHandler implements CommandHandler {
     private final int COUNT_PARAMS = 2;
 
     @Override
-    public String execute(DeckManager usersDecks, String[] params) {
+    public String handle(DeckManager usersDecks, String[] params) {
         //обработка параметров
         String deckName = params[0];
         String term = params[1];
@@ -31,7 +31,7 @@ public class ListCardCommandHandler implements CommandHandler {
             //сообщение пользователю о выполнении
             return String.format(card.toString());
         } catch (NoSuchElementException e) {
-            return MessageComandError.formatted(e.getMessage());
+            return MESSAGE_COMMAND_ERROR.formatted(e.getMessage());
         }
     }
 

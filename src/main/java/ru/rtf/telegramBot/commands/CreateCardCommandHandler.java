@@ -1,4 +1,4 @@
-package ru.rtf.telegramBot.Commands;
+package ru.rtf.telegramBot.commands;
 
 import ru.rtf.Card;
 import ru.rtf.DeckManager;
@@ -21,7 +21,7 @@ public class CreateCardCommandHandler implements CommandHandler {
     private final int COUNT_PARAMS = 3;
 
     @Override
-    public String execute(DeckManager usersDecks, String[] params) {
+    public String handle(DeckManager usersDecks, String[] params) {
         String deckName = params[0];
         String term = params[1];
 
@@ -29,7 +29,7 @@ public class CreateCardCommandHandler implements CommandHandler {
         try{
             newCard = new Card(term, params[2]);
         }catch (IllegalArgumentException e){
-            return MessageComandError.formatted(e.getMessage());
+            return MESSAGE_COMMAND_ERROR.formatted(e.getMessage());
         }
 
         //попытка добавить карту в колоду
@@ -37,7 +37,7 @@ public class CreateCardCommandHandler implements CommandHandler {
             usersDecks.getDeck(deckName).addCard(newCard);
 
         } catch (NoSuchElementException | IllegalArgumentException eNoSuch) {
-            return MessageComandError.formatted(eNoSuch.getMessage());
+            return MESSAGE_COMMAND_ERROR.formatted(eNoSuch.getMessage());
         }
         //сообщение пользователю о выполнении
         return "Карта с термином %s была успешно добавлена в колоду %s"
