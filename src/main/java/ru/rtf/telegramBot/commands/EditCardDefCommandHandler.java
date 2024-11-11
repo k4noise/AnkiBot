@@ -1,4 +1,4 @@
-package ru.rtf.telegramBot.Commands;
+package ru.rtf.telegramBot.commands;
 
 import ru.rtf.Deck;
 import ru.rtf.DeckManager;
@@ -21,7 +21,7 @@ public class EditCardDefCommandHandler implements CommandHandler {
     private final int COUNT_PARAMS = 3;
 
     @Override
-    public String execute(DeckManager usersDecks, String[] params) {
+    public String handle(DeckManager usersDecks, String[] params) {
         //обработка параметров
         String deckName = params[0];
         String term = params[1];
@@ -35,7 +35,7 @@ public class EditCardDefCommandHandler implements CommandHandler {
             return String.format("Определение карты было успешно изменено: %s", userDeck.getCard(term).toString());
         } catch (NoSuchElementException e) {
             // не существует колода или карта
-            return MessageComandError.formatted(e.getMessage());
+            return MESSAGE_COMMAND_ERROR.formatted(e.getMessage());
         }
     }
 

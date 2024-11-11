@@ -4,22 +4,21 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
- * Тесты на обработчика сообщений пользователя {@link MessageProcessor}
+ * Тесты на парсера команд из сообщений пользователя {@link CommandParser}
  */
-class MessageProcessorTest {
-
+class CommandParserTest {
     /**
      * Тест проверяет корректность получения имени команды из различных сообщений.
      */
     @Test
     void testGetCommandNameCorrect() {
-        MessageProcessor parser1 = new MessageProcessor("/edit-card-def param1 param2");
+        CommandParser parser1 = new CommandParser("/edit-card-def param1 param2");
         Assertions.assertEquals("/edit-card-def", parser1.getCommandName());
 
-        MessageProcessor parser2 = new MessageProcessor("help");
+        CommandParser parser2 = new CommandParser("help");
         Assertions.assertEquals("help", parser2.getCommandName());
 
-        MessageProcessor parser3 = new MessageProcessor("/add /del");
+        CommandParser parser3 = new CommandParser("/add /del");
         Assertions.assertEquals("/add", parser3.getCommandName());
     }
 
@@ -28,7 +27,7 @@ class MessageProcessorTest {
      */
     @Test
     void testGetCommandNameWithEmptyStart() {
-        MessageProcessor parser = new MessageProcessor("     \t\n/add /del");
+        CommandParser parser = new CommandParser("     \t\n/add /del");
         Assertions.assertEquals("/add", parser.getCommandName());
     }
 
@@ -37,10 +36,10 @@ class MessageProcessorTest {
      */
     @Test
     void testGetCommandNameWithEmptyMessage() {
-        MessageProcessor parser = new MessageProcessor("");
+        CommandParser parser = new CommandParser("");
         Assertions.assertNull(parser.getCommandName());
 
-        MessageProcessor parserSpan = new MessageProcessor("  ");
+        CommandParser parserSpan = new CommandParser("  ");
         Assertions.assertNull(parserSpan.getCommandName());
     }
 
@@ -49,7 +48,7 @@ class MessageProcessorTest {
      */
     @Test
     void testGetCommandNameWithNullMessage() {
-        MessageProcessor parser = new MessageProcessor(null);
+        CommandParser parser = new CommandParser(null);
         Assertions.assertNull(parser.getCommandName());
     }
 
@@ -58,7 +57,7 @@ class MessageProcessorTest {
      */
     @Test
     void testGetCommandParamsSpace() {
-        MessageProcessor parser = new MessageProcessor("/edit-card-def длинный параметр с пробелами");
+        CommandParser parser = new CommandParser("/edit-card-def длинный параметр с пробелами");
         String[] expectedParams = {"длинный параметр с пробелами"};
         Assertions.assertArrayEquals(expectedParams, parser.getCommandParams());
     }
@@ -68,7 +67,7 @@ class MessageProcessorTest {
      */
     @Test
     void testGetCommandParamsSpaceSeveral() {
-        MessageProcessor parser = new MessageProcessor(
+        CommandParser parser = new CommandParser(
                 "/edit-card-def название колоды: большой термин := новое определение");
         String[] expectedParams = {"название колоды", "большой термин", "новое определение"};
         Assertions.assertArrayEquals(expectedParams, parser.getCommandParams());
@@ -79,7 +78,7 @@ class MessageProcessorTest {
      */
     @Test
     void testParamsCommandWithNoGetParams() {
-        MessageProcessor parser = new MessageProcessor("/start");
+        CommandParser parser = new CommandParser("/start");
         Assertions.assertNull(parser.getCommandParams());
     }
 
@@ -88,7 +87,7 @@ class MessageProcessorTest {
      */
     @Test
     void testParse() {
-        MessageProcessor parser = new MessageProcessor("");
+        CommandParser parser = new CommandParser("");
         String[] expectedParts = {"/help:нет:пробела", "param"};
         Assertions.assertArrayEquals(expectedParts, parser.parseUsersMessage("/help:нет:пробела param"));
     }
@@ -98,7 +97,7 @@ class MessageProcessorTest {
      */
     @Test
     void testParseMessageWithEmptyMessage() {
-        MessageProcessor parser = new MessageProcessor("");
+        CommandParser parser = new CommandParser("");
         Assertions.assertNull(parser.parseUsersMessage(""));
     }
 
@@ -107,7 +106,7 @@ class MessageProcessorTest {
      */
     @Test
     void testParseUsersMessageWithSpacesAndEmptyValues() {
-        MessageProcessor parser = new MessageProcessor(" /start  param1=  :param2 ");
+        CommandParser parser = new CommandParser(" /start  param1=  :param2 ");
         String[] expectedParts = {"/start", "param1", "param2"};
         Assertions.assertArrayEquals(expectedParts, parser.parseUsersMessage(" /start  param1=  :param2 "));
     }
