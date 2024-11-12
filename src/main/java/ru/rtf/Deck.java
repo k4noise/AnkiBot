@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * Колода с картами для обучения
  *
- * @author Кистанова Марина
+ * @author k4noise
  * @since 22.10.2024
  */
 public class Deck {
