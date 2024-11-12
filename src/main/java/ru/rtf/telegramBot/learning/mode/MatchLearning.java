@@ -34,7 +34,8 @@ public class MatchLearning implements LearningSession {
 
         return """
                 Утверждение:
-                %s - %s""".formatted(allCards.peek().getTerm(), allDefinitions.get(randomDefinitionIndex));
+                %s - %s
+                1 - верно, 0 - неверно""".formatted(allCards.peek().getTerm(), allDefinitions.get(randomDefinitionIndex));
     }
 
     @Override

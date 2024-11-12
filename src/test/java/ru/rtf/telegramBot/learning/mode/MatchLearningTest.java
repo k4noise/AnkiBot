@@ -39,7 +39,8 @@ class MatchLearningTest {
         String question = matchLearning.formQuestion();
         Assertions.assertEquals("""
                 Утверждение:
-                term - def""", question);
+                term - def
+                1 - верно, 0 - неверно""", question);
     }
 
     /**

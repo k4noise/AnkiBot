@@ -54,7 +54,8 @@ class SessionManagerTest {
                 Чтобы досрочно завершить сеанс, воспользуйтесь командой /end_check
                 
                 Ваш первый вопрос: Утверждение:
-                term - def""", startMessage);
+                term - def
+                1 - верно, 0 - неверно""", startMessage);
     }
 
     /**
