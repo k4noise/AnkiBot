@@ -3,6 +3,7 @@ package ru.rtf.telegramBot;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.rtf.telegramBot.learning.SessionManager;
 
 /**
  * Тесты для класса управления командами
@@ -23,7 +24,7 @@ class CommandManagerTest {
      */
     @BeforeEach
     void setUp() {
-        commandManager = new CommandManager();
+        commandManager = new CommandManager(new SessionManager());
     }
 
     /**
@@ -52,5 +53,16 @@ class CommandManagerTest {
     void testNoCorrectCountParams() {
         String message = commandManager.handle(newChatId, "/rename_deck old name:=");
         Assertions.assertEquals("Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)", message);
+    }
+
+    /**
+     * Тест команды обучения
+     */
+    @Test
+    void testLearningCommand() {
+        String message = commandManager.handle(newChatId, "/end_check");
+        Assertions.assertEquals("""
+                Ошибка выполнения команды. Подробности:
+                Нет активной сессии обучения""", message);
     }
 }

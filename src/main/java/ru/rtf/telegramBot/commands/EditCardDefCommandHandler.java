@@ -21,7 +21,7 @@ public class EditCardDefCommandHandler implements CommandHandler {
     private final int COUNT_PARAMS = 3;
 
     @Override
-    public String handle(DeckManager usersDecks, String[] params) {
+    public String handle(DeckManager usersDecks, Long id, String[] params) {
         //обработка параметров
         String deckName = params[0];
         String term = params[1];

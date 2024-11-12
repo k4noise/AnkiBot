@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.rtf.DeckManager;
+
 /**
  * Тест обработчика команды создания новой колоды
  */
@@ -16,6 +17,10 @@ class CreateDeckCommandHandlerTest {
      * Менеджер колод пользователя
      */
     private DeckManager deckManager;
+    /**
+     * Идентификатор чата
+     */
+    private Long chatId = 1L;
 
     /**
      * Создание нового экземпляра обработчика команд и менеджера колод для каждого теста
@@ -31,7 +36,7 @@ class CreateDeckCommandHandlerTest {
      */
     @Test
     void testSimpleAddDeck() {
-        String message = createDeckCommandHandler.handle(deckManager, new String[]{"Deck"});
+        String message = createDeckCommandHandler.handle(deckManager, chatId, new String[]{"Deck"});
 
         Assertions.assertEquals(1, deckManager.getDecks().size());
         Assertions.assertEquals("Колода Deck успешно добавлена", message);
@@ -44,7 +49,7 @@ class CreateDeckCommandHandlerTest {
     void testIncorrectWordingCommand() {
         deckManager.addDeck("name");
 
-        String ans = createDeckCommandHandler.handle(deckManager, new String[]{"name"});
+        String ans = createDeckCommandHandler.handle(deckManager, chatId, new String[]{"name"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""

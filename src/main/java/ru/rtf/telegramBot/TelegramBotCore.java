@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import ru.rtf.telegramBot.learning.SessionManager;
 
 /**
  * Базовый класс телеграм бота
@@ -20,6 +21,10 @@ public class TelegramBotCore extends TelegramLongPollingBot {
      * Управляет командами бота
      */
     private final CommandManager commandManager;
+    /**
+     * Управляет сессиями обучения
+     */
+    private final SessionManager sessionManager;
 
     /**
      * Создание экземпляра бота
@@ -32,7 +37,8 @@ public class TelegramBotCore extends TelegramLongPollingBot {
         super(token);
         this.telegramBotName = telegramBotName;
 
-        commandManager = new CommandManager();
+        sessionManager = new SessionManager();
+        commandManager = new CommandManager(sessionManager);
     }
 
     /**
@@ -53,7 +59,13 @@ public class TelegramBotCore extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             Message message = update.getMessage();
             Long chatId = message.getChatId();
-            String messageResultExecution = commandManager.handle(chatId, message.getText());
+            boolean isCommand = message.getText()
+                    .trim()
+                    .startsWith("/");
+
+            String messageResultExecution = !isCommand || sessionManager.hasActive(chatId)
+                    ? sessionManager.handle(chatId, message.getText())
+                    : commandManager.handle(chatId, message.getText());
             sendMessage(chatId, messageResultExecution);
         }
     }

@@ -17,6 +17,10 @@ public class EditCardTermCommandHandlerTest {
      * Менеджер колод пользователя
      */
     private DeckManager deckManager;
+    /**
+     * Идентификатор чата
+     */
+    private Long chatId = 1L;
 
     @BeforeEach
     void setUp() {
@@ -33,7 +37,7 @@ public class EditCardTermCommandHandlerTest {
         deckManager.getDeck("Deck").addCard("term", "def");
 
         String newTerm = "new term";
-        String message = editCardTermCommandHandler.handle(deckManager, new String[]{"Deck", "term", newTerm});
+        String message = editCardTermCommandHandler.handle(deckManager, chatId, new String[]{"Deck", "term", newTerm});
         Assertions.assertEquals("Термин карты был успешно изменен: \"new term\" = def", message);
     }
 
@@ -42,7 +46,7 @@ public class EditCardTermCommandHandlerTest {
      */
     @Test
     void testIncorrectTerm() {
-        String message = editCardTermCommandHandler.handle(deckManager, new String[]{"Deck", "term", "new term"});
+        String message = editCardTermCommandHandler.handle(deckManager, chatId, new String[]{"Deck", "term", "new term"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""
@@ -55,7 +59,7 @@ public class EditCardTermCommandHandlerTest {
      */
     @Test
     void testIncorrectDeck() {
-        String message = editCardTermCommandHandler.handle(deckManager, new String[]{"Deck2", "term", "new term"});
+        String message = editCardTermCommandHandler.handle(deckManager, chatId, new String[]{"Deck2", "term", "new term"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""

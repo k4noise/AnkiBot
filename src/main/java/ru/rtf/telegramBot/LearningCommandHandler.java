@@ -1,11 +1,11 @@
 package ru.rtf.telegramBot;
 
-import ru.rtf.DeckManager;
+import ru.rtf.telegramBot.learning.SessionManager;
 
 /**
- * Интерфейс для обработчиков команд бота вне режимов
+ * Интерфейс для обработчиков команд бота в режиме обучения
  */
-public interface CommandHandler {
+public interface LearningCommandHandler {
     /**
      * Сообщение об ошибке исполнения команды
      */
@@ -14,14 +14,13 @@ public interface CommandHandler {
             %s""";
 
     /**
-     * Обрабатывает команду
+     * Обрабатывает команду в режиме обучения
      *
-     * @param usersDecks - колоды пользователя
-     * @param chatId     - идентификатор чата
-     * @param params     - параметры необходимые команде
+     * @param sessionManager Менеджер сессий пользователей
+     * @param chatId         Идентификатор пользователя
      * @return сообщение о результате обработки команды
      */
-    String handle(DeckManager usersDecks, Long chatId, String[] params);
+    String handle(SessionManager sessionManager, Long chatId);
 
     /**
      * Возвращает количество параметров нужных команде для выполнения
@@ -30,3 +29,4 @@ public interface CommandHandler {
      */
     int getParamsCount();
 }
+

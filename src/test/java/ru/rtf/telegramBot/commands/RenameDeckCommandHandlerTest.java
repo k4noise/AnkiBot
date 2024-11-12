@@ -17,6 +17,10 @@ class RenameDeckCommandHandlerTest {
      * Менеджер колод пользователя
      */
     private DeckManager deckManager;
+    /**
+     * Идентификатор чата
+     */
+    private Long chatId = 1L;
 
     @BeforeEach
     void setUp() {
@@ -31,7 +35,7 @@ class RenameDeckCommandHandlerTest {
     void testCorrectNames() {
         deckManager.addDeck("OldName");
 
-        String message = renameDeckCommandHandler.handle(deckManager, new String[]{"OldName", "NewName"});
+        String message = renameDeckCommandHandler.handle(deckManager, chatId, new String[]{"OldName", "NewName"});
         Assertions.assertEquals("Колода успешно переименована: OldName -> NewName", message);
     }
 
@@ -42,7 +46,7 @@ class RenameDeckCommandHandlerTest {
     void testCorrectBigNames() {
         deckManager.addDeck("Old big Name");
 
-        String message = renameDeckCommandHandler.handle(deckManager, new String[]{"Old big Name", "New Name"});
+        String message = renameDeckCommandHandler.handle(deckManager, chatId, new String[]{"Old big Name", "New Name"});
         Assertions.assertEquals("Колода успешно переименована: Old big Name -> New Name", message);
     }
 
@@ -51,7 +55,7 @@ class RenameDeckCommandHandlerTest {
      */
     @Test
     void testHandleWithNoDecks() {
-        String message = renameDeckCommandHandler.handle(deckManager, new String[]{"OldName", "NewName"});
+        String message = renameDeckCommandHandler.handle(deckManager, chatId, new String[]{"OldName", "NewName"});
         Assertions.assertEquals("""
                 Ошибка выполнения команды. Подробности:
                 Колода с именем OldName не существует в менеджере""", message);

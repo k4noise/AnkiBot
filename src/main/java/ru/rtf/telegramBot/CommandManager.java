@@ -2,6 +2,7 @@ package ru.rtf.telegramBot;
 
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.commands.*;
+import ru.rtf.telegramBot.learning.SessionManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +13,7 @@ import java.util.Map;
  */
 public class CommandManager {
     /**
-     * Хранилище команд
+     * Хранилище команд, доступных вне режимов
      */
     private final Map<String, CommandHandler> commands;
     /**
@@ -23,7 +24,7 @@ public class CommandManager {
     /**
      * Инициализирует поля и добавляет команды в список
      */
-    public CommandManager() {
+    public CommandManager(SessionManager sessionManager) {
         this.userDeckManagers = new HashMap<>();
         this.commands = new HashMap<>();
 
@@ -41,6 +42,9 @@ public class CommandManager {
         commands.put("/edit_card_def", new EditCardDefCommandHandler());
         commands.put("/delete_card", new DeleteCardCommandHandler());
         commands.put("/list_card", new ListCardCommandHandler());
+
+//        learningCommands.put("/check_match", new LearnCheckMatchCommandHandler(sessionManager));
+        commands.put("/end_check", new EndCheckCommandHandler(sessionManager));
     }
 
     /**
@@ -62,7 +66,7 @@ public class CommandManager {
 
         String[] commandParams = commandParser.getCommandParams();
         return checkArgumentsCount(commandHandler, commandParams)
-                ? commandHandler.handle(userDeckManager, commandParams)
+                ? commandHandler.handle(userDeckManager, chatId, commandParams)
                 : "Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)";
     }
 
@@ -71,7 +75,7 @@ public class CommandManager {
      * <p>Количество аргументов зависит от конкретной команды</p>
      *
      * @param commandHandler Обработчик команды
-     * @param commandParams  Параметры для запуска команды
+     * @param commandParams         Параметры для запуска команды
      * @return Достаточно ли количества параметров для запуска команды
      */
     private boolean checkArgumentsCount(CommandHandler commandHandler, String[] commandParams) {

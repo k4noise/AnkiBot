@@ -17,6 +17,10 @@ class DeleteDeckCommandHandlerTest {
      * Хранилище колод пользователя
      */
     private DeckManager deckManager;
+    /**
+     * Идентификатор чата
+     */
+    private Long chatId = 1L;
 
     @BeforeEach
     void setUp() {
@@ -31,7 +35,7 @@ class DeleteDeckCommandHandlerTest {
     void testExistingDeck() {
         deckManager.addDeck("DelDeck");
 
-        String message = deleteDeckCommandHandler.handle(deckManager, new String[]{"DelDeck"});
+        String message = deleteDeckCommandHandler.handle(deckManager, chatId, new String[]{"DelDeck"});
         Assertions.assertEquals("Колода DelDeck была успешно удалена", message);
     }
 
@@ -40,7 +44,7 @@ class DeleteDeckCommandHandlerTest {
      */
     @Test
     void testEmptyDeckList() {
-        String message = deleteDeckCommandHandler.handle(deckManager, new String[]{"MyDeck"});
+        String message = deleteDeckCommandHandler.handle(deckManager, chatId, new String[]{"MyDeck"});
         Assertions.assertEquals("""
                 Ошибка выполнения команды. Подробности:
                 Колода с именем MyDeck не существует в менеджере""", message);
