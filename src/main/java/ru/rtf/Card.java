@@ -25,7 +25,7 @@ public class Card {
     public Card(String term, String definition) {
         if (term.isEmpty() || definition.isEmpty())
             throw new IllegalArgumentException("Термин и определение не могут быть пустыми");
-        this.term = term;
+        this.term = term.toLowerCase();
         this.definition = definition;
     }
 

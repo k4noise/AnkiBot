@@ -8,14 +8,10 @@ import java.util.NoSuchElementException;
 /**
  * Менеджер управления колодами пользователя
  * <p>Для работы с картами колоды следует получить экземпляр колоды через метод {@link DeckManager#getDeck}</p>
- *
- * @author k4noise
- * @since 21.10.2024
  */
 public class DeckManager {
     /**
      * Колоды менеджера, где ключ - имя колоды, значение - сама колода
-     * Имя колоды хранится в нижнем регистре для обеспечения регистронезависимости при получении колоды
      */
     private final Map<String, Deck> decks;
 
@@ -34,8 +30,9 @@ public class DeckManager {
      * @throws IllegalArgumentException Колода с именем name существует в менеджере
      */
     public void addDeck(String name) {
-        validateUnique(name);
-        decks.put(name.toLowerCase(), new Deck(name));
+        String lowerCaseName = name.toLowerCase();
+        validateUnique(lowerCaseName);
+        decks.put(lowerCaseName, new Deck(name));
     }
 
     /**
@@ -44,8 +41,9 @@ public class DeckManager {
      * @throws NoSuchElementException Колода с именем name не существует в менеджере
      */
     public Deck getDeck(String name) {
-        validateExists(name);
-        return decks.get(name.toLowerCase());
+        String lowerCaseName = name.toLowerCase();
+        validateExists(lowerCaseName);
+        return decks.get(lowerCaseName);
     }
 
     /**
@@ -58,11 +56,13 @@ public class DeckManager {
      * @throws IllegalArgumentException Колода с именем name существует в менеджере
      */
     public void updateDeckName(String oldName, String newName) {
-        validateExists(oldName);
-        validateUnique(newName);
+        String lowerCaseOldName = oldName.toLowerCase();
+        String lowerCaseNewName = newName.toLowerCase();
+        validateExists(lowerCaseOldName);
+        validateUnique(lowerCaseNewName);
 
-        Deck deck = decks.remove(oldName.toLowerCase());
-        decks.put(newName.toLowerCase(), deck.updateName(newName));
+        Deck deck = decks.remove(lowerCaseOldName);
+        decks.put(lowerCaseNewName, deck.updateName(newName));
     }
 
     /**
@@ -71,8 +71,9 @@ public class DeckManager {
      * @throws NoSuchElementException Колода с именем name не существует в менеджере
      */
     public void removeDeck(String name) {
-        validateExists(name);
-        decks.remove(name.toLowerCase());
+        String lowerCaseName = name.toLowerCase();
+        validateExists(lowerCaseName);
+        decks.remove(lowerCaseName);
     }
 
     /**
@@ -88,7 +89,7 @@ public class DeckManager {
      * @throws IllegalArgumentException Колода с именем name существует в менеджере
      */
     private void validateUnique(String name) {
-        if (decks.containsKey(name.toLowerCase()))
+        if (decks.containsKey(name))
             throw new IllegalArgumentException("Колода с именем " + name + " существует в менеджере");
     }
 
@@ -98,7 +99,7 @@ public class DeckManager {
      * @throws NoSuchElementException Колода с именем name не существует в менеджере
      */
     private void validateExists(String name) {
-        if (!decks.containsKey(name.toLowerCase()))
+        if (!decks.containsKey(name))
             throw new NoSuchElementException("Колода с именем " + name + " не существует в менеджере");
     }
 }
