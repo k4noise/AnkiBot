@@ -30,6 +30,8 @@ public class HelpCommandHandler implements CommandHandler {
                     Редактирование определения: /edit_card_def название_колоды : термин = новое_определение
                     Удаление карточки: /delete_card название_колоды : термин
                     Просмотр карточки: /list_card название_колоды : термин
+                Обучение:
+                    Режим "соответствие": /check_match название_колоды
                 """;
         return help;
     }

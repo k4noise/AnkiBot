@@ -54,15 +54,4 @@ class CommandManagerTest {
         String message = commandManager.handle(newChatId, "/rename_deck old name:=");
         Assertions.assertEquals("Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)", message);
     }
-
-    /**
-     * Тест команды обучения
-     */
-    @Test
-    void testLearningCommand() {
-        String message = commandManager.handle(newChatId, "/end_check");
-        Assertions.assertEquals("""
-                Ошибка выполнения команды. Подробности:
-                Нет активной сессии обучения""", message);
-    }
 }

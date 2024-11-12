@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.rtf.Card;
+import ru.rtf.telegramBot.learning.mode.MatchLearning;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,9 +23,11 @@ class SessionManagerTest {
      * Менеджер сессий обучения пользователя
      */
     private SessionManager sessionManager;
-    private Collection<Card> cards = List.of(
-      new Card("term", "def"),
-      new Card("test", "test")
+    /**
+     * Карта для обучения
+     */
+    private Collection<Card> card = List.of(
+      new Card("term", "def")
     );
 
     /**
@@ -42,12 +45,16 @@ class SessionManagerTest {
     @Test
     @DisplayName("Корректное начало новой сессии")
     void testStartAndCheckNewSessionActivity() {
-        sessionManager.start(chatId, LearningMode.MATCH, cards);
-        LearningSession session = sessionManager.get(chatId);
+        String startMessage = sessionManager.start(chatId, new MatchLearning(card));
 
-        Assertions.assertEquals(LearningMode.MATCH, session.getMode(), "");
         Assertions.assertTrue(sessionManager.hasActive(chatId), "Должна быть создана активная сессия");
-        //TODO проверка сообщения старта
+        Assertions.assertEquals("""
+                Вы начали обучение в режиме соответствия
+                Показывается термин и определение, ваша задача - определить, соответствует ли термин определению
+                Чтобы досрочно завершить сеанс, воспользуйтесь командой /end_check
+                
+                Ваш первый вопрос: Утверждение:
+                term - def""", startMessage);
     }
 
     /**
@@ -56,11 +63,11 @@ class SessionManagerTest {
     @Test
     @DisplayName("Некорректное начало сессии при наличии активной")
     void testStartSessionWithActive() {
-        sessionManager.start(chatId, LearningMode.MATCH, cards);
+        sessionManager.start(chatId, new MatchLearning(card));
 
         IllegalStateException exception = Assertions.assertThrows(
                 IllegalStateException.class,
-                () -> sessionManager.start(chatId, LearningMode.MEMORY, cards),
+                () -> sessionManager.start(chatId, new MatchLearning(card)),
                 "Невозможно начать новую сессию при наличии активной"
         );
         Assertions.assertEquals("Имеется активная сессия обучения", exception.getMessage());
@@ -72,11 +79,9 @@ class SessionManagerTest {
     @Test
     @DisplayName("Некорректное начало сессии при отсутствии карт")
     void testStartSessionWithEmptyCards() {
-        sessionManager.start(chatId, LearningMode.MATCH, cards);
-
-        NoSuchElementException exception = Assertions.assertThrows(
+           NoSuchElementException exception = Assertions.assertThrows(
                 NoSuchElementException.class,
-                () -> sessionManager.start(chatId, LearningMode.MEMORY, List.of()),
+                () -> sessionManager.start(chatId, new MatchLearning(List.of())),
                 "Невозможно начать новую сессию с пустым списком карт"
         );
         Assertions.assertEquals("Колода не содержит карточек, доступных для изучения", exception.getMessage());
@@ -87,14 +92,30 @@ class SessionManagerTest {
      */
     @Test
     @DisplayName("Досрочное окончание активной сессии")
-    void testEndExistingSession() {
-        sessionManager.start(chatId, LearningMode.MATCH, cards);
-        sessionManager.end(chatId);
+    void testEarlyEndExistingSession() {
+        sessionManager.start(chatId, new MatchLearning(card));
+        String endMessage = sessionManager.end(chatId);
 
         Assertions.assertFalse(sessionManager.hasActive(chatId), "Не должно быть активной сессии");
+        Assertions.assertEquals("Вы досрочно завершили сессию", endMessage);
     }
 
-    //TODO проверка планового окончания сессии
+    /**
+     * Проверка досрочного окончания существующей активной сессии обучения
+     */
+    @Test
+    @DisplayName("Плановое окончание активной сессии")
+    void testHandleEndExistingSession() {
+        sessionManager.start(chatId, new MatchLearning(card));
+        String endMessage = sessionManager.handle(chatId, "1");
+
+        Assertions.assertFalse(sessionManager.hasActive(chatId), "Не должно быть активной сессии");
+        Assertions.assertEquals("""
+                        Верно! Правильный ответ:
+                        "term" = def
+                        Вы прошли все карточки в колоде!""",
+                endMessage);
+    }
 
     /**
      * Проверка окончания несуществующей активной сессии обучения
@@ -109,6 +130,4 @@ class SessionManagerTest {
         );
         Assertions.assertEquals("Нет активной сессии обучения", exception.getMessage());
     }
-
-    //TODO тесты на handle
 }

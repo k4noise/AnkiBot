@@ -3,7 +3,7 @@ package ru.rtf.telegramBot;
 import ru.rtf.DeckManager;
 
 /**
- * Интерфейс для обработчиков команд бота вне режимов
+ * Интерфейс для обработчиков команд бота
  */
 public interface CommandHandler {
     /**

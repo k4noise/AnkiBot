@@ -1,12 +1,13 @@
 package ru.rtf.telegramBot.learning;
 
 import ru.rtf.Card;
+import ru.rtf.telegramBot.learning.mode.MatchLearning;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 /**
  * Управляет сессиями обучения пользователей
@@ -16,13 +17,6 @@ public class SessionManager {
      * Хранилище активных сессий пользователей
      */
     private final Map<Long, LearningSession> sessions;
-    /**
-     * Хранилище ссылок на классы режимов обучения
-     */
-    private final Map<LearningMode, Supplier<LearningSession>> learningModes = Map.of(
-            // оставлено в качестве шаблона мапы, хардкодить тут
-            // LearningMode.TYPING, LearningSession::new,
-    );
 
     /**
      * Инициализировать хранилище сессий
@@ -35,26 +29,25 @@ public class SessionManager {
      * Начать новую сессию обучения для пользователя
      *
      * @param chatId Идентификатор чата
-     * @param mode   Режим обучения
+     * @param learningSession Сессия обучения
      * @return Описание режима и первый вопрос
      * @throws IllegalStateException  Имеется активная сессия обучения
      * @throws NoSuchElementException Колода не содержит карточек, доступных для изучения
      */
-    public String start(Long chatId, LearningMode mode, Collection<Card> cards) {
+    public String start(Long chatId, LearningSession learningSession) {
         if (sessions.containsKey(chatId)) {
             throw new IllegalStateException("Имеется активная сессия обучения");
         }
-        if (cards.isEmpty()) {
+        if (!learningSession.hasCardsToLearn()) {
             throw new NoSuchElementException("Колода не содержит карточек, доступных для изучения");
         }
-        LearningSession session = learningModes.get(mode).get();
-        sessions.put(chatId, session);
+        sessions.put(chatId, learningSession);
         return """
                 Вы начали обучение %s
-                Чтобы досрочно завершить сеанс, воспользуйтесь командой /end-check
+                Чтобы досрочно завершить сеанс, воспользуйтесь командой /end_check
                 
                 Ваш первый вопрос: %s"""
-                .formatted(session.getDescription(), session.formQuestion());
+                .formatted(learningSession.getDescription(), learningSession.formQuestion());
     }
 
     /**

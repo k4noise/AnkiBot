@@ -63,9 +63,9 @@ public class TelegramBotCore extends TelegramLongPollingBot {
                     .trim()
                     .startsWith("/");
 
-            String messageResultExecution = !isCommand || sessionManager.hasActive(chatId)
-                    ? sessionManager.handle(chatId, message.getText())
-                    : commandManager.handle(chatId, message.getText());
+            String messageResultExecution = isCommand || !sessionManager.hasActive(chatId)
+                    ? commandManager.handle(chatId, message.getText())
+                    : sessionManager.handle(chatId, message.getText());
             sendMessage(chatId, messageResultExecution);
         }
     }

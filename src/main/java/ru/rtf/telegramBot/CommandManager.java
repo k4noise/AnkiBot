@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class CommandManager {
     /**
-     * Хранилище команд, доступных вне режимов
+     * Хранилище команд
      */
     private final Map<String, CommandHandler> commands;
     /**
@@ -43,7 +43,7 @@ public class CommandManager {
         commands.put("/delete_card", new DeleteCardCommandHandler());
         commands.put("/list_card", new ListCardCommandHandler());
 
-//        learningCommands.put("/check_match", new LearnCheckMatchCommandHandler(sessionManager));
+        commands.put("/check_match", new LearnCheckMatchCommandHandler(sessionManager));
         commands.put("/end_check", new EndCheckCommandHandler(sessionManager));
     }
 

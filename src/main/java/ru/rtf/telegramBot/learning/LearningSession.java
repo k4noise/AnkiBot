@@ -8,7 +8,9 @@ public interface LearningSession {
     /**
      *
      */
-    String SHOW_RIGHT_ANSWER = "Правильный ответ: %s";
+    String SHOW_RIGHT_ANSWER = """
+            Правильный ответ:
+            %s""";
     /**
      * Шаблон сообщения правильного ответа
      */
@@ -16,7 +18,8 @@ public interface LearningSession {
     /**
      * Шаблон сообщения неправильного ответа
      */
-    String INCORRECT_ANSWER_INFO = "Неверно. "+ SHOW_RIGHT_ANSWER;
+    String INCORRECT_ANSWER_INFO = "Неверно. " + SHOW_RIGHT_ANSWER;
+
     /**
      * Сформировать вопрос по карте, не показывавшейся пользователю в течении сеанса
      *
@@ -26,6 +29,7 @@ public interface LearningSession {
 
     /**
      * Проверить, правильно ли пользователь ответил на вопрос по карте
+     * <p>Показ ответа подразумевает исключение текущей карточки из списка изучаемых</p>
      *
      * @param answer Ответ пользователя
      * @return Правильность ответа
@@ -41,11 +45,6 @@ public interface LearningSession {
      * Вернуть описание активной карты - термин: определение
      */
     String getActiveCardDescription();
-
-    /**
-     * Получить вид режима обучения
-     */
-    LearningMode getMode();
 
     /**
      * Вернуть описание режима
