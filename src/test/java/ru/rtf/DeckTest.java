@@ -67,8 +67,8 @@ class DeckTest {
                 "Имя у первоначального экземпляра колоды не должно измениться"
         );
         Assertions.assertNotEquals(deck, deckWithNewName, "Колоды не могут быть равными, так как термин разный");
-        Assertions.assertEquals(deck.getCardsDescription(),
-                deckWithNewName.getCardsDescription(),
+        Assertions.assertEquals(deck.getCardsCount(),
+                deckWithNewName.getCardsCount(),
                 "Все карты должны сохраняться"
         );
     }
@@ -339,26 +339,5 @@ class DeckTest {
                 "Удаленная карта не должна существовать в колоде после ее удаления"
         );
         Assertions.assertEquals("Карта с термином term не существует в колоде", exception.getMessage());
-    }
-
-    /**
-     * Тестирование метода {@link Deck#getCardsDescription}
-     */
-    @Test
-    @DisplayName("Получение определений карт")
-    void testGetCardsDescription() {
-        List<Card> cards = List.of(new Card("a", "a"),
-                new Card("b", "b")
-        );
-        cards.forEach(card -> deck.addCard(card));
-
-        Assertions.assertEquals(
-                """
-                        "a" = a
-                        "b" = b
-                        """,
-                deck.getCardsDescription(),
-                "Должно быть описание всех карт колоды без изменения их порядка"
-        );
     }
 }
