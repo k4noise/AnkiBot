@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 /**
  * Тесты на класс колоды {@link Deck}
  *
- * @author k4noise
+ * @author Кистанова Марина
  * @since 22.10.2024
  */
 class DeckTest {

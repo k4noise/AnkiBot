@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
  * Менеджер управления колодами пользователя
  * <p>Для работы с картами колоды следует получить экземпляр колоды через метод {@link DeckManager#getDeck}</p>
  *
- * @author k4noise
+ * @author Кистанова Марина
  * @since 21.10.2024
  */
 public class DeckManager {

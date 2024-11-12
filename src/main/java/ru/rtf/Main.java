@@ -3,11 +3,11 @@ package ru.rtf;
 import ru.rtf.telegramBot.TelegramBotCore;
 
 /**
- * Главный класс для запуска Telegram-бота.
+ * Главный класс для запуска приложения
  */
 public class Main {
     /**
-     * Главный метод для запуска Telegram-бота.
+     * Главный метод для запуска приложения.
      * @param args аргументы командной строки, не используются
      */
     public static void main(String[] args) {

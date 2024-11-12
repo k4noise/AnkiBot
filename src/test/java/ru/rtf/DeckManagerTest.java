@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
 /**
  * Тесты на класс менеджера управления колодами {@link DeckManager}
  *
- * @author k4noise
+ * @author Кистанова Марина
  * @since 21.10.2024
  */
 class DeckManagerTest {
