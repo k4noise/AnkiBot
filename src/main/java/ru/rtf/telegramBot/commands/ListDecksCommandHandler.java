@@ -15,7 +15,7 @@ public class ListDecksCommandHandler implements CommandHandler {
      * Количество параметров команды
      * нет параметров
      */
-    public final int COUNT_PARAMS = 0;
+    public static final int COUNT_PARAMS = 0;
 
     @Override
     public String handle(DeckManager usersDecks, String[] params) {

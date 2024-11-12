@@ -26,11 +26,7 @@ public class Deck {
      * @throws IllegalArgumentException Имя колоды не может быть пустым
      */
     public Deck(String name) {
-        if (name.isEmpty()) {
-            throw new IllegalArgumentException("Имя колоды не может быть пустым");
-        }
-        this.name = name;
-        this.cards = new LinkedHashMap<>();
+        this(name, new LinkedHashMap<>());
     }
 
     /**
@@ -153,17 +149,6 @@ public class Deck {
     public void removeCard(String term) {
         validateExists(term);
         cards.remove(term.toLowerCase());
-    }
-
-    /**
-     * Получить описание всех карт колоды
-     */
-    public String getCardsDescription() {
-        StringBuilder sb = new StringBuilder();
-        for (Card card : cards.values()) {
-            sb.append(card.toString()).append("\n");
-        }
-        return sb.toString();
     }
 
     @Override
