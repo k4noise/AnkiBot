@@ -37,9 +37,12 @@ public class TypingLearning implements LearningSession {
     }
 
     @Override
-    public boolean checkAnswer(String answer) {
+    public String messageCheckAnswer(String answer) {
         Card currentCard = allCards.peek();
-        return answer.equalsIgnoreCase(currentCard.getTerm());
+        boolean checkAnswer = answer.equalsIgnoreCase(currentCard.getTerm());
+        return checkAnswer
+                ? LearningSession.CORRECT_ANSWER_INFO.formatted(currentCard)
+                : LearningSession.INCORRECT_ANSWER_INFO.formatted(currentCard);
     }
 
     @Override
@@ -48,7 +51,7 @@ public class TypingLearning implements LearningSession {
     }
 
     @Override
-    public String getActiveCardDescription() {
+    public String pullActiveCardDescription() {
         return allCards.poll().toString();
     }
 

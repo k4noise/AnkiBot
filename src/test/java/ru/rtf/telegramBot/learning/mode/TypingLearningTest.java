@@ -37,7 +37,7 @@ class TypingLearningTest {
     void testFormQuestion() {
         String question = typingLearning.formQuestion();
         Assertions.assertEquals("""
-                Определение — "def".
+                Определение — "def"
                 Введите соответствующий термин:""", question);
     }
 
@@ -47,7 +47,9 @@ class TypingLearningTest {
     @Test
     @DisplayName("Правильный ответ")
     void testCheckRightAnswer() {
-        Assertions.assertTrue(typingLearning.checkAnswer("term"));
+        Assertions.assertEquals("""
+                Верно\\! Правильный ответ:
+                "term" \\= def""", typingLearning.messageCheckAnswer("term"));
     }
 
     /**
@@ -56,7 +58,9 @@ class TypingLearningTest {
     @Test
     @DisplayName("Неправильный ответ")
     void testCheckWrongAnswer() {
-        Assertions.assertFalse(typingLearning.checkAnswer("notTerm"));
+        Assertions.assertEquals("""
+                Неверно\\. Правильный ответ:
+                "term" \\= def""", typingLearning.messageCheckAnswer("notTerm"));
     }
 
     /**
@@ -64,8 +68,8 @@ class TypingLearningTest {
      */
     @Test
     @DisplayName("Активная карта текстом")
-    void getActiveCardDescription() {
-        String card = typingLearning.getActiveCardDescription();
+    void pullActiveCardDescription() {
+        String card = typingLearning.pullActiveCardDescription();
         Assertions.assertEquals("\"term\" \\= def", card);
     }
 }

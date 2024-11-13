@@ -54,13 +54,8 @@ public class SessionManager {
      */
     public String handle(Long chatId, String text) {
         LearningSession learningSession = sessions.get(chatId);
-        boolean isRightAnswer = learningSession.checkAnswer(text.trim());
-
-        String activeCardDescription = learningSession.getActiveCardDescription();
-        String checkMessage = isRightAnswer
-                ? LearningSession.CORRECT_ANSWER_INFO.formatted(activeCardDescription)
-                : LearningSession.INCORRECT_ANSWER_INFO.formatted(activeCardDescription);
-
+        String checkMessage = learningSession.messageCheckAnswer(text.trim());
+        learningSession.pullActiveCardDescription();
         if (!learningSession.hasCardsToLearn()) {
             return checkMessage + '\n' + end(chatId);
         }

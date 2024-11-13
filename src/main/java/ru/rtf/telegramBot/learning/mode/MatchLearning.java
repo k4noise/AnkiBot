@@ -45,7 +45,15 @@ public class MatchLearning implements LearningSession {
     }
 
     @Override
-    public boolean checkAnswer(String answer) {
+    public String messageCheckAnswer(String answer) {
+        Card currentCard = allCards.peek();
+        boolean checkAnswer = checkAnswer(answer);
+        return checkAnswer
+                ? LearningSession.CORRECT_ANSWER_INFO.formatted(currentCard)
+                : LearningSession.INCORRECT_ANSWER_INFO.formatted(currentCard);
+    }
+
+    private boolean checkAnswer(String answer) {
         boolean userAnswer;
         if (answer.equals("0")) {
             userAnswer = false;
@@ -63,7 +71,7 @@ public class MatchLearning implements LearningSession {
     }
 
     @Override
-    public String getActiveCardDescription() {
+    public String pullActiveCardDescription() {
         return allCards.poll().toString();
     }
 

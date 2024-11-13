@@ -28,13 +28,13 @@ public interface LearningSession {
     String formQuestion();
 
     /**
-     * Проверить, правильно ли пользователь ответил на вопрос по карте
+     * Проверить, правильно ли пользователь ответил на вопрос по карте и вернуть результат проверки
      * <p>Показ ответа подразумевает исключение текущей карточки из списка изучаемых</p>
      *
      * @param answer Ответ пользователя
-     * @return Правильность ответа
+     * @return Результат проверки
      */
-    boolean checkAnswer(String answer);
+    String messageCheckAnswer(String answer);
 
     /**
      * Проверяет, остались ли карты для обучения
@@ -44,7 +44,7 @@ public interface LearningSession {
     /**
      * Вернуть описание активной карты - термин: определение
      */
-    String getActiveCardDescription();
+    String pullActiveCardDescription();
 
     /**
      * Вернуть описание режима

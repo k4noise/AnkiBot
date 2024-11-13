@@ -44,6 +44,8 @@ public class HelpCommandHandler implements CommandHandler {
                         `/check match:` название\\_колоды
                     Режим "ввод термина":
                         `/check typing:` название\\_колоды
+                    Режим "карточки":
+                        `/check memory:` название\\_колоды
                     Выход из любого режима обучения:
                         /end\\_check
                 """;
