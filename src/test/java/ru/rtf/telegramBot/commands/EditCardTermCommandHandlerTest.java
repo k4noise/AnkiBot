@@ -38,7 +38,7 @@ public class EditCardTermCommandHandlerTest {
 
         String newTerm = "new term";
         String message = editCardTermCommandHandler.handle(deckManager, chatId, new String[]{"Deck", "term", newTerm});
-        Assertions.assertEquals("Термин карты был успешно изменен: \"new term\" = def", message);
+        Assertions.assertEquals("Термин карты был успешно изменен: \"new term\" \\= def", message);
     }
 
     /**
@@ -50,7 +50,7 @@ public class EditCardTermCommandHandlerTest {
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""
-                Ошибка выполнения команды. Подробности:
+                Ошибка выполнения команды Подробности:
                 Карта с термином term не существует в колоде""", message);
     }
 
@@ -63,7 +63,7 @@ public class EditCardTermCommandHandlerTest {
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""
-                Ошибка выполнения команды. Подробности:
+                Ошибка выполнения команды Подробности:
                 Колода с именем Deck2 не существует в менеджере""", message);
     }
 }

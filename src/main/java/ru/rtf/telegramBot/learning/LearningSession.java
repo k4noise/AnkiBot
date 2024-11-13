@@ -14,11 +14,11 @@ public interface LearningSession {
     /**
      * Шаблон сообщения правильного ответа
      */
-    String CORRECT_ANSWER_INFO = "Верно! " + SHOW_RIGHT_ANSWER;
+    String CORRECT_ANSWER_INFO = "Верно\\! " + SHOW_RIGHT_ANSWER;
     /**
      * Шаблон сообщения неправильного ответа
      */
-    String INCORRECT_ANSWER_INFO = "Неверно. " + SHOW_RIGHT_ANSWER;
+    String INCORRECT_ANSWER_INFO = "Неверно\\. " + SHOW_RIGHT_ANSWER;
 
     /**
      * Сформировать вопрос по карте, не показывавшейся пользователю в течении сеанса

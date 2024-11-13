@@ -39,7 +39,7 @@ public class SessionManager {
         sessions.put(chatId, learningSession);
         return """
                 Вы начали обучение %s
-                Чтобы досрочно завершить сеанс, воспользуйтесь командой /end_check
+                Чтобы досрочно завершить сеанс, воспользуйтесь командой /end\\_check
                 
                 Ваш первый вопрос: %s"""
                 .formatted(learningSession.getDescription(), learningSession.formQuestion());
@@ -54,7 +54,7 @@ public class SessionManager {
      */
     public String handle(Long chatId, String text) {
         LearningSession learningSession = sessions.get(chatId);
-        boolean isRightAnswer = learningSession.checkAnswer(text);
+        boolean isRightAnswer = learningSession.checkAnswer(text.trim());
 
         String activeCardDescription = learningSession.getActiveCardDescription();
         String checkMessage = isRightAnswer
@@ -80,7 +80,7 @@ public class SessionManager {
         LearningSession session = sessions.remove(chatId);
         return session.hasCardsToLearn()
                 ? "Вы досрочно завершили сессию"
-                : "Вы прошли все карточки в колоде!";
+                : "Вы прошли все карточки в колоде\\!";
     }
 
     /**

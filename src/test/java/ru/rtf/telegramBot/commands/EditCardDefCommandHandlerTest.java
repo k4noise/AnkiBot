@@ -47,7 +47,7 @@ public class EditCardDefCommandHandlerTest {
         Card modifiedCard = deck.getCard("term");
 
         Assertions.assertEquals("new def", modifiedCard.getDefinition(), "Определение должно измениться");
-        Assertions.assertEquals("Определение карты было успешно изменено: \"term\" = new def", message);
+        Assertions.assertEquals("Определение карты было успешно изменено: \"term\" \\= new def", message);
     }
 
     /**
@@ -59,7 +59,7 @@ public class EditCardDefCommandHandlerTest {
         String ans = editCardDefCommandHandler.handle(deckManager, chatId, new String[]{"Deck", "term", "new def"});
 
         Assertions.assertEquals("""
-                Ошибка выполнения команды. Подробности:
+                Ошибка выполнения команды Подробности:
                 Карта с термином term не существует в колоде""", ans);
     }
 
@@ -71,7 +71,7 @@ public class EditCardDefCommandHandlerTest {
         String message = editCardDefCommandHandler.handle(deckManager, chatId, new String[]{"Deck", "term", "new def"});
 
         Assertions.assertEquals("""
-                Ошибка выполнения команды. Подробности:
+                Ошибка выполнения команды Подробности:
                 Колода с именем Deck не существует в менеджере""", message);
     }
 }

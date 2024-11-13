@@ -39,8 +39,8 @@ class MatchLearningTest {
         String question = matchLearning.formQuestion();
         Assertions.assertEquals("""
                 Утверждение:
-                term - def
-                1 - верно, 0 - неверно""", question);
+                term — def
+                1 — верно, 0 — неверно""", question);
     }
 
     /**
@@ -68,6 +68,6 @@ class MatchLearningTest {
     @DisplayName("Активная карта текстом")
     void getActiveCardDescription() {
         String card = matchLearning.getActiveCardDescription();
-        Assertions.assertEquals("\"term\" = def", card);
+        Assertions.assertEquals("\"term\" \\= def", card);
     }
 }

@@ -16,13 +16,19 @@ public class CardTest {
     @DisplayName("Проверка конструктора")
     void testCardInitEmptyTwoParams() {
         Assertions.assertThrows(
-                IllegalArgumentException.class, () -> new Card("", ""), "Карта с пустыми параметрами не может быть создана"
+                IllegalArgumentException.class,
+                () -> new Card("", ""),
+                "Карта с пустыми параметрами не может быть создана"
         );
         Assertions.assertThrows(
-                IllegalArgumentException.class, () -> new Card("", "abс"), "Карта с пустым термином не может быть создана"
+                IllegalArgumentException.class,
+                () -> new Card("", "abс"),
+                "Карта с пустым термином не может быть создана"
         );
         Assertions.assertThrows(
-                IllegalArgumentException.class, () -> new Card("term", ""), "Карта с пустым определением не может быть создана"
+                IllegalArgumentException.class,
+                () -> new Card("term", ""),
+                "Карта с пустым определением не может быть создана"
         );
     }
 
@@ -126,7 +132,7 @@ public class CardTest {
     @DisplayName("Строковое представление")
     void testToString() {
         Card card = new Card("commit", "фиксация изменений");
-        Assertions.assertEquals("\"commit\" = фиксация изменений", card.toString(),
+        Assertions.assertEquals("\"commit\" \\= фиксация изменений", card.toString(),
                 "строковое представление не совпадает с ожидаемым");
     }
 }

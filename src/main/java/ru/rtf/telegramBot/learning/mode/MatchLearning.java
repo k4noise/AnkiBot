@@ -40,8 +40,8 @@ public class MatchLearning implements LearningSession {
 
         return """
                 Утверждение:
-                %s - %s
-                1 - верно, 0 - неверно""".formatted(allCards.peek().getTerm(), allDefinitions.get(randomDefinitionIndex));
+                %s — %s
+                1 — верно, 0 — неверно""".formatted(allCards.peek().getTerm(), allDefinitions.get(randomDefinitionIndex));
     }
 
     @Override
@@ -71,7 +71,7 @@ public class MatchLearning implements LearningSession {
     public String getDescription() {
         return """
                 в режиме соответствия
-                Показывается термин и определение, ваша задача - определить, соответствует ли термин определению""";
+                Показывается термин и определение, ваша задача — определить, соответствует ли термин определению""";
     }
 
     /**

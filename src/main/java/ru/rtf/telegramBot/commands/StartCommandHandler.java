@@ -16,7 +16,7 @@ public class StartCommandHandler implements CommandHandler {
 
     @Override
     public String handle(DeckManager usersDecks, Long id, String[] params) {
-        return "Добро пожаловать в AnkiBot. Введите команду /help, чтобы посмотреть доступные команды";
+        return "Добро пожаловать в AnkiBot\\. Введите команду /help, чтобы посмотреть доступные команды";
     }
 
     @Override

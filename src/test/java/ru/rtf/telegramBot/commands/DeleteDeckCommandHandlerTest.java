@@ -46,7 +46,7 @@ class DeleteDeckCommandHandlerTest {
     void testEmptyDeckList() {
         String message = deleteDeckCommandHandler.handle(deckManager, chatId, new String[]{"MyDeck"});
         Assertions.assertEquals("""
-                Ошибка выполнения команды. Подробности:
+                Ошибка выполнения команды Подробности:
                 Колода с именем MyDeck не существует в менеджере""", message);
     }
 }

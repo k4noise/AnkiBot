@@ -31,7 +31,7 @@ public class RenameDeckCommandHandler implements CommandHandler {
             return MESSAGE_COMMAND_ERROR.formatted(e.getMessage());
         }
         //сообщение пользователю о выполнении
-        return "Колода успешно переименована: " + oldDeckName + " -> " + newDeckName;
+        return "Колода успешно переименована: " + oldDeckName + " —\\> " + newDeckName;
     }
 
     @Override

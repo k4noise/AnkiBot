@@ -43,7 +43,7 @@ class CommandManagerTest {
     void testCorrectCountParams() {
         commandManager.handle(newChatId, "/create_deck old name");
         String message = commandManager.handle(newChatId, "/rename_deck old name:=new name");
-        Assertions.assertEquals("Колода успешно переименована: old name -> new name", message);
+        Assertions.assertEquals("Колода успешно переименована: old name —\\> new name", message);
     }
 
     /**
@@ -52,6 +52,6 @@ class CommandManagerTest {
     @Test
     void testNoCorrectCountParams() {
         String message = commandManager.handle(newChatId, "/rename_deck old name:=");
-        Assertions.assertEquals("Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)", message);
+        Assertions.assertEquals("Ошибка параметров команды\n Проверьте на соответствие шаблону \\(/help\\)", message);
     }
 }

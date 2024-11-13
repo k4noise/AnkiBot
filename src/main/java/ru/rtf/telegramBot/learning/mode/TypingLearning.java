@@ -30,7 +30,7 @@ public class TypingLearning implements LearningSession {
     @Override
     public String formQuestion() {
         String questionText = """
-                Определение - "%s".
+                Определение — "%s"
                 Введите соответствующий термин:""";
         Card currentCard = allCards.peek();
         return questionText.formatted(currentCard.getDefinition());
@@ -56,6 +56,6 @@ public class TypingLearning implements LearningSession {
     public String getDescription() {
         return """
                 в режиме ввода термина
-                Дано определение, ваша задача написать соответсвующий термин (регистр не учитывается)""";
+                Дано определение, ваша задача написать соответсвующий термин \\(регистр не учитывается\\)""";
     }
 }

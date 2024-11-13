@@ -37,7 +37,7 @@ class TypingLearningTest {
     void testFormQuestion() {
         String question = typingLearning.formQuestion();
         Assertions.assertEquals("""
-                Определение - "def".
+                Определение — "def".
                 Введите соответствующий термин:""", question);
     }
 
@@ -66,6 +66,6 @@ class TypingLearningTest {
     @DisplayName("Активная карта текстом")
     void getActiveCardDescription() {
         String card = typingLearning.getActiveCardDescription();
-        Assertions.assertEquals("\"term\" = def", card);
+        Assertions.assertEquals("\"term\" \\= def", card);
     }
 }
