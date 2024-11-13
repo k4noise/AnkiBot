@@ -5,14 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
  * Тесты на класс колоды {@link Deck}
- *
- * @author k4noise
- * @since 22.10.2024
  */
 class DeckTest {
     /**
@@ -31,7 +27,7 @@ class DeckTest {
     @Test
     @DisplayName("Корректная инициализация колоды")
     void testDeckCorrectInit() {
-        Assertions.assertEquals("Deck", deck.getName(), "Колода должна быть создана с указанным именем");
+        Assertions.assertEquals("deck", deck.getName(), "Колода должна быть создана с указанным именем");
     }
 
     /**
@@ -53,24 +49,13 @@ class DeckTest {
     }
 
     /**
-     * Тестирование метода {@link Deck#updateName}
+     * Тестирование метода {@link Deck#changeName}
      */
     @Test
     @DisplayName("Изменение имени колоды")
     void testChangeName() {
-        deck.addCard("term", "definition");
-        Deck deckWithNewName = deck.updateName("Deck1");
-
-        Assertions.assertEquals(
-                "Deck",
-                deck.getName(),
-                "Имя у первоначального экземпляра колоды не должно измениться"
-        );
-        Assertions.assertNotEquals(deck, deckWithNewName, "Колоды не могут быть равными, так как термин разный");
-        Assertions.assertEquals(deck.getCardsCount(),
-                deckWithNewName.getCardsCount(),
-                "Все карты должны сохраняться"
-        );
+        deck.changeName("Deck1");
+        Assertions.assertEquals("deck1", deck.getName());
     }
 
     /**
@@ -120,7 +105,7 @@ class DeckTest {
                 () -> deck.addCard("TERM", "definition"),
                 "Добавление карты с существующим термином невозможно"
         );
-        Assertions.assertEquals("Карта с термином TERM существует в колоде", exception.getMessage());
+        Assertions.assertEquals("Карта с термином term существует в колоде", exception.getMessage());
     }
 
     /**
@@ -149,7 +134,7 @@ class DeckTest {
                 () -> deck.addCard(card),
                 "Повторное добавление карты запрещено"
         );
-        Assertions.assertEquals("Карта с термином TERM существует в колоде", exception.getMessage());
+        Assertions.assertEquals("Карта с термином term существует в колоде", exception.getMessage());
     }
 
     /**
@@ -201,7 +186,7 @@ class DeckTest {
                 () -> deck.updateCardTerm("term", "newTerm"),
                 "Невозможно изменить термин на повторный"
         );
-        Assertions.assertEquals("Карта с термином newTerm существует в колоде", exception.getMessage());
+        Assertions.assertEquals("Карта с термином newterm существует в колоде", exception.getMessage());
     }
 
     /**

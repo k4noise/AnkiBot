@@ -43,6 +43,6 @@ class DeleteDeckCommandHandlerTest {
         String message = deleteDeckCommandHandler.handle(deckManager, new String[]{"MyDeck"});
         Assertions.assertEquals("""
                 Ошибка выполнения команды. Подробности:
-                Колода с именем MyDeck не существует в менеджере""", message);
+                Колода с именем mydeck не существует в менеджере""", message);
     }
 }

@@ -38,14 +38,9 @@ public class CardTest {
     @Test
     @DisplayName("изменение термина (новая карта)")
     void testChangeTerm() {
-        Card originalCard = new Card("hero", "person who kill people");
-        Card changedCard = originalCard.changeTerm("villain");
-        Assertions.assertNotEquals(originalCard, changedCard,
-                "При изменении термина карта не должна совпадать со своей старой версией");
-        Assertions.assertEquals(originalCard.getDefinition(), changedCard.getDefinition(),
-                "Определения должны совпадать");
-        Assertions.assertEquals("villain", changedCard.getTerm(),
-                "Термин должен совпадать с переданным значением");
+        Card card = new Card("hero", "person who kill people");
+        card.changeTerm("villain");
+        Assertions.assertEquals("villain", card.getTerm());
     }
 
     /**

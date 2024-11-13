@@ -54,7 +54,7 @@ class RenameDeckCommandHandlerTest {
         String message = renameDeckCommandHandler.handle(deckManager, new String[]{"OldName", "NewName"});
         Assertions.assertEquals("""
                 Ошибка выполнения команды. Подробности:
-                Колода с именем OldName не существует в менеджере""", message);
+                Колода с именем oldname не существует в менеджере""", message);
     }
 }
 
