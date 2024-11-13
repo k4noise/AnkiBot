@@ -19,7 +19,7 @@ public class ListCardsCommandsHandler implements CommandHandler {
     public final int COUNT_PARAMS = 1;
 
     @Override
-    public String handle(DeckManager usersDecks, String[] params) {
+    public String handle(DeckManager usersDecks, Long id, String[] params) {
         //обработка параметров
         String deckName = params[0];
 

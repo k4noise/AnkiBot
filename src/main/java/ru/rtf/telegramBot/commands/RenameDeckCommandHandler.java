@@ -19,7 +19,7 @@ public class RenameDeckCommandHandler implements CommandHandler {
     private final int COUNT_PARAMS = 2;
 
     @Override
-    public String handle(DeckManager usersDecks, String[] params) {
+    public String handle(DeckManager usersDecks, Long id, String[] params) {
         //обработка параметров
         String oldDeckName = params[0];
         String newDeckName = params[1];

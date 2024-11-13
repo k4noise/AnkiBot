@@ -1,9 +1,9 @@
 package ru.rtf.telegramBot.commands;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.rtf.DeckManager;
-import org.junit.jupiter.api.Assertions;
 
 /**
  * Тест обработчика команды редактирования карты в колоде
@@ -17,6 +17,10 @@ public class ListCardCommandHandlerTest {
      * Менеджер колод пользователя
      */
     private DeckManager deckManager;
+    /**
+     * Идентификатор чата
+     */
+    private Long chatId = 1L;
 
     @BeforeEach
     void setUp() {
@@ -32,7 +36,7 @@ public class ListCardCommandHandlerTest {
     void testCorrectPrintCard() {
         deckManager.getDeck("Deck").addCard("term", "какое-то описание");
 
-        String message = listCardCommandHandler.handle(deckManager, new String[]{"Deck", "term"});
+        String message = listCardCommandHandler.handle(deckManager, chatId, new String[]{"Deck", "term"});
         Assertions.assertEquals("\"term\" = какое-то описание", message);
     }
 
@@ -41,7 +45,7 @@ public class ListCardCommandHandlerTest {
      */
     @Test
     void testIncorrectTerm() {
-        String message = listCardCommandHandler.handle(deckManager, new String[]{"Deck", "term"});
+        String message = listCardCommandHandler.handle(deckManager, chatId, new String[]{"Deck", "term"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""
@@ -54,7 +58,7 @@ public class ListCardCommandHandlerTest {
      */
     @Test
     void testIncorrectDeck() {
-        String message = listCardCommandHandler.handle(deckManager, new String[]{"Deck2", "term"});
+        String message = listCardCommandHandler.handle(deckManager, chatId, new String[]{"Deck2", "term"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""
