@@ -6,7 +6,7 @@ package ru.rtf.telegramBot.learning;
  */
 public interface LearningSession {
     /**
-     *
+     * Шаблон сообщения показа ответа
      */
     String SHOW_RIGHT_ANSWER = """
             Правильный ответ:

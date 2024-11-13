@@ -23,6 +23,7 @@ public class CommandManager {
 
     /**
      * Инициализирует поля и добавляет команды в список
+     * @param sessionManager Менеджер сессий пользователей
      */
     public CommandManager(SessionManager sessionManager) {
         this.userDeckManagers = new HashMap<>();

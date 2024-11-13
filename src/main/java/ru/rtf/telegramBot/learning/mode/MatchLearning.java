@@ -13,7 +13,13 @@ public class MatchLearning implements LearningSession {
      * Карты к изучению
      */
     private final Queue<Card> allCards;
+    /**
+     * Все определения карт
+     */
     private final List<String> allDefinitions;
+    /**
+     * Индекс рандомного определения
+     */
     private int randomDefinitionIndex;
 
     /**
@@ -68,6 +74,9 @@ public class MatchLearning implements LearningSession {
                 Показывается термин и определение, ваша задача - определить, соответствует ли термин определению""";
     }
 
+    /**
+     * Генерирует случайный индекс для определения из списка всех определений
+     */
     private int generateNextRandomDefinitionIndex() {
         return new Random().nextInt(allDefinitions.size());
     }
