@@ -32,6 +32,7 @@ public class HelpCommandHandler implements CommandHandler {
                     Просмотр карточки: /list_card название_колоды : термин
                 Обучение:
                     Режим "соответствие": /check_match название_колоды
+                    Выход из любого режима обучения: /end_check
                 """;
         return help;
     }
