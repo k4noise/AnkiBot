@@ -49,24 +49,13 @@ class DeckTest {
     }
 
     /**
-     * Тестирование метода {@link Deck#updateName}
+     * Тестирование метода {@link Deck#changeName}
      */
     @Test
     @DisplayName("Изменение имени колоды")
     void testChangeName() {
-        deck.addCard("term", "definition");
-        Deck deckWithNewName = deck.updateName("Deck1");
-
-        Assertions.assertEquals(
-                "deck",
-                deck.getName(),
-                "Имя у первоначального экземпляра колоды не должно измениться"
-        );
-        Assertions.assertNotEquals(deck, deckWithNewName, "Колоды не могут быть равными, так как термин разный");
-        Assertions.assertEquals(deck.getCardsCount(),
-                deckWithNewName.getCardsCount(),
-                "Все карты должны сохраняться"
-        );
+        deck.changeName("Deck1");
+        Assertions.assertEquals("deck1", deck.getName());
     }
 
     /**

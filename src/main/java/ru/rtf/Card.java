@@ -7,9 +7,9 @@ import java.util.Objects;
  */
 public class Card {
     /**
-     * Термин - идентификатор внутри колоды
+     * Термин
      */
-    private final String term;
+    private String term;
     /**
      * Определение
      */
@@ -44,13 +44,10 @@ public class Card {
     }
 
     /**
-     * Меняет термин в копии карты
-     *
-     * @param newTerm новый термин
-     * @return новая карта
+     * Меняет термин
      */
-    public Card changeTerm(String newTerm) {
-        return new Card(newTerm, definition);
+    void changeTerm(String newTerm) {
+        this.term = newTerm.toLowerCase();
     }
 
     /**

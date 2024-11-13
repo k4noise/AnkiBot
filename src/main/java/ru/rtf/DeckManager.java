@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
  */
 public class DeckManager {
     /**
-     * Колоды менеджера, где ключ - имя колоды, значение - сама колода
+     * Колоды менеджера
      */
     private final Map<String, Deck> decks;
 
@@ -62,7 +62,8 @@ public class DeckManager {
         validateUnique(lowerCaseNewName);
 
         Deck deck = decks.remove(lowerCaseOldName);
-        decks.put(lowerCaseNewName, deck.updateName(newName));
+        deck.changeName(newName);
+        decks.put(lowerCaseNewName, deck);
     }
 
     /**

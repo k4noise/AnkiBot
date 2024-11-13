@@ -7,11 +7,11 @@ import java.util.*;
  */
 public class Deck {
     /**
-     * Имя колоды - идентификатор
+     * Имя колоды
      */
-    private final String name;
+    private String name;
     /**
-     * Карты колоды, где ключ - термин карты, значение - сама карта
+     * Карты колоды
      */
     private final Map<String, Card> cards;
 
@@ -48,13 +48,12 @@ public class Deck {
     }
 
     /**
-     * Изменить название, создавая экземпляр новой колоды
+     * Изменить название колоды
      *
      * @param newName Новое имя
-     * @return Новая колода
      */
-    public Deck updateName(String newName) {
-        return new Deck(newName, cards);
+    void changeName(String newName) {
+        this.name = newName.toLowerCase();
     }
 
     /**
@@ -105,8 +104,9 @@ public class Deck {
         validateExists(lowerCaseOldTerm);
         validateUnique(lowerCaseNewTerm);
 
-        Card oldCard = cards.remove(lowerCaseOldTerm);
-        cards.put(lowerCaseNewTerm, oldCard.changeTerm(newTerm));
+        Card card = cards.remove(lowerCaseOldTerm);
+        card.changeTerm(newTerm);
+        cards.put(lowerCaseNewTerm, card);
     }
 
     /**

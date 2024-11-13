@@ -111,7 +111,7 @@ class DeckManagerTest {
      */
     @Test
     @DisplayName("Изменение имени у созданной колоды")
-    void testUpdateNameDeck() {
+    void testChangeNameDeck() {
         deckManager.updateDeckName("Deck", "Deck1");
         Deck deck = deckManager.getDeck("Deck1");
 
@@ -160,7 +160,7 @@ class DeckManagerTest {
      */
     @Test
     @DisplayName("Проверка регистронезависимости при изменении имени у созданной колоды")
-    void testUpdateNameDeckIgnoreCase() {
+    void testChangeNameDeckIgnoreCase() {
         deckManager.updateDeckName("DECK", "Deck1");
         Deck deck = deckManager.getDeck("Deck1");
 
