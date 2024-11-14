@@ -1,13 +1,8 @@
 package ru.rtf.telegramBot.learning;
 
-import ru.rtf.Card;
-import ru.rtf.telegramBot.learning.mode.MatchLearning;
-
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.function.Function;
 
 /**
  * Управляет сессиями обучения пользователей
@@ -28,7 +23,7 @@ public class SessionManager {
     /**
      * Начать новую сессию обучения для пользователя
      *
-     * @param chatId Идентификатор чата
+     * @param chatId          Идентификатор чата
      * @param learningSession Сессия обучения
      * @return Описание режима и первый вопрос
      * @throws IllegalStateException  Имеется активная сессия обучения
@@ -61,7 +56,7 @@ public class SessionManager {
         LearningSession learningSession = sessions.get(chatId);
         boolean isRightAnswer = learningSession.checkAnswer(text);
 
-        String activeCardDescription = learningSession.getActiveCardDescription();
+        String activeCardDescription = learningSession.pullActiveCardDescription();
         String checkMessage = isRightAnswer
                 ? LearningSession.CORRECT_ANSWER_INFO.formatted(activeCardDescription)
                 : LearningSession.INCORRECT_ANSWER_INFO.formatted(activeCardDescription);

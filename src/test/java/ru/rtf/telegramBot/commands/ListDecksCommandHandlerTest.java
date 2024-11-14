@@ -37,7 +37,8 @@ public class ListDecksCommandHandlerTest {
         String message = listDecksCommandHandler.handle(deckManager, chatId, null);
 
         // Проверка, что отправляется корректное сообщение
-        Assertions.assertEquals("У Вас пока нет ни одной колоды, создайте первую /create_deck <название>", message);
+        Assertions.assertEquals(
+                "У Вас пока нет ни одной колоды, создайте первую /create_deck <название>", message);
     }
 
     /**

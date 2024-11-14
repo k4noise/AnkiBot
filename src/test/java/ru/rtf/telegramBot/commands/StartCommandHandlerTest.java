@@ -26,7 +26,7 @@ public class StartCommandHandlerTest {
     @Test
     void testCorrectHelloText() {
         String ans = startCommandHandler.handle(new DeckManager(), 1L, null);
-        Assertions.assertEquals("Добро пожаловать в AnkiBot. Введите команду /help, " +
+        Assertions.assertEquals("Добро пожаловать в AnkiBot\\. Введите команду /help, " +
                 "чтобы посмотреть доступные команды", ans);
     }
 }

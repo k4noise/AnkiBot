@@ -63,7 +63,7 @@ public class MatchLearning implements LearningSession {
     }
 
     @Override
-    public String getActiveCardDescription() {
+    public String pullActiveCardDescription() {
         return allCards.poll().toString();
     }
 

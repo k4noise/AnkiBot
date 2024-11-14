@@ -46,11 +46,12 @@ public class EditCardTermCommandHandlerTest {
      */
     @Test
     void testIncorrectTerm() {
-        String message = editCardTermCommandHandler.handle(deckManager, chatId, new String[]{"Deck", "term", "new term"});
+        String message = editCardTermCommandHandler.handle(deckManager, chatId,
+                new String[]{"Deck", "term", "new term"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""
-                Ошибка выполнения команды. Подробности:
+                Ошибка выполнения команды Подробности:
                 Карта с термином term не существует в колоде""", message);
     }
 
@@ -59,11 +60,12 @@ public class EditCardTermCommandHandlerTest {
      */
     @Test
     void testIncorrectDeck() {
-        String message = editCardTermCommandHandler.handle(deckManager, chatId, new String[]{"Deck2", "term", "new term"});
+        String message = editCardTermCommandHandler.handle(deckManager, chatId,
+                new String[]{"Deck2", "term", "new term"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""
-                Ошибка выполнения команды. Подробности:
+                Ошибка выполнения команды Подробности:
                 Колода с именем Deck2 не существует в менеджере""", message);
     }
 }

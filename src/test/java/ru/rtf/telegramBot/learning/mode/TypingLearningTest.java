@@ -8,11 +8,10 @@ import ru.rtf.Card;
 
 import java.util.List;
 
-
 /**
- * Тестирование режима обучения "соответствие"
+ * Тестирование режима обучения "ввод термина"
  */
-class MatchLearningTest {
+class TypingLearningTest {
     /**
      * Карта для обучения
      */
@@ -20,14 +19,14 @@ class MatchLearningTest {
     /**
      * Экземпляр режима обучения
      */
-    private MatchLearning matchLearning;
+    private TypingLearning typingLearning;
 
     /**
      * Создание нового экземпляра режима обучения для каждого теста
      */
     @BeforeEach
     void setUp() {
-        matchLearning = new MatchLearning(card);
+        typingLearning = new TypingLearning(card);
     }
 
     /**
@@ -36,11 +35,10 @@ class MatchLearningTest {
     @Test
     @DisplayName("Формулировка вопроса")
     void testFormQuestion() {
-        String question = matchLearning.formQuestion();
+        String question = typingLearning.formQuestion();
         Assertions.assertEquals("""
-                Утверждение:
-                term - def
-                1 - верно, 0 - неверно""", question);
+                Определение - "def"
+                Введите соответствующий термин:""", question);
     }
 
     /**
@@ -49,7 +47,7 @@ class MatchLearningTest {
     @Test
     @DisplayName("Правильный ответ")
     void testCheckRightAnswer() {
-        Assertions.assertTrue(matchLearning.checkAnswer("1"));
+        Assertions.assertTrue(typingLearning.checkAnswer("term"));
     }
 
     /**
@@ -58,7 +56,7 @@ class MatchLearningTest {
     @Test
     @DisplayName("Неправильный ответ")
     void testCheckWrongAnswer() {
-        Assertions.assertFalse(matchLearning.checkAnswer("0"));
+        Assertions.assertFalse(typingLearning.checkAnswer("notTerm"));
     }
 
     /**
@@ -67,7 +65,7 @@ class MatchLearningTest {
     @Test
     @DisplayName("Активная карта текстом")
     void getActiveCardDescription() {
-        String card = matchLearning.pullActiveCardDescription();
+        String card = typingLearning.pullActiveCardDescription();
         Assertions.assertEquals("\"term\" = def", card);
     }
 }
