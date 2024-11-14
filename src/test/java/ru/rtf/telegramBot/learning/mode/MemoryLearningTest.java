@@ -9,9 +9,10 @@ import ru.rtf.Card;
 import java.util.List;
 
 /**
- * Тестирование режима обучения "ввод термина"
+ * Тестирование режима обучения "карточки"
  */
-class TypingLearningTest {
+class MemoryLearningTest {
+
     /**
      * Карта для обучения
      */
@@ -19,14 +20,14 @@ class TypingLearningTest {
     /**
      * Экземпляр режима обучения
      */
-    private TypingLearning typingLearning;
+    private MemoryLearning memoryLearning;
 
     /**
      * Создание нового экземпляра режима обучения для каждого теста
      */
     @BeforeEach
     void setUp() {
-        typingLearning = new TypingLearning(card);
+        memoryLearning = new MemoryLearning(card);
     }
 
     /**
@@ -35,28 +36,8 @@ class TypingLearningTest {
     @Test
     @DisplayName("Формулировка вопроса")
     void testFormQuestion() {
-        String question = typingLearning.formQuestion();
-        Assertions.assertEquals("""
-                Определение - "def".
-                Введите соответствующий термин:""", question);
-    }
-
-    /**
-     * Проверка правильного ответа
-     */
-    @Test
-    @DisplayName("Правильный ответ")
-    void testCheckRightAnswer() {
-        Assertions.assertTrue(typingLearning.checkAnswer("term"));
-    }
-
-    /**
-     * Проверка неправильного ответа
-     */
-    @Test
-    @DisplayName("Неправильный ответ")
-    void testCheckWrongAnswer() {
-        Assertions.assertFalse(typingLearning.checkAnswer("notTerm"));
+        String question = memoryLearning.formQuestion();
+        Assertions.assertEquals("Термин - \"term\"", question);
     }
 
     /**
@@ -64,8 +45,9 @@ class TypingLearningTest {
      */
     @Test
     @DisplayName("Активная карта текстом")
-    void getActiveCardDescription() {
-        String card = typingLearning.pullActiveCardDescription();
+    void pullActiveCardDescription() {
+        String card = memoryLearning.pullActiveCardDescription();
         Assertions.assertEquals("\"term\" = def", card);
     }
+
 }

@@ -7,11 +7,10 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
 
-
 /**
- * Режим обучения "Ввод термина"
+ * Режим обучения "карточки"
  */
-public class TypingLearning implements LearningSession {
+public class MemoryLearning implements LearningSession {
 
     /**
      * Карты к изучению
@@ -23,23 +22,20 @@ public class TypingLearning implements LearningSession {
      *
      * @param cards Карты к обучению
      */
-    public TypingLearning(Collection<Card> cards) {
+    public MemoryLearning(Collection<Card> cards) {
         allCards = new LinkedList<>(cards);
     }
 
     @Override
     public String formQuestion() {
-        String questionText = """
-                Определение - "%s".
-                Введите соответствующий термин:""";
+        String question = "Термин - \"%s\"";
         Card currentCard = allCards.peek();
-        return questionText.formatted(currentCard.getDefinition());
+        return question.formatted(currentCard.getTerm());
     }
 
     @Override
     public boolean checkAnswer(String answer) {
-        Card currentCard = allCards.peek();
-        return answer.equalsIgnoreCase(currentCard.getTerm());
+        return answer.equals("1") || answer.equals("2");
     }
 
     @Override
@@ -55,7 +51,9 @@ public class TypingLearning implements LearningSession {
     @Override
     public String getDescription() {
         return """
-                в режиме ввода термина
-                Дано определение, ваша задача написать соответсвующий термин (регистр не учитывается)""";
+                в режиме карточки
+                Вам показывается термин, ваша задача — вспомнить определение
+                После оценить, насколько хорошо вы помните определение
+                0 — не помню  1 — частично помню  2 — помню""";
     }
 }

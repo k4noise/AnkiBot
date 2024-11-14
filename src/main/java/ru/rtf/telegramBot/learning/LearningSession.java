@@ -44,7 +44,7 @@ public interface LearningSession {
     /**
      * Вернуть описание активной карты - термин: определение
      */
-    String getActiveCardDescription();
+    String pullActiveCardDescription();
 
     /**
      * Вернуть описание режима

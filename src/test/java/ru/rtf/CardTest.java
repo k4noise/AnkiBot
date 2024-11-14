@@ -16,13 +16,19 @@ public class CardTest {
     @DisplayName("Проверка конструктора")
     void testCardInitEmptyTwoParams() {
         Assertions.assertThrows(
-                IllegalArgumentException.class, () -> new Card("", ""), "Карта с пустыми параметрами не может быть создана"
+                IllegalArgumentException.class,
+                () -> new Card("", ""),
+                "Карта с пустыми параметрами не может быть создана"
         );
         Assertions.assertThrows(
-                IllegalArgumentException.class, () -> new Card("", "abс"), "Карта с пустым термином не может быть создана"
+                IllegalArgumentException.class,
+                () -> new Card("", "abс"),
+                "Карта с пустым термином не может быть создана"
         );
         Assertions.assertThrows(
-                IllegalArgumentException.class, () -> new Card("term", ""), "Карта с пустым определением не может быть создана"
+                IllegalArgumentException.class,
+                () -> new Card("term", ""),
+                "Карта с пустым определением не может быть создана"
         );
     }
 

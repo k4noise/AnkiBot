@@ -67,7 +67,7 @@ class MatchLearningTest {
     @Test
     @DisplayName("Активная карта текстом")
     void getActiveCardDescription() {
-        String card = matchLearning.getActiveCardDescription();
+        String card = matchLearning.pullActiveCardDescription();
         Assertions.assertEquals("\"term\" = def", card);
     }
 }

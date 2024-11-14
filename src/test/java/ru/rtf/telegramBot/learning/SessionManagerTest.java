@@ -27,7 +27,7 @@ class SessionManagerTest {
      * Карта для обучения
      */
     private Collection<Card> card = List.of(
-      new Card("term", "def")
+            new Card("term", "def")
     );
 
     /**
@@ -80,7 +80,7 @@ class SessionManagerTest {
     @Test
     @DisplayName("Некорректное начало сессии при отсутствии карт")
     void testStartSessionWithEmptyCards() {
-           NoSuchElementException exception = Assertions.assertThrows(
+        NoSuchElementException exception = Assertions.assertThrows(
                 NoSuchElementException.class,
                 () -> sessionManager.start(chatId, new MatchLearning(List.of())),
                 "Невозможно начать новую сессию с пустым списком карт"
@@ -102,7 +102,7 @@ class SessionManagerTest {
     }
 
     /**
-     * Проверка досрочного окончания существующей активной сессии обучения
+     * Проверка планового окончания существующей активной сессии обучения
      */
     @Test
     @DisplayName("Плановое окончание активной сессии")

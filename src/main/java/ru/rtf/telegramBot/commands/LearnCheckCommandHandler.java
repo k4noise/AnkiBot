@@ -6,6 +6,7 @@ import ru.rtf.telegramBot.CommandHandler;
 import ru.rtf.telegramBot.learning.LearningSession;
 import ru.rtf.telegramBot.learning.SessionManager;
 import ru.rtf.telegramBot.learning.mode.MatchLearning;
+import ru.rtf.telegramBot.learning.mode.MemoryLearning;
 import ru.rtf.telegramBot.learning.mode.TypingLearning;
 
 import java.util.Collection;
@@ -44,6 +45,9 @@ public class LearnCheckCommandHandler implements CommandHandler {
                     break;
                 case "typing":
                     learningSession = new TypingLearning(cardsToLearn);
+                    break;
+                case "memory":
+                    learningSession = new MemoryLearning(cardsToLearn);
                     break;
                 default:
                     return MESSAGE_COMMAND_ERROR.formatted("Неизвестный режим обучения");
