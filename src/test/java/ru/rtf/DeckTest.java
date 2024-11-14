@@ -404,8 +404,8 @@ class DeckTest {
 
         Assertions.assertEquals(
                 """
-                        "a" \\= a
-                        "b" \\= b
+                        "a" = a
+                        "b" = b
                         """,
                 deck.getCardsDescription(),
                 "Должно быть описание всех карт колоды без изменения их порядка"

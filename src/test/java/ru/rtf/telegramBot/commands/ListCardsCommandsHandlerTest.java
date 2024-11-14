@@ -43,9 +43,9 @@ public class ListCardsCommandsHandlerTest {
         String message = listCardsCommandsHandler.handle(deckManager, chatId, new String[]{"Deck"});
         Assertions.assertEquals("""
                 Deck:
-                "term1" \\= def 1
-                "term2" \\= def 2
-                "term3" \\= def 3
+                "term1" = def 1
+                "term2" = def 2
+                "term3" = def 3
                 """, message);
     }
 

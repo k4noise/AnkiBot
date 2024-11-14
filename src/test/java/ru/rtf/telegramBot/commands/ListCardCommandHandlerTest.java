@@ -37,7 +37,7 @@ public class ListCardCommandHandlerTest {
         deckManager.getDeck("Deck").addCard("term", "какое-то описание");
 
         String message = listCardCommandHandler.handle(deckManager, chatId, new String[]{"Deck", "term"});
-        Assertions.assertEquals("\"term\" \\= какое-то описание", message);
+        Assertions.assertEquals("\"term\" = какое-то описание", message);
     }
 
     /**

@@ -50,12 +50,12 @@ class SessionManagerTest {
         Assertions.assertTrue(sessionManager.hasActive(chatId), "Должна быть создана активная сессия");
         Assertions.assertEquals("""
                 Вы начали обучение в режиме соответствия
-                Показывается термин и определение, ваша задача — определить, соответствует ли термин определению
-                Чтобы досрочно завершить сеанс, воспользуйтесь командой /end\\_check
+                Показывается термин и определение, ваша задача - определить, соответствует ли термин определению
+                Чтобы досрочно завершить сеанс, воспользуйтесь командой /end_check
                 
                 Ваш первый вопрос: Утверждение:
-                term — def
-                1 — верно, 0 — неверно""", startMessage);
+                term - def
+                1 - верно, 0 - неверно""", startMessage);
     }
 
     /**
@@ -111,7 +111,7 @@ class SessionManagerTest {
         String endMessage = sessionManager.handle(chatId, "1");
 
         Assertions.assertFalse(sessionManager.hasActive(chatId), "Не должно быть активной сессии");
-        Assertions.assertTrue(endMessage.contains("Вы прошли все карточки в колоде\\!"));
+        Assertions.assertTrue(endMessage.contains("Вы прошли все карточки в колоде!"));
     }
 
     /**

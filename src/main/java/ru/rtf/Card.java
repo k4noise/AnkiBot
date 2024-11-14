@@ -79,6 +79,6 @@ public class Card {
 
     @Override
     public String toString() {
-        return String.format("\"%s\" \\= %s", term, definition);
+        return String.format("\"%s\" = %s", term, definition);
     }
 }

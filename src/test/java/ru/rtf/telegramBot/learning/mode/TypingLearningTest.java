@@ -37,7 +37,7 @@ class TypingLearningTest {
     void testFormQuestion() {
         String question = typingLearning.formQuestion();
         Assertions.assertEquals("""
-                Определение - "def".
+                Определение - "def"
                 Введите соответствующий термин:""", question);
     }
 

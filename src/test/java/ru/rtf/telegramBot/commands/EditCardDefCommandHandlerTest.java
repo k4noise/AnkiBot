@@ -47,7 +47,7 @@ public class EditCardDefCommandHandlerTest {
         Card modifiedCard = deck.getCard("term");
 
         Assertions.assertEquals("new def", modifiedCard.getDefinition(), "Определение должно измениться");
-        Assertions.assertEquals("Определение карты было успешно изменено: \"term\" \\= new def", message);
+        Assertions.assertEquals("Определение карты было успешно изменено: \"term\" = new def", message);
     }
 
     /**
