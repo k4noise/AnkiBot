@@ -37,7 +37,7 @@ public class ListCardCommandHandlerTest {
         deckManager.getDeck("Deck").addCard("term", "какое-то описание");
 
         String message = listCardCommandHandler.handle(deckManager, chatId, new String[]{"Deck", "term"});
-        Assertions.assertEquals("\"term\" = какое-то описание", message);
+        Assertions.assertEquals("\"term\" \\= какое-то описание", message);
     }
 
     /**
@@ -49,7 +49,7 @@ public class ListCardCommandHandlerTest {
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""
-                Ошибка выполнения команды. Подробности:
+                Ошибка выполнения команды Подробности:
                 Карта с термином term не существует в колоде""", message);
     }
 
@@ -62,7 +62,7 @@ public class ListCardCommandHandlerTest {
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""
-                Ошибка выполнения команды. Подробности:
+                Ошибка выполнения команды Подробности:
                 Колода с именем Deck2 не существует в менеджере""", message);
     }
 }

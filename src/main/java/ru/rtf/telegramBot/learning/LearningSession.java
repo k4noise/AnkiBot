@@ -14,11 +14,11 @@ public interface LearningSession {
     /**
      * Шаблон сообщения правильного ответа
      */
-    String CORRECT_ANSWER_INFO = "Верно! " + SHOW_RIGHT_ANSWER;
+    String CORRECT_ANSWER_INFO = "Верно\\! " + SHOW_RIGHT_ANSWER;
     /**
      * Шаблон сообщения неправильного ответа
      */
-    String INCORRECT_ANSWER_INFO = "Неверно. " + SHOW_RIGHT_ANSWER;
+    String INCORRECT_ANSWER_INFO = "Неверно\\. " + SHOW_RIGHT_ANSWER;
 
     /**
      * Сформировать вопрос по карте, не показывавшейся пользователю в течении сеанса
@@ -28,13 +28,13 @@ public interface LearningSession {
     String formQuestion();
 
     /**
-     * Проверить, правильно ли пользователь ответил на вопрос по карте
+     * Проверить, правильно ли пользователь ответил на вопрос по карте и вернуть результат проверки
      * <p>Показ ответа подразумевает исключение текущей карточки из списка изучаемых</p>
      *
      * @param answer Ответ пользователя
-     * @return Правильность ответа
+     * @return Результат проверки
      */
-    boolean checkAnswer(String answer);
+    String messageCheckAnswer(String answer);
 
     /**
      * Проверяет, остались ли карты для обучения

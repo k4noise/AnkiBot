@@ -43,9 +43,9 @@ public class ListCardsCommandsHandlerTest {
         String message = listCardsCommandsHandler.handle(deckManager, chatId, new String[]{"Deck"});
         Assertions.assertEquals("""
                 Deck:
-                "term1" = def 1
-                "term2" = def 2
-                "term3" = def 3
+                "term1" \\= def 1
+                "term2" \\= def 2
+                "term3" \\= def 3
                 """, message);
     }
 
@@ -69,7 +69,7 @@ public class ListCardsCommandsHandlerTest {
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""
-                Ошибка выполнения команды. Подробности:
+                Ошибка выполнения команды Подробности:
                 Колода с именем Deck2 не существует в менеджере""", message);
     }
 }

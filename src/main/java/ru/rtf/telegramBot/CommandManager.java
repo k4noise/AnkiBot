@@ -69,7 +69,7 @@ public class CommandManager {
         String[] commandParams = commandParser.getCommandParams();
         return checkArgumentsCount(commandHandler, commandParams)
                 ? commandHandler.handle(userDeckManager, chatId, commandParams)
-                : "Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)";
+                : "Ошибка параметров команды\n Проверьте на соответствие шаблону \\(/help\\)";
     }
 
     /**

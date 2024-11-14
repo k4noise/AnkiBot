@@ -30,16 +30,19 @@ public class TypingLearning implements LearningSession {
     @Override
     public String formQuestion() {
         String questionText = """
-                Определение - "%s".
+                Определение — "%s"
                 Введите соответствующий термин:""";
         Card currentCard = allCards.peek();
         return questionText.formatted(currentCard.getDefinition());
     }
 
     @Override
-    public boolean checkAnswer(String answer) {
+    public String messageCheckAnswer(String answer) {
         Card currentCard = allCards.peek();
-        return answer.equalsIgnoreCase(currentCard.getTerm());
+        boolean checkAnswer = answer.equalsIgnoreCase(currentCard.getTerm());
+        return checkAnswer
+                ? LearningSession.CORRECT_ANSWER_INFO.formatted(currentCard)
+                : LearningSession.INCORRECT_ANSWER_INFO.formatted(currentCard);
     }
 
     @Override
@@ -56,6 +59,6 @@ public class TypingLearning implements LearningSession {
     public String getDescription() {
         return """
                 в режиме ввода термина
-                Дано определение, ваша задача написать соответсвующий термин (регистр не учитывается)""";
+                Дано определение, ваша задача написать соответсвующий термин \\(регистр не учитывается\\)""";
     }
 }
