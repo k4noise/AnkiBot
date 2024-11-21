@@ -35,7 +35,19 @@ public class MemoryLearning implements LearningSession {
 
     @Override
     public boolean checkAnswer(String answer) {
-        return answer.equals("1") || answer.equals("2");
+        Card currentCard = allCards.peek();
+        return switch (answer) {
+            case "0" -> {
+                currentCard.subtractScore();
+                yield false;
+            }
+            case "1" -> true;
+            case "2" -> {
+                currentCard.addScore();
+                yield true;
+            }
+            default -> false;
+        };
     }
 
     @Override

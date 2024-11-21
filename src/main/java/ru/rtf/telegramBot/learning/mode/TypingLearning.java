@@ -12,7 +12,11 @@ import java.util.Queue;
  * Режим обучения "Ввод термина"
  */
 public class TypingLearning implements LearningSession {
-
+    /**
+     * Количество баллов, которое добавляется карточке при правильном ответе <br>
+     * 2 балла за сложность режима
+     */
+    private static final int RIGHT_ANSWER_SCORE_ADDITION = 2;
     /**
      * Карты к изучению
      */
@@ -39,7 +43,13 @@ public class TypingLearning implements LearningSession {
     @Override
     public boolean checkAnswer(String answer) {
         Card currentCard = allCards.peek();
-        return answer.equalsIgnoreCase(currentCard.getTerm());
+        if (answer.equalsIgnoreCase(currentCard.getTerm())) {
+            currentCard.addScore(RIGHT_ANSWER_SCORE_ADDITION);
+            return true;
+        }
+
+        currentCard.subtractScore();
+        return false;
     }
 
     @Override

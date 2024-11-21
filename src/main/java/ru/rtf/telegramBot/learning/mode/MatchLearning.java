@@ -46,15 +46,28 @@ public class MatchLearning implements LearningSession {
 
     @Override
     public boolean checkAnswer(String answer) {
-        boolean userAnswer;
-        if (answer.equals("0")) {
-            userAnswer = false;
-        } else if (answer.equals("1")) {
-            userAnswer = true;
-        } else {
-            return false;
+        Card currentCard = allCards.peek();
+        boolean isCorrectDefinition = Objects.equals(currentCard.getDefinition(), allDefinitions.get(randomDefinitionIndex));
+        boolean isRightUserAnswer = false;
+
+        switch (answer) {
+            case "0":
+                isRightUserAnswer = !isCorrectDefinition;
+                break;
+            case "1":
+                isRightUserAnswer = isCorrectDefinition;
+                break;
+            default:
+                return false;
         }
-        return userAnswer == Objects.equals(allCards.peek().getDefinition(), allDefinitions.get(randomDefinitionIndex));
+
+        if (isRightUserAnswer) {
+            currentCard.addScore();
+        } else  {
+            currentCard.subtractScore();
+        }
+
+        return isRightUserAnswer;
     }
 
     @Override

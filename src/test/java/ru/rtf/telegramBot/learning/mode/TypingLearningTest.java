@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.rtf.Card;
+import ru.rtf.CardLearningStatus;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ class TypingLearningTest {
     /**
      * Карта для обучения
      */
-    private final List<Card> card = List.of(new Card("term", "def"));
+    private List<Card> card;
     /**
      * Экземпляр режима обучения
      */
@@ -26,6 +27,7 @@ class TypingLearningTest {
      */
     @BeforeEach
     void setUp() {
+        card = List.of(new Card("term", "def"));
         typingLearning = new TypingLearning(card);
     }
 
@@ -42,21 +44,27 @@ class TypingLearningTest {
     }
 
     /**
-     * Проверка правильного ответа
+     * Проверка правильного ответа и изменения статуса карты
      */
     @Test
-    @DisplayName("Правильный ответ")
-    void testCheckRightAnswer() {
+    @DisplayName("Правильный ответ с новым статусом")
+    void testCheckRightAnswerWithNewStatus() {
+        Card cardToLearn = card.getFirst();
+        cardToLearn.addScore(3);
         Assertions.assertTrue(typingLearning.checkAnswer("term"));
+        Assertions.assertEquals(CardLearningStatus.PARTIALLY_STUDIED, cardToLearn.getStatus());
     }
 
     /**
-     * Проверка неправильного ответа
+     * Проверка неправильного ответа и изменения статуса карты
      */
     @Test
-    @DisplayName("Неправильный ответ")
-    void testCheckWrongAnswer() {
+    @DisplayName("Неправильный ответ с новым статусом")
+    void testCheckWrongAnswerWithNewStatus() {
+        Card cardToLearn = card.getFirst();
+        cardToLearn.addScore(5);
         Assertions.assertFalse(typingLearning.checkAnswer("notTerm"));
+        Assertions.assertEquals(CardLearningStatus.NOT_STUDIED, cardToLearn.getStatus());
     }
 
     /**
