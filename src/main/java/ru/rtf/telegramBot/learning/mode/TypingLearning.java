@@ -1,10 +1,10 @@
 package ru.rtf.telegramBot.learning.mode;
 
 import ru.rtf.Card;
+import ru.rtf.Deck;
 import ru.rtf.telegramBot.learning.AnswerStatus;
 import ru.rtf.telegramBot.learning.LearningSession;
 
-import java.util.Collection;
 import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -20,6 +20,10 @@ public class TypingLearning implements LearningSession {
      */
     private static final int RIGHT_ANSWER_SCORE_ADDITION = 2;
     /**
+     * Колода
+     */
+    private final Deck deck;
+    /**
      * Карты к изучению
      */
     private final Queue<Card> allCards;
@@ -31,10 +35,11 @@ public class TypingLearning implements LearningSession {
     /**
      * Инициализировать режим обучения
      *
-     * @param cards Карты к обучению
+     * @param deck Колода пользователя
      */
-    public TypingLearning(Collection<Card> cards) {
-        allCards = new LinkedList<>(cards);
+    public TypingLearning(Deck deck) {
+        this.deck = deck;
+        allCards = new LinkedList<>(deck.getCards());
         learningStats = new EnumMap<>(AnswerStatus.class);
     }
 
@@ -74,6 +79,11 @@ public class TypingLearning implements LearningSession {
     @Override
     public EnumMap<AnswerStatus, Integer> getStats() {
         return learningStats;
+    }
+
+    @Override
+    public void saveStatsToDeck() {
+        deck.addNewStats(learningStats);
     }
 
     @Override

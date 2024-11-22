@@ -7,13 +7,13 @@ import java.util.Objects;
  */
 public class Card {
     /**
+     * Максимально возможное количество баллов
+     */
+    public static final int MAX_SCORE = 12;
+    /**
      * Минимально возможное количество баллов
      */
     private static final int MIN_SCORE = 0;
-    /**
-     * Максимально возможное количество баллов
-     */
-    private static final int MAX_SCORE = 12;
     /**
      * Минимально возможное количество баллов для получения статуса "Изучена"
      */
@@ -49,6 +49,7 @@ public class Card {
             throw new IllegalArgumentException("Термин и определение не могут быть пустыми");
         this.term = term;
         this.definition = definition;
+        this.score = MIN_SCORE;
     }
 
     /**
@@ -99,7 +100,7 @@ public class Card {
      * @param scoreDiff Количество баллов для добавления
      */
     public void addScore(int scoreDiff) {
-        if (score == MAX_SCORE) {
+        if (scoreDiff < 0 || score == MAX_SCORE) {
             return;
         }
         score = Math.min(MAX_SCORE, score + scoreDiff);
@@ -113,6 +114,13 @@ public class Card {
             return;
         }
         score--;
+    }
+
+    /**
+     * Вернуть балл карточки
+     */
+    public int getScore() {
+        return score;
     }
 
     /**

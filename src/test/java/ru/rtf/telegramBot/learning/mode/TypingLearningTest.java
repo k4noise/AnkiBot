@@ -5,19 +5,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.rtf.Card;
-import ru.rtf.CardLearningStatus;
+import ru.rtf.Deck;
 import ru.rtf.telegramBot.learning.AnswerStatus;
-
-import java.util.List;
 
 /**
  * Тестирование режима обучения "ввод термина"
  */
 class TypingLearningTest {
     /**
-     * Карта для обучения
+     * Колода для обучения
      */
-    private List<Card> card;
+    private Deck deck;
     /**
      * Экземпляр режима обучения
      */
@@ -28,8 +26,9 @@ class TypingLearningTest {
      */
     @BeforeEach
     void setUp() {
-        card = List.of(new Card("term", "def"));
-        typingLearning = new TypingLearning(card);
+        deck = new Deck("Deck");
+        deck.addCard(new Card("term", "def"));
+        typingLearning = new TypingLearning(deck);
     }
 
     /**
@@ -45,30 +44,28 @@ class TypingLearningTest {
     }
 
     /**
-     * Проверка правильного ответа и изменения статуса карты
+     * Проверка правильного ответа и изменения баллов карты
      */
     @Test
-    @DisplayName("Правильный ответ с новым статусом")
+    @DisplayName("Правильный ответ с изменением балла")
     void testCheckRightAnswerWithNewStatus() {
-        Card cardToLearn = card.getFirst();
-        cardToLearn.addScore(3);
-
+        Card cardToLearn = deck.getCards().iterator().next();
         Assertions.assertEquals(AnswerStatus.RIGHT, typingLearning.checkAnswer("term"));
-        Assertions.assertEquals(CardLearningStatus.PARTIALLY_STUDIED, cardToLearn.getStatus());
+        Assertions.assertEquals(2, cardToLearn.getScore());
         Assertions.assertEquals(1, typingLearning.getStats().get(AnswerStatus.RIGHT));
     }
 
     /**
-     * Проверка неправильного ответа и изменения статуса карты
+     * Проверка неправильного ответа и изменения баллов карты
      */
     @Test
-    @DisplayName("Неправильный ответ с новым статусом")
+    @DisplayName("Неправильный ответ с изменением балла")
     void testCheckWrongAnswerWithNewStatus() {
-        Card cardToLearn = card.getFirst();
-        cardToLearn.addScore(5);
+        Card cardToLearn = deck.getCards().iterator().next();
+        cardToLearn.addScore(2);
 
         Assertions.assertEquals(AnswerStatus.WRONG, typingLearning.checkAnswer("notTerm"));
-        Assertions.assertEquals(CardLearningStatus.NOT_STUDIED, cardToLearn.getStatus());
+        Assertions.assertEquals(1, cardToLearn.getScore());
         Assertions.assertEquals(1, typingLearning.getStats().get(AnswerStatus.WRONG));
     }
 

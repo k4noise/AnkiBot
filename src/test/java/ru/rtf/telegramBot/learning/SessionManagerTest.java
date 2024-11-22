@@ -5,10 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.rtf.Card;
+import ru.rtf.Deck;
 import ru.rtf.telegramBot.learning.mode.MatchLearning;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -24,11 +23,9 @@ class SessionManagerTest {
      */
     private SessionManager sessionManager;
     /**
-     * Карта для обучения
+     * Колода для обучения
      */
-    private Collection<Card> card = List.of(
-            new Card("term", "def")
-    );
+    private Deck deck;
 
     /**
      * Создание менеджера сессий обучения для каждого теста
@@ -36,6 +33,8 @@ class SessionManagerTest {
     @BeforeEach
     void createNewSessionManager() {
         sessionManager = new SessionManager();
+        deck = new Deck("Deck");
+        deck.addCard(new Card("term", "def"));
     }
 
     /**
@@ -45,7 +44,7 @@ class SessionManagerTest {
     @Test
     @DisplayName("Корректное начало новой сессии")
     void testStartAndCheckNewSessionActivity() {
-        String startMessage = sessionManager.start(chatId, new MatchLearning(card));
+        String startMessage = sessionManager.start(chatId, new MatchLearning(deck));
 
         Assertions.assertTrue(sessionManager.hasActive(chatId), "Должна быть создана активная сессия");
         Assertions.assertEquals("""
@@ -64,25 +63,25 @@ class SessionManagerTest {
     @Test
     @DisplayName("Некорректное начало сессии при наличии активной")
     void testStartSessionWithActive() {
-        sessionManager.start(chatId, new MatchLearning(card));
+        sessionManager.start(chatId, new MatchLearning(deck));
 
         IllegalStateException exception = Assertions.assertThrows(
                 IllegalStateException.class,
-                () -> sessionManager.start(chatId, new MatchLearning(card)),
+                () -> sessionManager.start(chatId, new MatchLearning(deck)),
                 "Невозможно начать новую сессию при наличии активной"
         );
         Assertions.assertEquals("Имеется активная сессия обучения", exception.getMessage());
     }
 
     /**
-     * Проверка начала новой сессии обучения {@link SessionManager#start} с пустым списком карт
+     * Проверка начала новой сессии обучения {@link SessionManager#start} с пустой колодой
      */
     @Test
-    @DisplayName("Некорректное начало сессии при отсутствии карт")
+    @DisplayName("Некорректное начало сессии с пустой колодой")
     void testStartSessionWithEmptyCards() {
         NoSuchElementException exception = Assertions.assertThrows(
                 NoSuchElementException.class,
-                () -> sessionManager.start(chatId, new MatchLearning(List.of())),
+                () -> sessionManager.start(chatId, new MatchLearning(new Deck("123"))),
                 "Невозможно начать новую сессию с пустым списком карт"
         );
         Assertions.assertEquals("Колода не содержит карточек, доступных для изучения", exception.getMessage());
@@ -94,7 +93,7 @@ class SessionManagerTest {
     @Test
     @DisplayName("Досрочное окончание активной сессии")
     void testEarlyEndExistingSession() {
-        sessionManager.start(chatId, new MatchLearning(card));
+        sessionManager.start(chatId, new MatchLearning(deck));
         String endMessage = sessionManager.end(chatId);
 
         Assertions.assertFalse(sessionManager.hasActive(chatId), "Не должно быть активной сессии");
@@ -109,7 +108,7 @@ class SessionManagerTest {
     @Test
     @DisplayName("Плановое окончание активной сессии")
     void testHandleEndExistingSession() {
-        sessionManager.start(chatId, new MatchLearning(card));
+        sessionManager.start(chatId, new MatchLearning(deck));
         String endMessage = sessionManager.handle(chatId, "1");
 
         Assertions.assertFalse(sessionManager.hasActive(chatId), "Не должно быть активной сессии");

@@ -1,6 +1,7 @@
 package ru.rtf.telegramBot.learning;
 
-import java.util.EnumMap;
+import ru.rtf.telegramBot.StatsCalculator;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -10,27 +11,17 @@ import java.util.NoSuchElementException;
  */
 public class SessionManager {
     /**
-     * Хранилище коэффициентов для расчета статистики ответов
-     */
-    private static final Map<AnswerStatus, Integer> answerScores;
-
-    static {
-        answerScores = new EnumMap<>(AnswerStatus.class);
-        answerScores.put(AnswerStatus.RIGHT, 1);
-        answerScores.put(AnswerStatus.PARTIALLY_RIGHT, 0);
-        answerScores.put(AnswerStatus.WRONG, -1);
-    }
-
-    /**
      * Хранилище активных сессий пользователей
      */
     private final Map<Long, LearningSession> sessions;
+    private final StatsCalculator statsCalculator;
 
     /**
      * Инициализировать хранилище сессий
      */
     public SessionManager() {
         this.sessions = new HashMap<>();
+        statsCalculator = new StatsCalculator();
     }
 
     /**
@@ -91,7 +82,8 @@ public class SessionManager {
             throw new NoSuchElementException("Нет активной сессии обучения");
         }
         LearningSession session = sessions.remove(chatId);
-        int stats = getSuccessLearningPercentage(session.getStats());
+        session.saveStatsToDeck();
+        int stats = statsCalculator.getSuccessLearningPercentage(session.getStats());
         String endMessage = session.hasCardsToLearn()
                 ? "Вы досрочно завершили сессию"
                 : "Вы прошли все карточки в колоде!";
@@ -116,23 +108,5 @@ public class SessionManager {
         return sessions.get(chatId);
     }
 
-    /**
-     * Получить процент успешности сеанса целым числом (с округлением вниз)
-     *
-     * @param stats Статистика сеанса
-     */
-    private int getSuccessLearningPercentage(EnumMap<AnswerStatus, Integer> stats) {
-        final int PERCENTAGE_COEFFICIENT = 50;
-        int totalWeightedScore = 0;
-        int totalAnswers = 0;
 
-        for (Map.Entry<AnswerStatus, Integer> entry : stats.entrySet()) {
-            AnswerStatus status = entry.getKey();
-            int count = entry.getValue();
-            totalAnswers += count;
-            totalWeightedScore += count * (PERCENTAGE_COEFFICIENT + answerScores.get(status) * PERCENTAGE_COEFFICIENT);
-        }
-
-        return totalAnswers > 0 ? totalWeightedScore / totalAnswers : 0;
-    }
 }

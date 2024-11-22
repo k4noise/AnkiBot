@@ -127,11 +127,18 @@ public class CardTest {
                 "Должен измениться статус на частично изученный"
         );
 
+        card.addScore(-5);
+        Assertions.assertEquals(
+                CardLearningStatus.PARTIALLY_STUDIED,
+                card.getStatus(),
+                "Статус не должен измениться"
+        );
+
         card.addScore(5);
         Assertions.assertEquals(
                 CardLearningStatus.STUDIED,
                 card.getStatus(),
-                "Должен измениться статус на частично изученный"
+                "Должен измениться статус на изученный"
         );
     }
 

@@ -5,20 +5,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.rtf.Card;
-import ru.rtf.CardLearningStatus;
+import ru.rtf.Deck;
 import ru.rtf.telegramBot.learning.AnswerStatus;
-
-import java.util.List;
 
 /**
  * Тестирование режима обучения "карточки"
  */
 class MemoryLearningTest {
-
     /**
-     * Карта для обучения
+     * Колода для обучения
      */
-    private final List<Card> card = List.of(new Card("term", "def"));
+    private Deck deck;
     /**
      * Экземпляр режима обучения
      */
@@ -29,52 +26,48 @@ class MemoryLearningTest {
      */
     @BeforeEach
     void setUp() {
-        memoryLearning = new MemoryLearning(card);
+        deck = new Deck("Deck");
+        deck.addCard(new Card("term", "def"));
+        memoryLearning = new MemoryLearning(deck);
     }
 
     /**
-     * Проверка правильного ответа и изменения статуса карты
+     * Проверка правильного ответа и изменения баллов карты
      */
     @Test
-    @DisplayName("Правильный ответ с новым статусом")
+    @DisplayName("Правильный ответ с изменением баллов")
     void testCheckRightAnswerWithNewStatus() {
-        Card cardToLearn = card.getFirst();
-        cardToLearn.addScore(4);
-
+        Card cardToLearn = deck.getCards().iterator().next();
         Assertions.assertEquals(AnswerStatus.RIGHT, memoryLearning.checkAnswer("2"));
-        Assertions.assertEquals(CardLearningStatus.PARTIALLY_STUDIED, cardToLearn.getStatus());
+        Assertions.assertEquals(1, cardToLearn.getScore());
         Assertions.assertEquals(1, memoryLearning.getStats().get(AnswerStatus.RIGHT));
     }
 
     /**
-     * Проверка частично правильного ответа и сохранения статуса карты
+     * Проверка частично правильного ответа и сохранения баллов
      */
     @Test
-    @DisplayName("Частично правильный ответ с сохранением статуса")
+    @DisplayName("Частично правильный ответ с сохранением баллов")
     void testCheckPartiallyRightAnswerWithSaveStatus() {
-        Card cardToLearn = card.getFirst();
-        cardToLearn.addScore(4);
+        Card cardToLearn = deck.getCards().iterator().next();
+        cardToLearn.addScore(2);
 
         Assertions.assertEquals(AnswerStatus.PARTIALLY_RIGHT, memoryLearning.checkAnswer("1"));
-        Assertions.assertEquals(
-                CardLearningStatus.NOT_STUDIED,
-                cardToLearn.getStatus(),
-                "Статус не должен был измениться"
-        );
+        Assertions.assertEquals(2, cardToLearn.getScore());
         Assertions.assertEquals(1, memoryLearning.getStats().get(AnswerStatus.PARTIALLY_RIGHT));
     }
 
     /**
-     * Проверка неправильного ответа и изменения статуса карты
+     * Проверка неправильного ответа и изменения баллов
      */
     @Test
-    @DisplayName("Неправильный ответ с новым статусом")
+    @DisplayName("Неправильный ответ с изменением баллов")
     void testCheckWrongAnswerWithNewStatus() {
-        Card cardToLearn = card.getFirst();
-        cardToLearn.addScore(5);
+        Card cardToLearn = deck.getCards().iterator().next();
+        cardToLearn.addScore(2);
 
         Assertions.assertEquals(AnswerStatus.WRONG, memoryLearning.checkAnswer("0"));
-        Assertions.assertEquals(CardLearningStatus.NOT_STUDIED, cardToLearn.getStatus());
+        Assertions.assertEquals(1, cardToLearn.getScore());
         Assertions.assertEquals(1, memoryLearning.getStats().get(AnswerStatus.WRONG));
     }
 
