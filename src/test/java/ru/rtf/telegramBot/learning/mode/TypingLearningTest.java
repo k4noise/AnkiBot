@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.rtf.Card;
 import ru.rtf.CardLearningStatus;
+import ru.rtf.telegramBot.learning.AnswerStatus;
 
 import java.util.List;
 
@@ -51,8 +52,10 @@ class TypingLearningTest {
     void testCheckRightAnswerWithNewStatus() {
         Card cardToLearn = card.getFirst();
         cardToLearn.addScore(3);
-        Assertions.assertTrue(typingLearning.checkAnswer("term"));
+
+        Assertions.assertEquals(AnswerStatus.RIGHT, typingLearning.checkAnswer("term"));
         Assertions.assertEquals(CardLearningStatus.PARTIALLY_STUDIED, cardToLearn.getStatus());
+        Assertions.assertEquals(1, typingLearning.getStats().get(AnswerStatus.RIGHT));
     }
 
     /**
@@ -63,8 +66,10 @@ class TypingLearningTest {
     void testCheckWrongAnswerWithNewStatus() {
         Card cardToLearn = card.getFirst();
         cardToLearn.addScore(5);
-        Assertions.assertFalse(typingLearning.checkAnswer("notTerm"));
+
+        Assertions.assertEquals(AnswerStatus.WRONG, typingLearning.checkAnswer("notTerm"));
         Assertions.assertEquals(CardLearningStatus.NOT_STUDIED, cardToLearn.getStatus());
+        Assertions.assertEquals(1, typingLearning.getStats().get(AnswerStatus.WRONG));
     }
 
     /**

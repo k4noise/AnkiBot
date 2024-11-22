@@ -6,8 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.rtf.Card;
 import ru.rtf.CardLearningStatus;
+import ru.rtf.telegramBot.learning.AnswerStatus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -54,8 +54,10 @@ class MatchLearningTest {
     void testCheckRightAnswerWithNewStatus() {
         Card cardToLearn = card.getFirst();
         cardToLearn.addScore(4);
-        Assertions.assertTrue(matchLearning.checkAnswer("1"));
+
+        Assertions.assertEquals(AnswerStatus.RIGHT, matchLearning.checkAnswer("1"));
         Assertions.assertEquals(CardLearningStatus.PARTIALLY_STUDIED, cardToLearn.getStatus());
+        Assertions.assertEquals(1, matchLearning.getStats().get(AnswerStatus.RIGHT));
     }
 
     /**
@@ -66,9 +68,10 @@ class MatchLearningTest {
     void testCheckWrongAnswerWithNewStatus() {
         Card cardToLearn = card.getFirst();
         cardToLearn.addScore(5);
-        Assertions.assertFalse(matchLearning.checkAnswer("0"));
-        Assertions.assertEquals(CardLearningStatus.NOT_STUDIED, cardToLearn.getStatus());
 
+        Assertions.assertEquals(AnswerStatus.WRONG, matchLearning.checkAnswer("0"));
+        Assertions.assertEquals(CardLearningStatus.NOT_STUDIED, cardToLearn.getStatus());
+        Assertions.assertEquals(1, matchLearning.getStats().get(AnswerStatus.WRONG));
     }
 
     /**

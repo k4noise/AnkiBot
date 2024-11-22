@@ -1,9 +1,11 @@
 package ru.rtf.telegramBot.learning.mode;
 
 import ru.rtf.Card;
+import ru.rtf.telegramBot.learning.AnswerStatus;
 import ru.rtf.telegramBot.learning.LearningSession;
 
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -21,6 +23,10 @@ public class TypingLearning implements LearningSession {
      * Карты к изучению
      */
     private final Queue<Card> allCards;
+    /**
+     * Статистика сеанса обучения
+     */
+    private final EnumMap<AnswerStatus, Integer> learningStats;
 
     /**
      * Инициализировать режим обучения
@@ -29,6 +35,7 @@ public class TypingLearning implements LearningSession {
      */
     public TypingLearning(Collection<Card> cards) {
         allCards = new LinkedList<>(cards);
+        learningStats = new EnumMap<>(AnswerStatus.class);
     }
 
     @Override
@@ -41,15 +48,17 @@ public class TypingLearning implements LearningSession {
     }
 
     @Override
-    public boolean checkAnswer(String answer) {
+    public AnswerStatus checkAnswer(String answer) {
         Card currentCard = allCards.peek();
+        AnswerStatus status = AnswerStatus.WRONG;
         if (answer.equalsIgnoreCase(currentCard.getTerm())) {
             currentCard.addScore(RIGHT_ANSWER_SCORE_ADDITION);
-            return true;
+            status = AnswerStatus.RIGHT;
+        } else {
+            currentCard.subtractScore();
         }
-
-        currentCard.subtractScore();
-        return false;
+        learningStats.merge(status, 1, Integer::sum);
+        return status;
     }
 
     @Override
@@ -60,6 +69,11 @@ public class TypingLearning implements LearningSession {
     @Override
     public String pullActiveCardDescription() {
         return allCards.poll().toString();
+    }
+
+    @Override
+    public EnumMap<AnswerStatus, Integer> getStats() {
+        return learningStats;
     }
 
     @Override

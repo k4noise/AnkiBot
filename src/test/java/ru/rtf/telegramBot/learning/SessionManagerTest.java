@@ -98,7 +98,9 @@ class SessionManagerTest {
         String endMessage = sessionManager.end(chatId);
 
         Assertions.assertFalse(sessionManager.hasActive(chatId), "Не должно быть активной сессии");
-        Assertions.assertEquals("Вы досрочно завершили сессию", endMessage);
+        Assertions.assertEquals("""
+                Вы досрочно завершили сессию
+                Вы помните 0% терминов из показанных""", endMessage);
     }
 
     /**
@@ -111,7 +113,11 @@ class SessionManagerTest {
         String endMessage = sessionManager.handle(chatId, "1");
 
         Assertions.assertFalse(sessionManager.hasActive(chatId), "Не должно быть активной сессии");
-        Assertions.assertTrue(endMessage.contains("Вы прошли все карточки в колоде!"));
+        Assertions.assertEquals("""
+                Верно! Правильный ответ:
+                "term" = def
+                Вы прошли все карточки в колоде!
+                Вы помните 100% терминов из показанных""", endMessage);
     }
 
     /**

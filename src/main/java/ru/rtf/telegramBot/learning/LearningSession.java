@@ -1,5 +1,7 @@
 package ru.rtf.telegramBot.learning;
 
+import java.util.EnumMap;
+
 /**
  * Сеанс обучения по колоде для пользователя
  * <p>Создается только на один сеанс</p>
@@ -19,6 +21,10 @@ public interface LearningSession {
      * Шаблон сообщения неправильного ответа
      */
     String INCORRECT_ANSWER_INFO = "Неверно. " + SHOW_RIGHT_ANSWER;
+    /**
+     * Шаблон сообщения статистики сеанса
+     */
+    String STATS_INFO = "Вы помните %d%% терминов из показанных";
 
     /**
      * Сформировать вопрос по карте, не показывавшейся пользователю в течении сеанса
@@ -32,9 +38,9 @@ public interface LearningSession {
      * <p>Показ ответа подразумевает исключение текущей карточки из списка изучаемых</p>
      *
      * @param answer Ответ пользователя
-     * @return Правильность ответа
+     * @return Статус ответа - правильный, частично правильный или неправильный
      */
-    boolean checkAnswer(String answer);
+    AnswerStatus checkAnswer(String answer);
 
     /**
      * Проверяет, остались ли карты для обучения
@@ -51,4 +57,9 @@ public interface LearningSession {
      * <p>Содержит краткое имя режима и его описание</p>
      */
     String getDescription();
+
+    /**
+     * Вернуть статистику ответов
+     */
+    EnumMap<AnswerStatus, Integer> getStats();
 }

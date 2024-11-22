@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.rtf.Card;
+import ru.rtf.CardLearningStatus;
+import ru.rtf.telegramBot.learning.AnswerStatus;
 
 import java.util.List;
 
@@ -28,6 +30,52 @@ class MemoryLearningTest {
     @BeforeEach
     void setUp() {
         memoryLearning = new MemoryLearning(card);
+    }
+
+    /**
+     * Проверка правильного ответа и изменения статуса карты
+     */
+    @Test
+    @DisplayName("Правильный ответ с новым статусом")
+    void testCheckRightAnswerWithNewStatus() {
+        Card cardToLearn = card.getFirst();
+        cardToLearn.addScore(4);
+
+        Assertions.assertEquals(AnswerStatus.RIGHT, memoryLearning.checkAnswer("2"));
+        Assertions.assertEquals(CardLearningStatus.PARTIALLY_STUDIED, cardToLearn.getStatus());
+        Assertions.assertEquals(1, memoryLearning.getStats().get(AnswerStatus.RIGHT));
+    }
+
+    /**
+     * Проверка частично правильного ответа и сохранения статуса карты
+     */
+    @Test
+    @DisplayName("Частично правильный ответ с сохранением статуса")
+    void testCheckPartiallyRightAnswerWithSaveStatus() {
+        Card cardToLearn = card.getFirst();
+        cardToLearn.addScore(4);
+
+        Assertions.assertEquals(AnswerStatus.PARTIALLY_RIGHT, memoryLearning.checkAnswer("1"));
+        Assertions.assertEquals(
+                CardLearningStatus.NOT_STUDIED,
+                cardToLearn.getStatus(),
+                "Статус не должен был измениться"
+        );
+        Assertions.assertEquals(1, memoryLearning.getStats().get(AnswerStatus.PARTIALLY_RIGHT));
+    }
+
+    /**
+     * Проверка неправильного ответа и изменения статуса карты
+     */
+    @Test
+    @DisplayName("Неправильный ответ с новым статусом")
+    void testCheckWrongAnswerWithNewStatus() {
+        Card cardToLearn = card.getFirst();
+        cardToLearn.addScore(5);
+
+        Assertions.assertEquals(AnswerStatus.WRONG, memoryLearning.checkAnswer("0"));
+        Assertions.assertEquals(CardLearningStatus.NOT_STUDIED, cardToLearn.getStatus());
+        Assertions.assertEquals(1, memoryLearning.getStats().get(AnswerStatus.WRONG));
     }
 
     /**
