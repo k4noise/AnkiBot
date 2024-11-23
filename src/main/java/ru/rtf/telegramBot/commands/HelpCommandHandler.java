@@ -48,6 +48,9 @@ public class HelpCommandHandler implements CommandHandler {
                         /check memory: название_колоды
                     Выход из любого режима обучения:
                         /end_check
+                Статистика:
+                    Вывод статистики конкретной колоды
+                        /deck_stats название_колоды
                 """;
         return help;
     }

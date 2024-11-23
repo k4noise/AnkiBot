@@ -47,6 +47,9 @@ public class CommandManager {
         //команды режимов обучения
         commands.put("/check", new LearnCheckCommandHandler(sessionManager));
         commands.put("/end_check", new EndCheckCommandHandler(sessionManager));
+        //команды статистики
+        commands.put("/deck_stats", new DeckStatsCommandHandler());
+        commands.put("/stats", new StatsCommandHandler());
     }
 
     /**
