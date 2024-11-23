@@ -42,7 +42,7 @@ public class StatsCalculator {
         for (AnswerStatus status : stats.keySet()) {
             int count = stats.getOrDefault(status, 0);
             totalAnswers += count;
-            totalWeightedScore += count * (PERCENTAGE_COEFFICIENT + answerScores.get(status) * PERCENTAGE_COEFFICIENT);
+            totalWeightedScore += count * PERCENTAGE_COEFFICIENT * (1 + answerScores.get(status));
         }
 
         return totalAnswers == 0 ? 0 : totalWeightedScore / totalAnswers;

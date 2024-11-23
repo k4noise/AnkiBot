@@ -100,7 +100,7 @@ public class Card {
      * @param scoreDiff Количество баллов для добавления
      */
     public void addScore(int scoreDiff) {
-        if (scoreDiff < 0 || score == MAX_SCORE) {
+        if (scoreDiff < 0) {
             return;
         }
         score = Math.min(MAX_SCORE, score + scoreDiff);
