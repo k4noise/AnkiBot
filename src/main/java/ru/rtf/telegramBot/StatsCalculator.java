@@ -12,15 +12,18 @@ import java.util.Map;
  */
 public class StatsCalculator {
     /**
-     * Хранилище коэффициентов для расчета статистики ответов
-     */
-    private static final Map<AnswerStatus, Integer> answerScores;
-    /**
      * Коэффициент для расчета статистики по ответам
      */
     private static final int PERCENTAGE_COEFFICIENT = 50;
+    /**
+     * Хранилище коэффициентов для расчета статистики ответов
+     */
+    private final Map<AnswerStatus, Integer> answerScores;
 
-    static {
+    /**
+     * Инициализация калькулятора статистики
+     */
+    public StatsCalculator() {
         answerScores = new EnumMap<>(AnswerStatus.class);
         answerScores.put(AnswerStatus.RIGHT, 1);
         answerScores.put(AnswerStatus.PARTIALLY_RIGHT, 0);
