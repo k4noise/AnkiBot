@@ -5,17 +5,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.rtf.Card;
-
-import java.util.List;
+import ru.rtf.Deck;
+import ru.rtf.telegramBot.learning.AnswerStatus;
 
 /**
  * Тестирование режима обучения "ввод термина"
  */
 class TypingLearningTest {
     /**
-     * Карта для обучения
+     * Колода для обучения
      */
-    private final List<Card> card = List.of(new Card("term", "def"));
+    private Deck deck;
     /**
      * Экземпляр режима обучения
      */
@@ -26,7 +26,9 @@ class TypingLearningTest {
      */
     @BeforeEach
     void setUp() {
-        typingLearning = new TypingLearning(card);
+        deck = new Deck("Deck");
+        deck.addCard(new Card("term", "def"));
+        typingLearning = new TypingLearning(deck);
     }
 
     /**
@@ -42,21 +44,29 @@ class TypingLearningTest {
     }
 
     /**
-     * Проверка правильного ответа
+     * Проверка правильного ответа и изменения баллов карты
      */
     @Test
-    @DisplayName("Правильный ответ")
-    void testCheckRightAnswer() {
-        Assertions.assertTrue(typingLearning.checkAnswer("term"));
+    @DisplayName("Правильный ответ с изменением балла")
+    void testCheckRightAnswerWithNewStatus() {
+        Card cardToLearn = deck.getCards().iterator().next();
+        Assertions.assertEquals(AnswerStatus.RIGHT, typingLearning.checkAnswer("term"));
+        Assertions.assertEquals(2, cardToLearn.getScore());
+        Assertions.assertEquals(1, typingLearning.getStats().get(AnswerStatus.RIGHT));
     }
 
     /**
-     * Проверка неправильного ответа
+     * Проверка неправильного ответа и изменения баллов карты
      */
     @Test
-    @DisplayName("Неправильный ответ")
-    void testCheckWrongAnswer() {
-        Assertions.assertFalse(typingLearning.checkAnswer("notTerm"));
+    @DisplayName("Неправильный ответ с изменением балла")
+    void testCheckWrongAnswerWithNewStatus() {
+        Card cardToLearn = deck.getCards().iterator().next();
+        cardToLearn.addScore(2);
+
+        Assertions.assertEquals(AnswerStatus.WRONG, typingLearning.checkAnswer("notTerm"));
+        Assertions.assertEquals(1, cardToLearn.getScore());
+        Assertions.assertEquals(1, typingLearning.getStats().get(AnswerStatus.WRONG));
     }
 
     /**

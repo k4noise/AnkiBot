@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.rtf.Card;
-
-import java.util.List;
+import ru.rtf.Deck;
+import ru.rtf.telegramBot.learning.AnswerStatus;
 
 
 /**
@@ -14,9 +14,9 @@ import java.util.List;
  */
 class MatchLearningTest {
     /**
-     * Карта для обучения
+     * Колода для обучения
      */
-    private final List<Card> card = List.of(new Card("term", "def"));
+    private Deck deck;
     /**
      * Экземпляр режима обучения
      */
@@ -27,7 +27,9 @@ class MatchLearningTest {
      */
     @BeforeEach
     void setUp() {
-        matchLearning = new MatchLearning(card);
+        deck = new Deck("Deck");
+        deck.addCard(new Card("term", "def"));
+        matchLearning = new MatchLearning(deck);
     }
 
     /**
@@ -44,21 +46,29 @@ class MatchLearningTest {
     }
 
     /**
-     * Проверка правильного ответа
+     * Проверка правильного ответа и изменения баллов карты
      */
     @Test
-    @DisplayName("Правильный ответ")
-    void testCheckRightAnswer() {
-        Assertions.assertTrue(matchLearning.checkAnswer("1"));
+    @DisplayName("Правильный ответ и изменение балла")
+    void testCheckRightAnswerWithNewStatus() {
+        Card cardToLearn = deck.getCards().iterator().next();
+        Assertions.assertEquals(AnswerStatus.RIGHT, matchLearning.checkAnswer("1"));
+        Assertions.assertEquals(1, cardToLearn.getScore());
+        Assertions.assertEquals(1, matchLearning.getStats().get(AnswerStatus.RIGHT));
     }
 
     /**
-     * Проверка неправильного ответа
+     * Проверка неправильного ответа и изменения баллов карты
      */
     @Test
-    @DisplayName("Неправильный ответ")
-    void testCheckWrongAnswer() {
-        Assertions.assertFalse(matchLearning.checkAnswer("0"));
+    @DisplayName("Неправильный ответ и изменения балла")
+    void testCheckWrongAnswerWithNewStatus() {
+        Card cardToLearn = deck.getCards().iterator().next();
+        cardToLearn.addScore(2);
+
+        Assertions.assertEquals(AnswerStatus.WRONG, matchLearning.checkAnswer("0"));
+        Assertions.assertEquals(1, cardToLearn.getScore());
+        Assertions.assertEquals(1, matchLearning.getStats().get(AnswerStatus.WRONG));
     }
 
     /**

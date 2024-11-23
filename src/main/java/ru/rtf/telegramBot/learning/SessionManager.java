@@ -1,5 +1,7 @@
 package ru.rtf.telegramBot.learning;
 
+import ru.rtf.telegramBot.StatsCalculator;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -12,12 +14,14 @@ public class SessionManager {
      * Хранилище активных сессий пользователей
      */
     private final Map<Long, LearningSession> sessions;
+    private final StatsCalculator statsCalculator;
 
     /**
      * Инициализировать хранилище сессий
      */
     public SessionManager() {
         this.sessions = new HashMap<>();
+        statsCalculator = new StatsCalculator();
     }
 
     /**
@@ -54,12 +58,12 @@ public class SessionManager {
      */
     public String handle(Long chatId, String text) {
         LearningSession learningSession = sessions.get(chatId);
-        boolean isRightAnswer = learningSession.checkAnswer(text);
+        AnswerStatus answerStatus = learningSession.checkAnswer(text);
 
         String activeCardDescription = learningSession.pullActiveCardDescription();
-        String checkMessage = isRightAnswer
-                ? LearningSession.CORRECT_ANSWER_INFO.formatted(activeCardDescription)
-                : LearningSession.INCORRECT_ANSWER_INFO.formatted(activeCardDescription);
+        String checkMessage = answerStatus.equals(AnswerStatus.WRONG)
+                ? LearningSession.INCORRECT_ANSWER_INFO.formatted(activeCardDescription)
+                : LearningSession.CORRECT_ANSWER_INFO.formatted(activeCardDescription);
 
         if (!learningSession.hasCardsToLearn()) {
             return checkMessage + '\n' + end(chatId);
@@ -78,9 +82,12 @@ public class SessionManager {
             throw new NoSuchElementException("Нет активной сессии обучения");
         }
         LearningSession session = sessions.remove(chatId);
-        return session.hasCardsToLearn()
+        session.saveStatsToDeck();
+        int stats = statsCalculator.getSuccessLearningPercentage(session.getStats());
+        String endMessage = session.hasCardsToLearn()
                 ? "Вы досрочно завершили сессию"
                 : "Вы прошли все карточки в колоде!";
+        return endMessage + '\n' + LearningSession.STATS_INFO.formatted(stats);
     }
 
     /**
@@ -100,4 +107,6 @@ public class SessionManager {
     public LearningSession get(Long chatId) {
         return sessions.get(chatId);
     }
+
+
 }

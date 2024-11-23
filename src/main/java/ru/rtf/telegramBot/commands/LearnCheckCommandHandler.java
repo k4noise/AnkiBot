@@ -1,6 +1,6 @@
 package ru.rtf.telegramBot.commands;
 
-import ru.rtf.Card;
+import ru.rtf.Deck;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.CommandHandler;
 import ru.rtf.telegramBot.learning.LearningSession;
@@ -9,7 +9,6 @@ import ru.rtf.telegramBot.learning.mode.MatchLearning;
 import ru.rtf.telegramBot.learning.mode.MemoryLearning;
 import ru.rtf.telegramBot.learning.mode.TypingLearning;
 
-import java.util.Collection;
 import java.util.NoSuchElementException;
 
 /**
@@ -36,18 +35,18 @@ public class LearnCheckCommandHandler implements CommandHandler {
         String typeCheck = params[0].toLowerCase();
         String deckName = params[1];
         try {
-            Collection<Card> cardsToLearn = usersDecks.getDeck(deckName).getCards();
+            Deck deck = usersDecks.getDeck(deckName);
 
             LearningSession learningSession;
             switch (typeCheck) {
                 case "match":
-                    learningSession = new MatchLearning(cardsToLearn);
+                    learningSession = new MatchLearning(deck);
                     break;
                 case "typing":
-                    learningSession = new TypingLearning(cardsToLearn);
+                    learningSession = new TypingLearning(deck);
                     break;
                 case "memory":
-                    learningSession = new MemoryLearning(cardsToLearn);
+                    learningSession = new MemoryLearning(deck);
                     break;
                 default:
                     return MESSAGE_COMMAND_ERROR.formatted("Неизвестный режим обучения");

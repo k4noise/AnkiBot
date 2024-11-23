@@ -1,6 +1,8 @@
 package ru.rtf.telegramBot.learning.mode;
 
 import ru.rtf.Card;
+import ru.rtf.Deck;
+import ru.rtf.telegramBot.learning.AnswerStatus;
 import ru.rtf.telegramBot.learning.LearningSession;
 
 import java.util.*;
@@ -9,6 +11,10 @@ import java.util.*;
  * Режим обучения "соответствие"
  */
 public class MatchLearning implements LearningSession {
+    /**
+     * Колода
+     */
+    private final Deck deck;
     /**
      * Карты к изучению
      */
@@ -21,17 +27,23 @@ public class MatchLearning implements LearningSession {
      * Индекс рандомного определения
      */
     private int randomDefinitionIndex;
+    /**
+     * Статистика сеанса обучения
+     */
+    private final EnumMap<AnswerStatus, Integer> learningStats;
 
     /**
      * Инициализировать режим обучения
      *
-     * @param cards Карты к обучению
+     * @param deck Колода пользователя
      */
-    public MatchLearning(Collection<Card> cards) {
-        allCards = new LinkedList<>(cards);
-        allDefinitions = cards.stream()
+    public MatchLearning(Deck deck) {
+        this.deck = deck;
+        allCards = new LinkedList<>(deck.getCards());
+        allDefinitions = deck.getCards().stream()
                 .map(Card::getDefinition)
                 .toList();
+        learningStats = new EnumMap<>(AnswerStatus.class);
     }
 
     @Override
@@ -45,16 +57,31 @@ public class MatchLearning implements LearningSession {
     }
 
     @Override
-    public boolean checkAnswer(String answer) {
-        boolean userAnswer;
-        if (answer.equals("0")) {
-            userAnswer = false;
-        } else if (answer.equals("1")) {
-            userAnswer = true;
-        } else {
-            return false;
+    public AnswerStatus checkAnswer(String answer) {
+        Card currentCard = allCards.peek();
+        boolean isCorrectDefinition = Objects.equals(currentCard.getDefinition(), allDefinitions.get(randomDefinitionIndex));
+
+        boolean isRightUserAnswer;
+        switch (answer) {
+            case "0":
+                isRightUserAnswer = !isCorrectDefinition;
+                break;
+            case "1":
+                isRightUserAnswer = isCorrectDefinition;
+                break;
+            default:
+                learningStats.merge(AnswerStatus.WRONG, 1, Integer::sum);
+                return AnswerStatus.WRONG;
         }
-        return userAnswer == Objects.equals(allCards.peek().getDefinition(), allDefinitions.get(randomDefinitionIndex));
+
+        AnswerStatus result = isRightUserAnswer ? AnswerStatus.RIGHT : AnswerStatus.WRONG;
+        if (isRightUserAnswer) {
+            currentCard.addScore();
+        } else {
+            currentCard.subtractScore();
+        }
+        learningStats.merge(result, 1, Integer::sum);
+        return result;
     }
 
     @Override
@@ -72,6 +99,16 @@ public class MatchLearning implements LearningSession {
         return """
                 в режиме соответствия
                 Показывается термин и определение, ваша задача - определить, соответствует ли термин определению""";
+    }
+
+    @Override
+    public EnumMap<AnswerStatus, Integer> getStats() {
+        return learningStats;
+    }
+
+    @Override
+    public void saveStatsToDeck() {
+        deck.addNewStats(learningStats);
     }
 
     /**
