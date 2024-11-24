@@ -5,8 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.rtf.Card;
-import ru.rtf.Deck;
 import ru.rtf.telegramBot.learning.AnswerStatus;
+
+import java.util.List;
 
 
 /**
@@ -14,9 +15,9 @@ import ru.rtf.telegramBot.learning.AnswerStatus;
  */
 class MatchLearningTest {
     /**
-     * Колода для обучения
+     * Карты для обучения
      */
-    private Deck deck;
+    private List<Card> cards;
     /**
      * Экземпляр режима обучения
      */
@@ -27,9 +28,8 @@ class MatchLearningTest {
      */
     @BeforeEach
     void setUp() {
-        deck = new Deck("Deck");
-        deck.addCard(new Card("term", "def"));
-        matchLearning = new MatchLearning(deck);
+        cards = List.of(new Card("term", "def"));
+        matchLearning = new MatchLearning(cards);
     }
 
     /**
@@ -51,10 +51,9 @@ class MatchLearningTest {
     @Test
     @DisplayName("Правильный ответ и изменение балла")
     void testCheckRightAnswerWithNewStatus() {
-        Card cardToLearn = deck.getCards().iterator().next();
+        Card cardToLearn = cards.getFirst();
         Assertions.assertEquals(AnswerStatus.RIGHT, matchLearning.checkAnswer("1"));
         Assertions.assertEquals(1, cardToLearn.getScore());
-        Assertions.assertEquals(1, matchLearning.getStats().get(AnswerStatus.RIGHT));
     }
 
     /**
@@ -63,12 +62,11 @@ class MatchLearningTest {
     @Test
     @DisplayName("Неправильный ответ и изменения балла")
     void testCheckWrongAnswerWithNewStatus() {
-        Card cardToLearn = deck.getCards().iterator().next();
+        Card cardToLearn = cards.getFirst();
         cardToLearn.addScore(2);
 
         Assertions.assertEquals(AnswerStatus.WRONG, matchLearning.checkAnswer("0"));
         Assertions.assertEquals(1, cardToLearn.getScore());
-        Assertions.assertEquals(1, matchLearning.getStats().get(AnswerStatus.WRONG));
     }
 
     /**

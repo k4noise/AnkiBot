@@ -82,7 +82,6 @@ public class SessionManager {
             throw new NoSuchElementException("Нет активной сессии обучения");
         }
         LearningSession session = sessions.remove(chatId);
-        session.saveStatsToDeck();
         int stats = statsCalculator.getSuccessLearningPercentage(session.getStats());
         String endMessage = session.hasCardsToLearn()
                 ? "Вы досрочно завершили сессию"
