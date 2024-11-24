@@ -15,7 +15,7 @@ class StatsCommandHandlerTest {
     /**
      * Обработчик команды для получения статистики колоды
      */
-    private StatsCommandHandler statsCommandHandler;
+    private final StatsCommandHandler statsCommandHandler = new StatsCommandHandler();
     /**
      * Менеджер колод пользователя
      */
@@ -31,7 +31,6 @@ class StatsCommandHandlerTest {
     @BeforeEach
     void setUp() {
         deckManager = new DeckManager();
-        statsCommandHandler = new StatsCommandHandler();
     }
 
     /**

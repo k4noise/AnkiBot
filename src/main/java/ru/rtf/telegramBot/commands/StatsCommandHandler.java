@@ -26,7 +26,7 @@ public class StatsCommandHandler implements CommandHandler {
     public String handle(DeckManager usersDecks, Long chatId, String[] params) {
 
         if (usersDecks.getDecks().isEmpty())
-            return "У Вас пока нет ни одной колоды, создайте первую /create_deck <название>";
+            return MESSAGE_NO_DECKS_ERROR;
 
         StringBuilder decksAndPercentages = new StringBuilder();
         for (Deck deck : usersDecks.getDecks()) {
