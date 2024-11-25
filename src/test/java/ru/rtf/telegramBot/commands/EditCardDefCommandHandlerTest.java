@@ -72,6 +72,6 @@ public class EditCardDefCommandHandlerTest {
 
         Assertions.assertEquals("""
                 Ошибка выполнения команды Подробности:
-                Колода с именем Deck не существует в менеджере""", message);
+                Колода с именем deck не существует в менеджере""", message);
     }
 }

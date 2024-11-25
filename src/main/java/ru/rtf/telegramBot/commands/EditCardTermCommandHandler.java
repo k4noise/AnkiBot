@@ -17,7 +17,7 @@ public class EditCardTermCommandHandler implements CommandHandler {
      * 2.термин
      * 3.новый термин
      */
-    private final int COUNT_PARAMS = 3;
+    private static final int COUNT_PARAMS = 3;
 
     @Override
     public String handle(DeckManager usersDecks, Long id, String[] params) {
