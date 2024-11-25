@@ -1,7 +1,5 @@
 package ru.rtf;
 
-import ru.rtf.telegramBot.learning.AnswerStatus;
-
 import java.util.*;
 
 /**
@@ -20,10 +18,6 @@ public class Deck {
      * Термин карты хранится в нижнем регистре для обеспечения регистронезависимости при получении карты
      */
     private final Map<String, Card> cards;
-    /**
-     * Статистика колоды за все время обучения
-     */
-    private EnumMap<AnswerStatus, Integer> stats;
 
     /**
      * Инициализировать колоду
@@ -37,7 +31,6 @@ public class Deck {
         }
         this.name = name;
         this.cards = new LinkedHashMap<>();
-        this.stats = new EnumMap<>(AnswerStatus.class);
     }
 
     /**
@@ -171,22 +164,6 @@ public class Deck {
             sb.append(card.toString()).append("\n");
         }
         return sb.toString();
-    }
-
-    /**
-     * Добавить данные новой статистики
-     */
-    public void addNewStats(EnumMap<AnswerStatus, Integer> newStats) {
-        newStats.forEach((key, value) ->
-                stats.merge(key, value, Integer::sum)
-        );
-    }
-
-    /**
-     * Вернуть данные статистики колоды
-     */
-    public EnumMap<AnswerStatus, Integer> getStats() {
-        return stats;
     }
 
     @Override

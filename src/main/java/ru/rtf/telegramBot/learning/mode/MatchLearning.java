@@ -1,7 +1,6 @@
 package ru.rtf.telegramBot.learning.mode;
 
 import ru.rtf.Card;
-import ru.rtf.Deck;
 import ru.rtf.telegramBot.learning.AnswerStatus;
 import ru.rtf.telegramBot.learning.LearningSession;
 
@@ -11,10 +10,6 @@ import java.util.*;
  * Режим обучения "соответствие"
  */
 public class MatchLearning implements LearningSession {
-    /**
-     * Колода
-     */
-    private final Deck deck;
     /**
      * Карты к изучению
      */
@@ -35,13 +30,12 @@ public class MatchLearning implements LearningSession {
     /**
      * Инициализировать режим обучения
      *
-     * @param deck Колода пользователя
+     * @param cards Карты к обучению
      */
-    public MatchLearning(Deck deck) {
-        this.deck = deck;
-        allCards = new LinkedList<>(deck.getCards());
-        allDefinitions = deck.getCards().stream()
-                .map(Card::getDefinition)
+    public MatchLearning(Collection<Card> cards) {
+        allCards = new LinkedList<>(cards);
+        allDefinitions = cards.stream()
+                    .map(Card::getDefinition)
                 .toList();
         learningStats = new EnumMap<>(AnswerStatus.class);
     }
@@ -104,11 +98,6 @@ public class MatchLearning implements LearningSession {
     @Override
     public EnumMap<AnswerStatus, Integer> getStats() {
         return learningStats;
-    }
-
-    @Override
-    public void saveStatsToDeck() {
-        deck.addNewStats(learningStats);
     }
 
     /**

@@ -63,10 +63,4 @@ public interface LearningSession {
      * Вернуть статистику ответов
      */
     EnumMap<AnswerStatus, Integer> getStats();
-
-    /**
-     * Сохранить статистику в колоду
-     * <p>Мутирует колоду - дополняет статистику</p>
-     */
-    void saveStatsToDeck();
 }
