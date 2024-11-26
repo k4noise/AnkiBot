@@ -63,6 +63,6 @@ public class ListCardCommandHandlerTest {
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""
                 Ошибка выполнения команды Подробности:
-                Колода с именем Deck2 не существует в менеджере""", message);
+                Колода с именем deck2 не существует в менеджере""", message);
     }
 }

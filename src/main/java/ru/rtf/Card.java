@@ -7,9 +7,9 @@ import java.util.Objects;
  */
 public class Card {
     /**
-     * Термин - идентификатор внутри колоды
+     * Термин
      */
-    private final String term;
+    private String term;
     /**
      * Определение
      */
@@ -25,7 +25,7 @@ public class Card {
     public Card(String term, String definition) {
         if (term.isEmpty() || definition.isEmpty())
             throw new IllegalArgumentException("Термин и определение не могут быть пустыми");
-        this.term = term;
+        this.term = term.toLowerCase();
         this.definition = definition;
     }
 
@@ -44,13 +44,10 @@ public class Card {
     }
 
     /**
-     * Меняет термин в копии карты
-     *
-     * @param newTerm новый термин
-     * @return новая карта
+     * Меняет термин
      */
-    public Card changeTerm(String newTerm) {
-        return new Card(newTerm, definition);
+    void changeTerm(String newTerm) {
+        this.term = newTerm.toLowerCase();
     }
 
     /**

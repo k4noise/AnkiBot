@@ -16,7 +16,7 @@ public class RenameDeckCommandHandler implements CommandHandler {
      * 1.старое имя колоды
      * 2.новое имя колоды
      */
-    private final int COUNT_PARAMS = 2;
+    private static final int COUNT_PARAMS = 2;
 
     @Override
     public String handle(DeckManager usersDecks, Long id, String[] params) {
