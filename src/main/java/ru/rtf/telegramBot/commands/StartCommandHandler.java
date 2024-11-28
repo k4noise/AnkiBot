@@ -15,8 +15,8 @@ public class StartCommandHandler implements CommandHandler {
     private static final int COUNT_PARAMS = 0;
 
     @Override
-    public String handle(DeckManager usersDecks, Long id, String[] params) {
-        return "Добро пожаловать в AnkiBot\\. Введите команду /help, чтобы посмотреть доступные команды";
+    public String handle(DeckManager usersDecks, Long chatId, String[] params) {
+        return "Добро пожаловать в AnkiBot. Введите команду /help, чтобы посмотреть доступные команды";
     }
 
     @Override

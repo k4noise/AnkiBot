@@ -8,11 +8,8 @@ import java.util.*;
 /**
  * Режим обучения "соответствие"
  */
-public class MatchLearning implements LearningSession {
-    /**
-     * Карты к изучению
-     */
-    private final Queue<Card> allCards;
+public class MatchLearning extends LearningSession {
+
     /**
      * Все определения карт
      */
@@ -28,7 +25,7 @@ public class MatchLearning implements LearningSession {
      * @param cards Карты к обучению
      */
     public MatchLearning(Collection<Card> cards) {
-        allCards = new LinkedList<>(cards);
+        super(cards);
         allDefinitions = cards.stream()
                 .map(Card::getDefinition)
                 .toList();
@@ -55,16 +52,6 @@ public class MatchLearning implements LearningSession {
             return false;
         }
         return userAnswer == Objects.equals(allCards.peek().getDefinition(), allDefinitions.get(randomDefinitionIndex));
-    }
-
-    @Override
-    public boolean hasCardsToLearn() {
-        return !allCards.isEmpty();
-    }
-
-    @Override
-    public String pullActiveCardDescription() {
-        return allCards.poll().toString();
     }
 
     @Override

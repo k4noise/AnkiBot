@@ -21,7 +21,7 @@ public class LearnCheckCommandHandler implements CommandHandler {
      * 1.тип режима обучения
      * 2.имя колоды
      */
-    private final int COUNT_PARAMS = 2;
+    private final static int COUNT_PARAMS = 2;
     /**
      * Менеджер сессий пользователе
      */
@@ -55,7 +55,7 @@ public class LearnCheckCommandHandler implements CommandHandler {
 
             return sessionManager.start(chatId, learningSession);
 
-        } catch (IllegalArgumentException | NoSuchElementException | IllegalStateException exception) {
+        } catch (Exception exception) {
             return MESSAGE_COMMAND_ERROR.formatted(exception.getMessage());
         }
     }

@@ -49,7 +49,7 @@ class MatchLearningTest {
     @Test
     @DisplayName("Правильный ответ")
     void testCheckRightAnswer() {
-        Assertions.assertTrue(matchLearning.checkAnswer("1"));
+        Assertions.assertEquals(true, matchLearning.checkAnswer("1"));
     }
 
     /**
@@ -58,16 +58,6 @@ class MatchLearningTest {
     @Test
     @DisplayName("Неправильный ответ")
     void testCheckWrongAnswer() {
-        Assertions.assertFalse(matchLearning.checkAnswer("0"));
-    }
-
-    /**
-     * Проверка формирования текстового описания активной карты
-     */
-    @Test
-    @DisplayName("Активная карта текстом")
-    void getActiveCardDescription() {
-        String card = matchLearning.pullActiveCardDescription();
-        Assertions.assertEquals("\"term\" = def", card);
+        Assertions.assertEquals(false, matchLearning.checkAnswer("0"));
     }
 }

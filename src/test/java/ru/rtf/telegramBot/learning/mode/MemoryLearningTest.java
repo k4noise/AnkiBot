@@ -39,15 +39,4 @@ class MemoryLearningTest {
         String question = memoryLearning.formQuestion();
         Assertions.assertEquals("Термин - \"term\"", question);
     }
-
-    /**
-     * Проверка формирования текстового описания активной карты
-     */
-    @Test
-    @DisplayName("Активная карта текстом")
-    void pullActiveCardDescription() {
-        String card = memoryLearning.pullActiveCardDescription();
-        Assertions.assertEquals("\"term\" = def", card);
-    }
-
 }

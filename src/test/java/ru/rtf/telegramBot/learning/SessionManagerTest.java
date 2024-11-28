@@ -47,7 +47,8 @@ class SessionManagerTest {
     void testStartAndCheckNewSessionActivity() {
         String startMessage = sessionManager.start(chatId, new MatchLearning(card));
 
-        Assertions.assertTrue(sessionManager.hasActive(chatId), "Должна быть создана активная сессия");
+        Assertions.assertEquals(true, sessionManager.hasActive(chatId),
+                "Должна быть создана активная сессия");
         Assertions.assertEquals("""
                 Вы начали обучение в режиме соответствия
                 Показывается термин и определение, ваша задача - определить, соответствует ли термин определению
@@ -97,7 +98,8 @@ class SessionManagerTest {
         sessionManager.start(chatId, new MatchLearning(card));
         String endMessage = sessionManager.end(chatId);
 
-        Assertions.assertFalse(sessionManager.hasActive(chatId), "Не должно быть активной сессии");
+        Assertions.assertEquals(false, sessionManager.hasActive(chatId),
+                "Не должно быть активной сессии");
         Assertions.assertEquals("Вы досрочно завершили сессию", endMessage);
     }
 
@@ -110,8 +112,9 @@ class SessionManagerTest {
         sessionManager.start(chatId, new MatchLearning(card));
         String endMessage = sessionManager.handle(chatId, "1");
 
-        Assertions.assertFalse(sessionManager.hasActive(chatId), "Не должно быть активной сессии");
-        Assertions.assertTrue(endMessage.contains("Вы прошли все карточки в колоде!"));
+        Assertions.assertEquals(false, sessionManager.hasActive(chatId),
+                "Не должно быть активной сессии");
+        Assertions.assertEquals(true, endMessage.contains("Вы прошли все карточки в колоде!"));
     }
 
     /**

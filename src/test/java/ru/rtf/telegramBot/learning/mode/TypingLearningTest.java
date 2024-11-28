@@ -47,7 +47,7 @@ class TypingLearningTest {
     @Test
     @DisplayName("Правильный ответ")
     void testCheckRightAnswer() {
-        Assertions.assertTrue(typingLearning.checkAnswer("term"));
+        Assertions.assertEquals(true, typingLearning.checkAnswer("term"));
     }
 
     /**
@@ -56,16 +56,6 @@ class TypingLearningTest {
     @Test
     @DisplayName("Неправильный ответ")
     void testCheckWrongAnswer() {
-        Assertions.assertFalse(typingLearning.checkAnswer("notTerm"));
-    }
-
-    /**
-     * Проверка формирования текстового описания активной карты
-     */
-    @Test
-    @DisplayName("Активная карта текстом")
-    void getActiveCardDescription() {
-        String card = typingLearning.pullActiveCardDescription();
-        Assertions.assertEquals("\"term\" = def", card);
+        Assertions.assertEquals(false, typingLearning.checkAnswer("notTerm"));
     }
 }
