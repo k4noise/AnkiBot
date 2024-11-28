@@ -10,7 +10,6 @@ import ru.rtf.telegramBot.learning.mode.MemoryLearning;
 import ru.rtf.telegramBot.learning.mode.TypingLearning;
 
 import java.util.Collection;
-import java.util.NoSuchElementException;
 
 /**
  * Обработчик команд относящихся к режимам обучения

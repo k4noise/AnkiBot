@@ -31,33 +31,18 @@ class MatchLearningTest {
     }
 
     /**
-     * Проверка формулировки вопроса к пользователю
+     * Проверка формулировки вопроса к пользователю и
+     * Проверка ответов
      */
     @Test
-    @DisplayName("Формулировка вопроса")
+    @DisplayName("Один вопрос")
     void testFormQuestion() {
         String question = matchLearning.formQuestion();
         Assertions.assertEquals("""
                 Утверждение:
                 term - def
                 1 - верно, 0 - неверно""", question);
-    }
-
-    /**
-     * Проверка правильного ответа
-     */
-    @Test
-    @DisplayName("Правильный ответ")
-    void testCheckRightAnswer() {
         Assertions.assertEquals(true, matchLearning.checkAnswer("1"));
-    }
-
-    /**
-     * Проверка неправильного ответа
-     */
-    @Test
-    @DisplayName("Неправильный ответ")
-    void testCheckWrongAnswer() {
         Assertions.assertEquals(false, matchLearning.checkAnswer("0"));
     }
 }

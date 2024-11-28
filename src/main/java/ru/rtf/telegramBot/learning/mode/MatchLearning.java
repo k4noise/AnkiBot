@@ -20,6 +20,11 @@ public class MatchLearning extends LearningSession {
     private int randomDefinitionIndex;
 
     /**
+     * Экземпляр генератора случайных чисел
+     */
+    private final Random random;
+
+    /**
      * Инициализировать режим обучения
      *
      * @param cards Карты к обучению
@@ -29,6 +34,7 @@ public class MatchLearning extends LearningSession {
         allDefinitions = cards.stream()
                 .map(Card::getDefinition)
                 .toList();
+        random = new Random();
     }
 
     @Override
@@ -65,6 +71,6 @@ public class MatchLearning extends LearningSession {
      * Генерирует случайный индекс для определения из списка всех определений
      */
     private int generateNextRandomDefinitionIndex() {
-        return new Random().nextInt(allDefinitions.size());
+        return random.nextInt(allDefinitions.size());
     }
 }
