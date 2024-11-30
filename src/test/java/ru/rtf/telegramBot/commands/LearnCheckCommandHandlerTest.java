@@ -27,6 +27,9 @@ public class LearnCheckCommandHandlerTest {
      */
     private DeckManager deckManager;
 
+    /**
+     * Инициализировать колоду с картами и хранилища для обработчика команды
+     */
     @BeforeAll
     void setUp() {
         deckManager = new DeckManager();
@@ -38,6 +41,9 @@ public class LearnCheckCommandHandlerTest {
         learnCheckCommandHandler = new LearnCheckCommandHandler(sessionManager);
     }
 
+    /**
+     * Завершить активную сессию, если имеется
+     */
     @BeforeEach
     void endActiveSession() {
         if (sessionManager.hasActive(chatId)) {
@@ -46,7 +52,7 @@ public class LearnCheckCommandHandlerTest {
     }
 
     /**
-     * Проверка успешности запуска режима "соответствие"
+     * Тест успешности запуска режима "соответствие"
      */
     @Test
     @DisplayName("Запуск режима \"соответствие\"")
@@ -63,7 +69,7 @@ public class LearnCheckCommandHandlerTest {
     }
 
     /**
-     * Проверка успешности запуска режима "ввод"
+     * Тест успешности запуска режима "ввод"
      */
     @Test
     @DisplayName("Запуск режима \"ввод\"")
@@ -79,7 +85,7 @@ public class LearnCheckCommandHandlerTest {
     }
 
     /**
-     * Проверка успешности запуска режима оценки запоминания
+     * Тест успешности запуска режима оценки запоминания
      */
     @Test
     @DisplayName("Запуск режима оценки запоминания")
@@ -96,7 +102,20 @@ public class LearnCheckCommandHandlerTest {
     }
 
     /**
-     * Проверка запуска несуществующего режима
+     * Тест невозможности запуска новой сессии при наличии активной
+     */
+    @Test
+    @DisplayName("Начать сессию в сессии")
+    void testStartSessionInSession() {
+        learnCheckCommandHandler.handle(deckManager, chatId, new String[]{"memory", "Deck"});
+        String message = learnCheckCommandHandler.handle(deckManager, chatId, new String[]{"memory", "Deck"});
+        Assertions.assertEquals("""
+                Ошибка выполнения команды Подробности:
+                Имеется активная сессия обучения""", message);
+    }
+
+    /**
+     * Тест запуска несуществующего режима
      */
     @Test
     @DisplayName("Запуск несуществующего режима")

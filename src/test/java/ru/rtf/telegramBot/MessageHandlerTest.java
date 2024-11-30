@@ -1,9 +1,6 @@
 package ru.rtf.telegramBot;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -35,8 +32,7 @@ class MessageHandlerTest {
     private MessageHandler messageHandler;
 
     /**
-     * Создание менеджера управление с 2 командами - без параметров (<code>/start</code>)
-     * и с 3 параметрами (<code>/create_card</code>)
+     * Создание менеджера управления с командами
      */
     @BeforeAll
     void initCommandManager(@Mock StartCommandHandler startCommandHandler,
@@ -56,9 +52,10 @@ class MessageHandlerTest {
     }
 
     /**
-     * Попытка вызова неизвестной команды
+     * Тест попытки вызова неизвестной команды
      */
     @Test
+    @DisplayName("Обработка неизвестной команды")
     void testUnknownCommand() {
         String message = messageHandler.handle(newChatId, "/unknown");
         Assertions.assertEquals("Команда /unknown не распознана", message);
@@ -68,6 +65,7 @@ class MessageHandlerTest {
      * Тест корректного вызова команды без параметров
      */
     @Test
+    @DisplayName("Обработка команды без параметров")
     void testHandleCommandNoParams() {
         CommandHandler commandHandlerMock = commands.get("/start");
         Mockito.when(commandHandlerMock.handle(Mockito.any(DeckManager.class), Mockito.anyLong(), Mockito.any()))
@@ -84,13 +82,14 @@ class MessageHandlerTest {
      * Тест корректного вызова команды с корректным количеством параметров
      */
     @Test
+    @DisplayName("Обработка команды с параметрами")
     void testHandleCommandWithRightParamsCount() {
         CommandHandler commandHandlerMock = commands.get("/rename_deck");
         Mockito.when(commandHandlerMock.handle(Mockito.any(DeckManager.class), Mockito.anyLong(), Mockito.notNull()))
-                .thenReturn("Колода была успешно переименовала");
+                .thenReturn("Колода была успешно переименована");
 
         String message = messageHandler.handle(newChatId, "/rename_deck Deck := Deck2");
-        Assertions.assertEquals("Колода была успешно переименовала", message);
+        Assertions.assertEquals("Колода была успешно переименована", message);
 
         Mockito.verify(commandHandlerMock, Mockito.times(1))
                 .handle(
@@ -104,9 +103,10 @@ class MessageHandlerTest {
     }
 
     /**
-     * Тест некорректного вызова команды с некорректным количеством параметров (1 вместо 3)
+     * Тест некорректного вызова команды с некорректным количеством параметров (1 вместо 2)
      */
     @Test
+    @DisplayName("Обработка команды с частью аргументов")
     void testHandleCommandWithWrongParamsCount() {
         CommandHandler commandHandlerMock = commands.get("/rename_deck");
 
@@ -126,6 +126,7 @@ class MessageHandlerTest {
      * Тест некорректного вызова команды без параметров
      */
     @Test
+    @DisplayName("Обработка команды с параметрами без параметров")
     void testHandleCommandWithNoParams() {
         CommandHandler commandHandlerMock = commands.get("/rename_deck");
 
@@ -144,6 +145,7 @@ class MessageHandlerTest {
      * и выполнение команды из режима обучения</p>
      */
     @Test
+    @DisplayName("Обработка сообщения в режиме обучения")
     void testHandleAnswersInLearning() {
         messageHandler.handle(newChatId, "/create_deck Deck");
         messageHandler.handle(newChatId, "/create_card Deck : term = def");

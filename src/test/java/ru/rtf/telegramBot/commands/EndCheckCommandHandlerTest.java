@@ -30,8 +30,11 @@ public class EndCheckCommandHandlerTest {
      */
     private final Long chatId = 1L;
 
+    /**
+     * Инициализировать колоду с картами и хранилища для обработчика команды
+     */
     @BeforeAll
-    void initHandler() {
+    void setUp() {
         deckManager = new DeckManager();
         deckManager.addDeck("Deck");
         deckManager.getDeck("Deck")
@@ -42,7 +45,7 @@ public class EndCheckCommandHandlerTest {
     }
 
     /**
-     * Проверка невозможности окончания несуществующей сессии
+     * Тест невозможности окончания несуществующей сессии
      */
     @Test
     @DisplayName("Выход вне сессии")
@@ -54,7 +57,7 @@ public class EndCheckCommandHandlerTest {
     }
 
     /**
-     * Проверка корректного выхода из активной сессии
+     * Тест корректного выхода из активной сессии
      */
     @Test
     @DisplayName("Выход из активной сессии")
