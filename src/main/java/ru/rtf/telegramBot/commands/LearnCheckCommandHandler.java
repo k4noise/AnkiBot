@@ -33,13 +33,13 @@ public class LearnCheckCommandHandler implements CommandHandler {
 
     @Override
     public String handle(DeckManager usersDecks, Long chatId, String[] params) {
-        String typeCheck = params[0].toLowerCase();
+        String checkType = params[0].toLowerCase();
         String deckName = params[1];
         try {
             Collection<Card> cardsToLearn = usersDecks.getDeck(deckName).getCards();
 
             LearningSession learningSession;
-            switch (typeCheck) {
+            switch (checkType) {
                 case "match":
                     learningSession = new MatchLearning(cardsToLearn);
                     break;
@@ -53,7 +53,13 @@ public class LearnCheckCommandHandler implements CommandHandler {
                     return MESSAGE_COMMAND_ERROR.formatted("Неизвестный режим обучения");
             }
 
-            return sessionManager.start(chatId, learningSession);
+            sessionManager.start(chatId, learningSession);
+            return """
+                    Вы начали обучение %s
+                    Чтобы досрочно завершить сеанс, воспользуйтесь командой /end_check
+                    
+                    Ваш первый вопрос: %s"""
+                    .formatted(learningSession.getDescription(), learningSession.formQuestion());
 
         } catch (IllegalArgumentException | NoSuchElementException | IllegalStateException exception) {
             return MESSAGE_COMMAND_ERROR.formatted(exception.getMessage());

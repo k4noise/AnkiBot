@@ -26,7 +26,7 @@ class SessionManagerTest {
     /**
      * Карта для обучения
      */
-    private Collection<Card> card = List.of(
+    private final Collection<Card> card = List.of(
             new Card("term", "def")
     );
 
@@ -45,17 +45,8 @@ class SessionManagerTest {
     @Test
     @DisplayName("Корректное начало новой сессии")
     void testStartAndCheckNewSessionActivity() {
-        String startMessage = sessionManager.start(chatId, new MatchLearning(card));
-
+        sessionManager.start(chatId, new MatchLearning(card));
         Assertions.assertTrue(sessionManager.hasActive(chatId), "Должна быть создана активная сессия");
-        Assertions.assertEquals("""
-                Вы начали обучение в режиме соответствия
-                Показывается термин и определение, ваша задача - определить, соответствует ли термин определению
-                Чтобы досрочно завершить сеанс, воспользуйтесь командой /end_check
-                
-                Ваш первый вопрос: Утверждение:
-                term - def
-                1 - верно, 0 - неверно""", startMessage);
     }
 
     /**
@@ -95,23 +86,9 @@ class SessionManagerTest {
     @DisplayName("Досрочное окончание активной сессии")
     void testEarlyEndExistingSession() {
         sessionManager.start(chatId, new MatchLearning(card));
-        String endMessage = sessionManager.end(chatId);
+        sessionManager.end(chatId);
 
         Assertions.assertFalse(sessionManager.hasActive(chatId), "Не должно быть активной сессии");
-        Assertions.assertEquals("Вы досрочно завершили сессию", endMessage);
-    }
-
-    /**
-     * Проверка планового окончания существующей активной сессии обучения
-     */
-    @Test
-    @DisplayName("Плановое окончание активной сессии")
-    void testHandleEndExistingSession() {
-        sessionManager.start(chatId, new MatchLearning(card));
-        String endMessage = sessionManager.handle(chatId, "1");
-
-        Assertions.assertFalse(sessionManager.hasActive(chatId), "Не должно быть активной сессии");
-        Assertions.assertTrue(endMessage.contains("Вы прошли все карточки в колоде!"));
     }
 
     /**

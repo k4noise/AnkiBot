@@ -28,7 +28,8 @@ public class EndCheckCommandHandler implements CommandHandler {
     @Override
     public String handle(DeckManager userDecks, Long chatId, String[] params) {
         try {
-            return sessionManager.end(chatId);
+            sessionManager.end(chatId);
+            return "Вы досрочно завершили сессию";
         } catch (NoSuchElementException exception) {
             return MESSAGE_COMMAND_ERROR.formatted(exception.getMessage());
         }

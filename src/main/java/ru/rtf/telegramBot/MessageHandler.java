@@ -2,16 +2,17 @@ package ru.rtf.telegramBot;
 
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.commands.*;
+import ru.rtf.telegramBot.learning.LearningSession;
 import ru.rtf.telegramBot.learning.SessionManager;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Класс управления командами бота
- * <p>Управляет передачей сообщения пользователя нужному обработчику команды</p>
+ * Обработчик сообщений пользователя
+ * <p>Управляет передачей сообщения пользователя нужному обработчику</p>
  */
-public class CommandManager {
+public class MessageHandler {
     /**
      * Хранилище команд
      */
@@ -20,35 +21,54 @@ public class CommandManager {
      * Хранилище менеджеров колод пользователя
      */
     private final Map<Long, DeckManager> userDeckManagers;
+    /**
+     * Менеджер сессий пользователя
+     */
+    private final SessionManager sessionManager;
 
     /**
      * Инициализирует поля и добавляет команды по умолчанию в список
-     *
-     * @param sessionManager Менеджер сессий пользователей
      */
-    public CommandManager(SessionManager sessionManager) {
-        this(new HashMap<>());
-        createDefaultCommandsWithHandlers(sessionManager);
+    public MessageHandler() {
+        this(new HashMap<>(), new SessionManager());
+        createDefaultCommandsWithHandlers();
     }
 
     /**
      * Инициализирует поля и добавляет пользовательские команды в список
      *
-     * @param commands Хранилище команд
+     * @param commands       Хранилище команд
+     * @param sessionManager Менеджер сессий
      */
-    public CommandManager(Map<String, CommandHandler> commands) {
+    public MessageHandler(Map<String, CommandHandler> commands, SessionManager sessionManager) {
+        this.sessionManager = sessionManager;
         this.commands = commands;
         this.userDeckManagers = new HashMap<>();
     }
 
     /**
-     * Выполнение команды по сообщению пользователя
+     * Обрабатывает сообщение пользователя
      *
      * @param chatId Идентификатор чата
      * @param text   Сообщение пользователя
-     * @return сообщение с результатом выполнения команды
+     * @return Результат обработки
      */
     public String handle(Long chatId, String text) {
+        boolean isCommand = text
+                .trim()
+                .startsWith("/");
+
+        return isCommand || !sessionManager.hasActive(chatId)
+                ? handleCommand(chatId, text)
+                : handleAnswerInLearning(chatId, text);
+    }
+
+    /**
+     * Обрабатывает сообщение пользователя как команду
+     *
+     * @return Результат выполнения команды
+     */
+    private String handleCommand(Long chatId, String text) {
         CommandParser commandParser = new CommandParser(text);
         DeckManager userDeckManager = userDeckManagers.computeIfAbsent(chatId, id -> new DeckManager());
 
@@ -62,6 +82,27 @@ public class CommandManager {
         return checkArgumentsCount(commandHandler, commandParams)
                 ? commandHandler.handle(userDeckManager, chatId, commandParams)
                 : "Ошибка параметров команды\n Проверьте на соответствие шаблону \\(/help\\)";
+    }
+
+    /**
+     * Обрабатывает сообщение пользователя как ответ в режиме обучения
+     *
+     * @return Результат обработки ответа
+     */
+    private String handleAnswerInLearning(Long chatId, String text) {
+        LearningSession learningSession = sessionManager.get(chatId);
+        boolean isRightAnswer = learningSession.checkAnswer(text);
+        String activeCardDescription = learningSession.pullActiveCardDescription();
+
+        String checkMessage = isRightAnswer
+                ? LearningSession.CORRECT_ANSWER_INFO.formatted(activeCardDescription)
+                : LearningSession.INCORRECT_ANSWER_INFO.formatted(activeCardDescription);
+
+        if (!learningSession.hasCardsToLearn()) {
+            sessionManager.end(chatId);
+            return checkMessage + '\n' + "Вы прошли все карточки в колоде!";
+        }
+        return checkMessage + '\n' + learningSession.formQuestion();
     }
 
     /**
@@ -83,11 +124,9 @@ public class CommandManager {
     }
 
     /**
-     * Создает команды по умолчанию, включая обработчиков команд
-     *
-     * @param sessionManager Менеджер сессий пользователя
+     * Создает команды по умолчанию вместе с обработчиками команд
      */
-    private void createDefaultCommandsWithHandlers(SessionManager sessionManager) {
+    private void createDefaultCommandsWithHandlers() {
         commands.put("/start", new StartCommandHandler());
         commands.put("/help", new HelpCommandHandler());
         // команды для работы с колодами
