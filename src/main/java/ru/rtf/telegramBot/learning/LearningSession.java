@@ -14,7 +14,7 @@ public abstract class LearningSession {
     /**
      * Шаблон сообщения показа ответа
      */
-    protected static final String SHOW_RIGHT_ANSWER = """
+    private static final String SHOW_RIGHT_ANSWER = """
             Правильный ответ:
             %s""";
     /**
