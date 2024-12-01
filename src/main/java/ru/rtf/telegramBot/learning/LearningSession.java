@@ -2,8 +2,8 @@ package ru.rtf.telegramBot.learning;
 
 import ru.rtf.Card;
 
+import java.util.ArrayDeque;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.Queue;
 
 /**
@@ -37,7 +37,7 @@ public abstract class LearningSession {
      * @param cards Карты к обучению
      */
     public LearningSession(Collection<Card> cards) {
-        allCards = new LinkedList<>(cards);
+        allCards = new ArrayDeque<>(cards);
     }
 
     /**

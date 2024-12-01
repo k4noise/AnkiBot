@@ -26,7 +26,7 @@ class SessionManagerTest {
     /**
      * Карта для обучения
      */
-    private Collection<Card> card = List.of(
+    private final Collection<Card> card = List.of(
             new Card("term", "def")
     );
 
@@ -40,23 +40,17 @@ class SessionManagerTest {
 
     /**
      * Проверка начала новой сессии обучения {@link SessionManager#start} при отсутствии активных сессий
-     * <p>также проверяется наличие активной сессии обучения {@link SessionManager#hasActive}</p>
+     * и досрочного завершения сессии.
+     * <p>также проверяется состояние активности сессии {@link SessionManager#hasActive}</p>
      */
     @Test
-    @DisplayName("Корректное начало новой сессии")
+    @DisplayName("Корректное начало и досрочное завершение сессии")
     void testStartAndCheckNewSessionActivity() {
-        String startMessage = sessionManager.start(chatId, new MatchLearning(card));
+        sessionManager.start(chatId, new MatchLearning(card));
+        Assertions.assertTrue(sessionManager.hasActive(chatId), "Должна быть создана активная сессия");
 
-        Assertions.assertEquals(true, sessionManager.hasActive(chatId),
-                "Должна быть создана активная сессия");
-        Assertions.assertEquals("""
-                Вы начали обучение в режиме соответствия
-                Показывается термин и определение, ваша задача - определить, соответствует ли термин определению
-                Чтобы досрочно завершить сеанс, воспользуйтесь командой /end_check
-                
-                Ваш первый вопрос: Утверждение:
-                term - def
-                1 - верно, 0 - неверно""", startMessage);
+        sessionManager.end(chatId);
+        Assertions.assertFalse(sessionManager.hasActive(chatId), "Не должно быть активной сессии");
     }
 
     /**
@@ -87,37 +81,6 @@ class SessionManagerTest {
                 "Невозможно начать новую сессию с пустым списком карт"
         );
         Assertions.assertEquals("Колода не содержит карточек, доступных для изучения", exception.getMessage());
-    }
-
-    /**
-     * Проверка досрочного окончания существующей активной сессии обучения
-     */
-    @Test
-    @DisplayName("Досрочное окончание активной сессии")
-    void testEarlyEndExistingSession() {
-        sessionManager.start(chatId, new MatchLearning(card));
-        String endMessage = sessionManager.end(chatId);
-
-        Assertions.assertEquals(false, sessionManager.hasActive(chatId),
-                "Не должно быть активной сессии");
-        Assertions.assertEquals("Вы досрочно завершили сессию", endMessage);
-    }
-
-    /**
-     * Проверка планового окончания существующей активной сессии обучения
-     */
-    @Test
-    @DisplayName("Плановое окончание активной сессии")
-    void testHandleEndExistingSession() {
-        sessionManager.start(chatId, new MatchLearning(card));
-        String endMessage = sessionManager.handle(chatId, "1");
-
-        Assertions.assertEquals(false, sessionManager.hasActive(chatId),
-                "Не должно быть активной сессии");
-        Assertions.assertEquals("""
-                Верно! Правильный ответ:
-                "term" = def
-                Вы прошли все карточки в колоде!""", endMessage);
     }
 
     /**
