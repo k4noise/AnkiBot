@@ -8,11 +8,8 @@ import java.util.*;
 /**
  * Режим обучения "соответствие"
  */
-public class MatchLearning implements LearningSession {
-    /**
-     * Карты к изучению
-     */
-    private final Queue<Card> allCards;
+public class MatchLearning extends LearningSession {
+
     /**
      * Все определения карт
      */
@@ -23,15 +20,21 @@ public class MatchLearning implements LearningSession {
     private int randomDefinitionIndex;
 
     /**
+     * Экземпляр генератора случайных чисел
+     */
+    private final Random random;
+
+    /**
      * Инициализировать режим обучения
      *
      * @param cards Карты к обучению
      */
     public MatchLearning(Collection<Card> cards) {
-        allCards = new LinkedList<>(cards);
+        super(cards);
         allDefinitions = cards.stream()
                 .map(Card::getDefinition)
                 .toList();
+        random = new Random();
     }
 
     @Override
@@ -58,16 +61,6 @@ public class MatchLearning implements LearningSession {
     }
 
     @Override
-    public boolean hasCardsToLearn() {
-        return !allCards.isEmpty();
-    }
-
-    @Override
-    public String pullActiveCardDescription() {
-        return allCards.poll().toString();
-    }
-
-    @Override
     public String getDescription() {
         return """
                 в режиме соответствия
@@ -78,6 +71,6 @@ public class MatchLearning implements LearningSession {
      * Генерирует случайный индекс для определения из списка всех определений
      */
     private int generateNextRandomDefinitionIndex() {
-        return new Random().nextInt(allDefinitions.size());
+        return random.nextInt(allDefinitions.size());
     }
 }

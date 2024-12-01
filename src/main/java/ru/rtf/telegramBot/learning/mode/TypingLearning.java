@@ -4,19 +4,12 @@ import ru.rtf.Card;
 import ru.rtf.telegramBot.learning.LearningSession;
 
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Queue;
 
 
 /**
  * Режим обучения "Ввод термина"
  */
-public class TypingLearning implements LearningSession {
-
-    /**
-     * Карты к изучению
-     */
-    private final Queue<Card> allCards;
+public class TypingLearning extends LearningSession {
 
     /**
      * Инициализировать режим обучения
@@ -24,7 +17,7 @@ public class TypingLearning implements LearningSession {
      * @param cards Карты к обучению
      */
     public TypingLearning(Collection<Card> cards) {
-        allCards = new LinkedList<>(cards);
+        super(cards);
     }
 
     @Override
@@ -40,16 +33,6 @@ public class TypingLearning implements LearningSession {
     public boolean checkAnswer(String answer) {
         Card currentCard = allCards.peek();
         return answer.equalsIgnoreCase(currentCard.getTerm());
-    }
-
-    @Override
-    public boolean hasCardsToLearn() {
-        return !allCards.isEmpty();
-    }
-
-    @Override
-    public String pullActiveCardDescription() {
-        return allCards.poll().toString();
     }
 
     @Override

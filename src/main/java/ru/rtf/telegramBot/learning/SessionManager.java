@@ -56,7 +56,8 @@ public class SessionManager {
         LearningSession learningSession = sessions.get(chatId);
         boolean isRightAnswer = learningSession.checkAnswer(text);
 
-        String activeCardDescription = learningSession.pullActiveCardDescription();
+        String activeCardDescription = learningSession.getActiveCardDescription();
+        learningSession.removeActiveCardFromStudy();
         String checkMessage = isRightAnswer
                 ? LearningSession.CORRECT_ANSWER_INFO.formatted(activeCardDescription)
                 : LearningSession.INCORRECT_ANSWER_INFO.formatted(activeCardDescription);
@@ -90,14 +91,5 @@ public class SessionManager {
      */
     public boolean hasActive(Long chatId) {
         return sessions.containsKey(chatId);
-    }
-
-    /**
-     * Получить активную сессию обучения для пользователя
-     *
-     * @param chatId Идентификатор чата
-     */
-    public LearningSession get(Long chatId) {
-        return sessions.get(chatId);
     }
 }
