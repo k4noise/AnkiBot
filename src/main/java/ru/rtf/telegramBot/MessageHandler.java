@@ -81,7 +81,7 @@ public class MessageHandler {
         String[] commandParams = commandParser.getCommandParams();
         return checkArgumentsCount(commandHandler, commandParams)
                 ? commandHandler.handle(userDeckManager, chatId, commandParams)
-                : "Ошибка параметров команды\n Проверьте на соответствие шаблону \\(/help\\)";
+                : "Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)";
     }
 
     /**
@@ -92,12 +92,13 @@ public class MessageHandler {
     private String handleAnswerInLearning(Long chatId, String text) {
         LearningSession learningSession = sessionManager.get(chatId);
         boolean isRightAnswer = learningSession.checkAnswer(text);
-        String activeCardDescription = learningSession.pullActiveCardDescription();
+        String activeCardDescription = learningSession.getActiveCardDescription();
 
         String checkMessage = isRightAnswer
                 ? LearningSession.CORRECT_ANSWER_INFO.formatted(activeCardDescription)
                 : LearningSession.INCORRECT_ANSWER_INFO.formatted(activeCardDescription);
 
+        learningSession.removeActiveCardFromStudy();
         if (!learningSession.hasCardsToLearn()) {
             sessionManager.end(chatId);
             return checkMessage + '\n' + "Вы прошли все карточки в колоде!";

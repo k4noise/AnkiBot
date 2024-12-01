@@ -112,8 +112,8 @@ class MessageHandlerTest {
 
         String message = messageHandler.handle(newChatId, "/rename_deck Deck");
         Assertions.assertEquals("""
-                Ошибка параметров команды
-                 Проверьте на соответствие шаблону \\(/help\\)""", message);
+                Ошибка параметров команды.
+                 Проверьте на соответствие шаблону (/help)""", message);
 
         Mockito.verify(commandHandlerMock, Mockito.never()).handle(Mockito.any(DeckManager.class),
                 Mockito.eq(newChatId), Mockito.argThat(args -> {
@@ -132,8 +132,8 @@ class MessageHandlerTest {
 
         String message = messageHandler.handle(newChatId, "/rename_deck");
         Assertions.assertEquals("""
-                Ошибка параметров команды
-                 Проверьте на соответствие шаблону \\(/help\\)""", message);
+                Ошибка параметров команды.
+                 Проверьте на соответствие шаблону (/help)""", message);
 
         Mockito.verify(commandHandlerMock, Mockito.never()).handle(Mockito.any(DeckManager.class),
                 Mockito.eq(newChatId), Mockito.isNull());

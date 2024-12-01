@@ -20,7 +20,7 @@ public class EditCardTermCommandHandler implements CommandHandler {
     private static final int COUNT_PARAMS = 3;
 
     @Override
-    public String handle(DeckManager usersDecks, Long id, String[] params) {
+    public String handle(DeckManager usersDecks, Long chatId, String[] params) {
         //обработка параметров
         String deckName = params[0];
         String term = params[1];

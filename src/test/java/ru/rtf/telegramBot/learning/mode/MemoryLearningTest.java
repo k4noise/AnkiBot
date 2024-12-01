@@ -32,22 +32,14 @@ class MemoryLearningTest {
 
     /**
      * Проверка формулировки вопроса к пользователю
+     * Проверка ответов
      */
     @Test
-    @DisplayName("Формулировка вопроса")
+    @DisplayName("Один вопрос")
     void testFormQuestion() {
         String question = memoryLearning.formQuestion();
         Assertions.assertEquals("Термин - \"term\"", question);
+        Assertions.assertEquals(true, memoryLearning.checkAnswer("1"));
+        Assertions.assertEquals(false, memoryLearning.checkAnswer("0"));
     }
-
-    /**
-     * Проверка формирования текстового описания активной карты
-     */
-    @Test
-    @DisplayName("Активная карта текстом")
-    void pullActiveCardDescription() {
-        String card = memoryLearning.pullActiveCardDescription();
-        Assertions.assertEquals("\"term\" = def", card);
-    }
-
 }

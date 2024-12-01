@@ -10,7 +10,6 @@ import ru.rtf.telegramBot.learning.mode.MemoryLearning;
 import ru.rtf.telegramBot.learning.mode.TypingLearning;
 
 import java.util.Collection;
-import java.util.NoSuchElementException;
 
 /**
  * Обработчик команд относящихся к режимам обучения
@@ -21,7 +20,7 @@ public class LearnCheckCommandHandler implements CommandHandler {
      * 1.тип режима обучения
      * 2.имя колоды
      */
-    private final int COUNT_PARAMS = 2;
+    private final static int COUNT_PARAMS = 2;
     /**
      * Менеджер сессий пользователе
      */
@@ -61,7 +60,7 @@ public class LearnCheckCommandHandler implements CommandHandler {
                     Ваш первый вопрос: %s"""
                     .formatted(learningSession.getDescription(), learningSession.formQuestion());
 
-        } catch (IllegalArgumentException | NoSuchElementException | IllegalStateException exception) {
+        } catch (Exception exception) {
             return MESSAGE_COMMAND_ERROR.formatted(exception.getMessage());
         }
     }

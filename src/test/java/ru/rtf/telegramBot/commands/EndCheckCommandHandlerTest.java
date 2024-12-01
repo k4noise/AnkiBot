@@ -52,7 +52,7 @@ public class EndCheckCommandHandlerTest {
     void testEndNonExistSession() {
         String message = endCheckCommandHandler.handle(deckManager, chatId, null);
         Assertions.assertEquals("""
-                Ошибка выполнения команды Подробности:
+                Ошибка выполнения команды. Подробности:
                 Нет активной сессии обучения""", message);
     }
 

@@ -110,7 +110,7 @@ public class LearnCheckCommandHandlerTest {
         learnCheckCommandHandler.handle(deckManager, chatId, new String[]{"memory", "Deck"});
         String message = learnCheckCommandHandler.handle(deckManager, chatId, new String[]{"memory", "Deck"});
         Assertions.assertEquals("""
-                Ошибка выполнения команды Подробности:
+                Ошибка выполнения команды. Подробности:
                 Имеется активная сессия обучения""", message);
     }
 
@@ -122,7 +122,7 @@ public class LearnCheckCommandHandlerTest {
     void testStartNonExistCheck() {
         String message = learnCheckCommandHandler.handle(deckManager, chatId, new String[]{"wrong", "Deck"});
         Assertions.assertEquals("""
-                Ошибка выполнения команды Подробности:
+                Ошибка выполнения команды. Подробности:
                 Неизвестный режим обучения""", message);
     }
 }
