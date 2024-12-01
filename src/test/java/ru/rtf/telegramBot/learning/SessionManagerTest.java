@@ -40,13 +40,17 @@ class SessionManagerTest {
 
     /**
      * Проверка начала новой сессии обучения {@link SessionManager#start} при отсутствии активных сессий
-     * <p>также проверяется наличие активной сессии обучения {@link SessionManager#hasActive}</p>
+     * и досрочного завершения сессии.
+     * <p>также проверяется состояние активности сессии {@link SessionManager#hasActive}</p>
      */
     @Test
-    @DisplayName("Корректное начало новой сессии")
+    @DisplayName("Корректное начало и досрочное завершение сессии")
     void testStartAndCheckNewSessionActivity() {
         sessionManager.start(chatId, new MatchLearning(card));
         Assertions.assertTrue(sessionManager.hasActive(chatId), "Должна быть создана активная сессия");
+
+        sessionManager.end(chatId);
+        Assertions.assertFalse(sessionManager.hasActive(chatId), "Не должно быть активной сессии");
     }
 
     /**
@@ -77,18 +81,6 @@ class SessionManagerTest {
                 "Невозможно начать новую сессию с пустым списком карт"
         );
         Assertions.assertEquals("Колода не содержит карточек, доступных для изучения", exception.getMessage());
-    }
-
-    /**
-     * Проверка досрочного окончания существующей активной сессии обучения
-     */
-    @Test
-    @DisplayName("Досрочное окончание активной сессии")
-    void testEarlyEndExistingSession() {
-        sessionManager.start(chatId, new MatchLearning(card));
-        sessionManager.end(chatId);
-
-        Assertions.assertFalse(sessionManager.hasActive(chatId), "Не должно быть активной сессии");
     }
 
     /**
