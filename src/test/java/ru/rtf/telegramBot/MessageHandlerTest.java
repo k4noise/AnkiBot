@@ -13,7 +13,8 @@ import java.util.Arrays;
 import java.util.Map;
 
 /**
- * Тесты для класса управления командами
+ * Тесты для класса обработки сообщений
+ * <p>Если сообщение - команда, то тестируется передача параметров сообщения нужному обработчику</p>
  */
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -46,7 +47,8 @@ class MessageHandlerTest {
                 // следующие обработчики без моков для модификации внутреннего состояния
                 "/create_deck", new CreateDeckCommandHandler(),
                 "/create_card", new CreateCardCommandHandler(),
-                "/check", new LearnCheckCommandHandler(manager)
+                "/check", new LearnCheckCommandHandler(manager),
+                "/end_check", new EndCheckCommandHandler(manager)
         );
         messageHandler = new MessageHandler(commands, manager);
     }
@@ -140,15 +142,14 @@ class MessageHandlerTest {
     }
 
     /**
-     * Тест обработки сообщений в режиме обучения
-     * <p>Проверяется корректность обработки сообщения по входу и выходу из режима обучения
-     * и выполнение команды из режима обучения</p>
+     * Тест обработки правильного ответа в режиме обучения и команды на примере завершения сессии
      */
     @Test
-    @DisplayName("Обработка сообщения в режиме обучения")
-    void testHandleAnswersInLearning() {
+    @DisplayName("Обработка правильного ответа и команды выхода")
+    void testHandleAnswerAndCommand() {
         messageHandler.handle(newChatId, "/create_deck Deck");
         messageHandler.handle(newChatId, "/create_card Deck : term = def");
+        messageHandler.handle(newChatId, "/create_card Deck : term2 = def2");
 
         String startMessage = messageHandler.handle(newChatId, "/check typing : Deck");
         Assertions.assertEquals("""
@@ -159,26 +160,85 @@ class MessageHandlerTest {
                 Ваш первый вопрос: Определение - "def"
                 Введите соответствующий термин:""", startMessage);
 
-        CommandHandler commandHandlerMock = commands.get("/start");
-        Mockito.when(commandHandlerMock.handle(Mockito.any(DeckManager.class), Mockito.anyLong(), Mockito.any()))
-                .thenReturn("Добро пожаловать в AnkiBot");
-        String reactionInCommandMessage = messageHandler.handle(newChatId, "/start");
-        Assertions.assertEquals("Добро пожаловать в AnkiBot", reactionInCommandMessage);
-
-        String reactionInAnswerMessage = messageHandler.handle(newChatId, "term");
+        String reactionInRightAnswer = messageHandler.handle(newChatId, "term");
         Assertions.assertEquals("""
-                Верно! Правильный ответ:
-                "term" = def
-                Вы прошли все карточки в колоде!""",
-                reactionInAnswerMessage,
-                "Сообщение должно быть обработано как ответ в режиме обучения"
+                        Верно! Правильный ответ:
+                        "term" = def
+                        Определение - "def2"
+                        Введите соответствующий термин:""",
+                reactionInRightAnswer,
+                "Сообщение должно быть обработано как ответ в режиме обучения и быть правильным ответом"
         );
 
-        String reactionInMessageNoCommand = messageHandler.handle(newChatId, "term");
+        String reactionInCommandMessage = messageHandler.handle(newChatId, "/end_check");
+        Assertions.assertEquals("Вы досрочно завершили сессию", reactionInCommandMessage);
+
+        String reactionNoCommandMessage = messageHandler.handle(newChatId, "term2");
         Assertions.assertEquals(
-                "Команда term не распознана",
-                reactionInMessageNoCommand,
-                "Сообщение должно быть обработано как команда"
+                "Команда term2 не распознана",
+                reactionNoCommandMessage,
+                "Сообщение не должно обрабатываться как ответ"
+        );
+    }
+
+    /**
+     * Тест обработки неправильного ответа и реакции на любой другой ответ для режима с однозначным ответом
+     */
+    @Test
+    @DisplayName("Обработка неправильного и рандомного ответов")
+    void testHandleWrongAndRandomAnswer() {
+        messageHandler.handle(newChatId, "/create_deck Deck2");
+        messageHandler.handle(newChatId, "/create_card Deck2 : term = def");
+        messageHandler.handle(newChatId, "/create_card Deck2 : term2 = def2");
+        messageHandler.handle(newChatId, "/check memory : Deck2");
+
+        String reactionInWrongAnswer = messageHandler.handle(newChatId, "0");
+        Assertions.assertEquals("""
+                        Неверно. Правильный ответ:
+                        "term" = def
+                        Термин - "term2\"""",
+                reactionInWrongAnswer,
+                "Ответ должен быть неправильным"
+        );
+
+        String reactionInRandomPhraseAnswer = messageHandler.handle(newChatId, "term");
+        Assertions.assertEquals("""
+                        Неверно. Правильный ответ:
+                        "term2" = def2
+                        Вы прошли все карточки в колоде!""",
+                reactionInRandomPhraseAnswer,
+                "Рандомная фраза - по-прежнему неправильный ответ"
+        );
+    }
+
+    /**
+     * Тест обработки неправильного и правильного ответов
+     */
+    @Test
+    @DisplayName("Обработка неправильного и правильного ответов")
+    void testHandleWrongAndRightAnswer() {
+        messageHandler.handle(newChatId, "/create_deck Deck3");
+        messageHandler.handle(newChatId, "/create_card Deck3 : term = def");
+        messageHandler.handle(newChatId, "/create_card Deck3 : term2 = def2");
+        messageHandler.handle(newChatId, "/check typing : Deck3");
+
+        String reactionInWrongAnswerMessage = messageHandler.handle(newChatId, "term2");
+        Assertions.assertEquals("""
+                        Неверно. Правильный ответ:
+                        "term" = def
+                        Определение - "def2"
+                        Введите соответствующий термин:""",
+                reactionInWrongAnswerMessage,
+                "Ответ должен быть неправильным"
+        );
+
+        String reactionInRightAnswerMessage = messageHandler.handle(newChatId, "term2");
+        Assertions.assertEquals("""
+                        Верно! Правильный ответ:
+                        "term2" = def2
+                        Вы прошли все карточки в колоде!""",
+                reactionInRightAnswerMessage,
+                "Ответ должен быть неправильным"
         );
     }
 }
