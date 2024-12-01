@@ -114,7 +114,10 @@ class SessionManagerTest {
 
         Assertions.assertEquals(false, sessionManager.hasActive(chatId),
                 "Не должно быть активной сессии");
-        Assertions.assertEquals(true, endMessage.contains("Вы прошли все карточки в колоде!"));
+        Assertions.assertEquals("""
+                Верно! Правильный ответ:
+                "term" = def
+                Вы прошли все карточки в колоде!""", endMessage);
     }
 
     /**

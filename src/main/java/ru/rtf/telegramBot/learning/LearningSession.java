@@ -14,17 +14,17 @@ public abstract class LearningSession {
     /**
      * Шаблон сообщения показа ответа
      */
-    protected static String SHOW_RIGHT_ANSWER = """
+    protected static final String SHOW_RIGHT_ANSWER = """
             Правильный ответ:
             %s""";
     /**
      * Шаблон сообщения правильного ответа
      */
-    protected static final String CORRECT_ANSWER_INFO = "Верно! " + SHOW_RIGHT_ANSWER;
+    public static final String CORRECT_ANSWER_INFO = "Верно! " + SHOW_RIGHT_ANSWER;
     /**
      * Шаблон сообщения неправильного ответа
      */
-    protected static final String INCORRECT_ANSWER_INFO = "Неверно. " + SHOW_RIGHT_ANSWER;
+    public static final String INCORRECT_ANSWER_INFO = "Неверно. " + SHOW_RIGHT_ANSWER;
 
     /**
      * Карты к изучению
@@ -61,10 +61,17 @@ public abstract class LearningSession {
     }
 
     /**
-     * Вернуть активную карту и убирает ее из текущей сессии обучения
+     * Вернуть строковое представление активной карты
      */
-    public Card pollActiveCard() {
-        return allCards.poll();
+    public String getActiveCardDescription(){
+        return allCards.peek().toString();
+    }
+
+    /**
+     * Убирает активную карту из текущей сессии обучения
+     */
+    public void removeActiveCardFromStudy() {
+        allCards.remove();
     }
 
     /**
