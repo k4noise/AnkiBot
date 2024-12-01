@@ -18,6 +18,10 @@ public class ListCardsCommandsHandlerTest {
      * Менеджер колод пользователя
      */
     private DeckManager deckManager;
+    /**
+     * Идентификатор чата
+     */
+    private Long chatId = 1L;
 
     @BeforeEach
     void setUp() {
@@ -36,7 +40,7 @@ public class ListCardsCommandsHandlerTest {
         deck.addCard("term2", "def 2");
         deck.addCard("term3", "def 3");
 
-        String message = listCardsCommandsHandler.handle(deckManager, new String[]{"Deck"});
+        String message = listCardsCommandsHandler.handle(deckManager, chatId, new String[]{"Deck"});
         Assertions.assertEquals("""
                 Deck:
                 "term1" = def 1
@@ -50,7 +54,7 @@ public class ListCardsCommandsHandlerTest {
      */
     @Test
     void testNoCards() {
-        String message = listCardsCommandsHandler.handle(deckManager, new String[]{"Deck"});
+        String message = listCardsCommandsHandler.handle(deckManager, chatId, new String[]{"Deck"});
 
         Assertions.assertEquals("Deck:\n" +
                 "В этой колоде пока нет карточек", message);
@@ -61,7 +65,7 @@ public class ListCardsCommandsHandlerTest {
      */
     @Test
     void testIncorrectDeck() {
-        String message = listCardsCommandsHandler.handle(deckManager, new String[]{"Deck2"});
+        String message = listCardsCommandsHandler.handle(deckManager, chatId, new String[]{"Deck2"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""

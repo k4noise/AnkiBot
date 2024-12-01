@@ -17,6 +17,10 @@ public class ListDecksCommandHandlerTest {
      * Менеджер колод пользователя
      */
     private DeckManager deckManager;
+    /**
+     * Идентификатор чата
+     */
+    private Long chatId = 1L;
 
     @BeforeEach
     void setUp() {
@@ -30,10 +34,11 @@ public class ListDecksCommandHandlerTest {
     @Test
     void testHandleWithNoDecksEmpty() {
         // попытка выполнить команду
-        String message = listDecksCommandHandler.handle(deckManager, null);
+        String message = listDecksCommandHandler.handle(deckManager, chatId, null);
 
         // Проверка, что отправляется корректное сообщение
-        Assertions.assertEquals("У Вас пока нет ни одной колоды, создайте первую /create_deck <название>", message);
+        Assertions.assertEquals(
+                "У Вас пока нет ни одной колоды, создайте первую /create_deck <название>", message);
     }
 
     /**
@@ -45,7 +50,7 @@ public class ListDecksCommandHandlerTest {
         deckManager.addDeck("second");
 
         // попытка выполнить команду
-        String message = listDecksCommandHandler.handle(deckManager, null);
+        String message = listDecksCommandHandler.handle(deckManager, chatId, null);
 
         Assertions.assertEquals("""
                         Ваши колоды:

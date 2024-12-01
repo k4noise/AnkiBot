@@ -17,10 +17,11 @@ public interface CommandHandler {
      * Обрабатывает команду
      *
      * @param usersDecks - колоды пользователя
+     * @param chatId     - идентификатор чата
      * @param params     - параметры необходимые команде
      * @return сообщение о результате обработки команды
      */
-    String handle(DeckManager usersDecks, String[] params);
+    String handle(DeckManager usersDecks, Long chatId, String[] params);
 
     /**
      * Возвращает количество параметров нужных команде для выполнения

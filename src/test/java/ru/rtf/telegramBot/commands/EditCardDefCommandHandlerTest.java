@@ -19,6 +19,10 @@ public class EditCardDefCommandHandlerTest {
      * Менеджер колод пользователя
      */
     private DeckManager deckManager;
+    /**
+     * Идентификатор чата
+     */
+    private Long chatId = 1L;
 
     @BeforeEach
     void setUp() {
@@ -39,7 +43,7 @@ public class EditCardDefCommandHandlerTest {
         Deck deck = deckManager.getDeck(deckName);
         deck.addCard("term", "def");
 
-        String message = editCardDefCommandHandler.handle(deckManager, new String[]{deckName, "term", "new def"});
+        String message = editCardDefCommandHandler.handle(deckManager, chatId, new String[]{deckName, "term", "new def"});
         Card modifiedCard = deck.getCard("term");
 
         Assertions.assertEquals("new def", modifiedCard.getDefinition(), "Определение должно измениться");
@@ -52,7 +56,7 @@ public class EditCardDefCommandHandlerTest {
     @Test
     void testIncorrectTerm() {
         deckManager.addDeck("Deck");
-        String ans = editCardDefCommandHandler.handle(deckManager, new String[]{"Deck", "term", "new def"});
+        String ans = editCardDefCommandHandler.handle(deckManager, chatId, new String[]{"Deck", "term", "new def"});
 
         Assertions.assertEquals("""
                 Ошибка выполнения команды. Подробности:
@@ -64,7 +68,7 @@ public class EditCardDefCommandHandlerTest {
      */
     @Test
     void testIncorrectDeck() {
-        String message = editCardDefCommandHandler.handle(deckManager, new String[]{"Deck", "term", "new def"});
+        String message = editCardDefCommandHandler.handle(deckManager, chatId, new String[]{"Deck", "term", "new def"});
 
         Assertions.assertEquals("""
                 Ошибка выполнения команды. Подробности:

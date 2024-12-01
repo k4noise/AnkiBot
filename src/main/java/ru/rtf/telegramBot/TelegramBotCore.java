@@ -17,9 +17,9 @@ public class TelegramBotCore extends TelegramLongPollingBot {
      */
     private final String telegramBotName;
     /**
-     * Управляет командами бота
+     * Обработчик сообщений пользователя
      */
-    private final CommandManager commandManager;
+    private final MessageHandler messageHandler;
 
     /**
      * Создание экземпляра бота
@@ -31,8 +31,7 @@ public class TelegramBotCore extends TelegramLongPollingBot {
     public TelegramBotCore(String telegramBotName, String token) {
         super(token);
         this.telegramBotName = telegramBotName;
-
-        commandManager = new CommandManager();
+        this.messageHandler = new MessageHandler();
     }
 
     /**
@@ -53,9 +52,13 @@ public class TelegramBotCore extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             Message message = update.getMessage();
             Long chatId = message.getChatId();
-            String messageResultExecution = commandManager.handle(chatId, message.getText());
-            sendMessage(chatId, messageResultExecution);
+            sendMessage(chatId, messageHandler.handle(chatId, message.getText()));
         }
+    }
+
+    @Override
+    public String getBotUsername() {
+        return telegramBotName;
     }
 
     /**
@@ -64,7 +67,7 @@ public class TelegramBotCore extends TelegramLongPollingBot {
      * @param chatId  идентификатор чата
      * @param message текст сообщения
      */
-    public void sendMessage(Long chatId, String message) {
+    private void sendMessage(Long chatId, String message) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.setText(message);
@@ -73,10 +76,5 @@ public class TelegramBotCore extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             System.err.println("Не удалось отправить сообщение. " + e.getMessage());
         }
-    }
-
-    @Override
-    public String getBotUsername() {
-        return telegramBotName;
     }
 }
