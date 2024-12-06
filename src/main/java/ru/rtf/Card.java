@@ -14,15 +14,6 @@ public class Card {
      * Минимально возможное количество баллов
      */
     private static final int MIN_SCORE = 0;
-    /**
-     * Минимально возможное количество баллов для получения статуса "Изучена"
-     */
-    private static final int MIN_SCORE_IN_STUDIED_STATUS = 10;
-    /**
-     * Минимально возможное количество баллов для получения статуса "Частично изучена"
-     */
-    private static final int MIN_SCORE_IN_PARTIALLY_STUDIED_STATUS = 5;
-
 
     /**
      * Термин - идентификатор внутри колоды
@@ -121,18 +112,6 @@ public class Card {
      */
     public int getScore() {
         return score;
-    }
-
-    /**
-     * Вернуть статус карты
-     */
-    public CardLearningStatus getStatus() {
-        if (score >= MIN_SCORE_IN_STUDIED_STATUS) {
-            return CardLearningStatus.STUDIED;
-        } else if (score >= MIN_SCORE_IN_PARTIALLY_STUDIED_STATUS) {
-            return CardLearningStatus.PARTIALLY_STUDIED;
-        }
-        return CardLearningStatus.NOT_STUDIED;
     }
 
     @Override

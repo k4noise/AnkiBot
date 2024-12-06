@@ -108,55 +108,20 @@ public class CardTest {
     }
 
     /**
-     * Проверка добавления баллов карточке и получения статуса
+     * Проверка добавления и убавления баллов карточке
      */
     @Test
-    @DisplayName("Добавление баллов карточке и получение статуса")
+    @DisplayName("Добавление и убавление баллов карточке")
     void testAddScores() {
         Card card = new Card("term", "definition");
-        Assertions.assertEquals(
-                CardLearningStatus.NOT_STUDIED,
-                card.getStatus(),
-                "Карта инициализируется не изученной"
-        );
-
         card.addScore(5);
-        Assertions.assertEquals(
-                CardLearningStatus.PARTIALLY_STUDIED,
-                card.getStatus(),
-                "Должен измениться статус на частично изученный"
-        );
+        Assertions.assertEquals(5, card.getScore());
 
         card.addScore(-5);
-        Assertions.assertEquals(
-                CardLearningStatus.PARTIALLY_STUDIED,
-                card.getStatus(),
-                "Статус не должен измениться"
-        );
-
-        card.addScore(5);
-        Assertions.assertEquals(
-                CardLearningStatus.STUDIED,
-                card.getStatus(),
-                "Должен измениться статус на изученный"
-        );
-    }
-
-    /**
-     * Проверка убавления балла карточки
-     */
-    @Test
-    @DisplayName("Убавление балла карточки")
-    void testSubtractScore() {
-        Card card = new Card("term", "definition");
-        card.addScore(5);
+        Assertions.assertEquals(5, card.getScore(), "Балл не должен измениться");
 
         card.subtractScore();
-        Assertions.assertEquals(
-                CardLearningStatus.NOT_STUDIED,
-                card.getStatus(),
-                "Должен измениться статус на не изученный"
-        );
+        Assertions.assertEquals(4, card.getScore(), "Балл не должен измениться");
     }
 
     /**
