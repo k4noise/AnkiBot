@@ -1,9 +1,6 @@
 package ru.rtf.telegramBot;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import ru.rtf.Card;
 import ru.rtf.Deck;
 import ru.rtf.telegramBot.learning.AnswerStatus;
@@ -13,6 +10,7 @@ import java.util.EnumMap;
 /**
  * Тестирование калькулятора статистики обучения {@link StatsCalculator}
  */
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class StatsCalculatorTest {
     /**
      * Калькулятор статистики обучения
@@ -23,7 +21,7 @@ class StatsCalculatorTest {
      * Создать единый экземпляр калькулятора статистики
      */
     @BeforeAll
-    static void createStatsCalculator() {
+    void createStatsCalculator() {
         calculator = new StatsCalculator();
     }
 
