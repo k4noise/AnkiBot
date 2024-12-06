@@ -32,7 +32,8 @@ public class EditCardDefCommandHandler implements CommandHandler {
             Deck userDeck = usersDecks.getDeck(deckName);
             userDeck.updateCardDefinition(term, newDef);
             //сообщение пользователю о выполнении
-            return String.format("Определение карты было успешно изменено: %s", userDeck.getCard(term).toString());
+            return String.format("Определение карты было успешно изменено: %s",
+                    userDeck.getCard(term).getDescription());
         } catch (NoSuchElementException e) {
             // не существует колода или карта
             return MESSAGE_COMMAND_ERROR.formatted(e.getMessage());

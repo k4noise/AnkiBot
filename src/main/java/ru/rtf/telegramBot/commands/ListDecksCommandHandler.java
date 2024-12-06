@@ -41,7 +41,7 @@ public class ListDecksCommandHandler implements CommandHandler {
         StringBuilder decksToSting = new StringBuilder();
         for (Deck deck : decks) {
             decksToSting.append("\n");
-            decksToSting.append(deck);
+            decksToSting.append(deck.getDescription());
         }
         return decksToSting.toString();
     }

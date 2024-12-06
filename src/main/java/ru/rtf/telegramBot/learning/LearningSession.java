@@ -4,6 +4,7 @@ import ru.rtf.Card;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 
 /**
@@ -11,20 +12,6 @@ import java.util.Queue;
  * <p>Создается только на один сеанс</p>
  */
 public abstract class LearningSession {
-    /**
-     * Шаблон сообщения показа ответа
-     */
-    private static final String SHOW_RIGHT_ANSWER = """
-            Правильный ответ:
-            %s""";
-    /**
-     * Шаблон сообщения правильного ответа
-     */
-    public static final String CORRECT_ANSWER_INFO = "Верно! " + SHOW_RIGHT_ANSWER;
-    /**
-     * Шаблон сообщения неправильного ответа
-     */
-    public static final String INCORRECT_ANSWER_INFO = "Неверно. " + SHOW_RIGHT_ANSWER;
 
     /**
      * Карты к изучению
@@ -61,10 +48,15 @@ public abstract class LearningSession {
     }
 
     /**
-     * Вернуть строковое представление активной карты
+     * Вернуть активную карту
+     *
+     * @throws NoSuchElementException Карты для изучения закончились
      */
-    public String getActiveCardDescription(){
-        return allCards.peek().toString();
+    public Card getActiveCard() {
+        Card activeCard = allCards.peek();
+        if (activeCard == null)
+            throw new NoSuchElementException("Карты для изучения закончились");
+        return activeCard;
     }
 
     /**

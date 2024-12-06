@@ -165,8 +165,11 @@ public class Deck {
         return Objects.equals(name, deck.name);
     }
 
-    @Override
-    public String toString() {
+    /**
+     * Возвращает описание колоды
+     * <p>в формате имя колоды: количество карт</p>
+     */
+    public String getDescription() {
         return String.format("%s: %d карт", name, getCardsCount());
     }
 

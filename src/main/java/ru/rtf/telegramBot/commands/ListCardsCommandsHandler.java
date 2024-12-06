@@ -48,7 +48,7 @@ public class ListCardsCommandsHandler implements CommandHandler {
     public String getCardsDescription(Deck deck) {
         StringBuilder sb = new StringBuilder();
         for (Card card : deck.getCards()) {
-            sb.append(card.toString()).append("\n");
+            sb.append(card.getDescription()).append("\n");
         }
         return sb.toString();
     }

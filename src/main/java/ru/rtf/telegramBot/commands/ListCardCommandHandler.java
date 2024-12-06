@@ -29,7 +29,7 @@ public class ListCardCommandHandler implements CommandHandler {
         try {
             Card card = usersDecks.getDeck(deckName).getCard(term);
             //сообщение пользователю о выполнении
-            return String.format(card.toString());
+            return String.format(card.getDescription());
         } catch (NoSuchElementException e) {
             return MESSAGE_COMMAND_ERROR.formatted(e.getMessage());
         }

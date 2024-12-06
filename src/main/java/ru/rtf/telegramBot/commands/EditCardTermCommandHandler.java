@@ -31,7 +31,8 @@ public class EditCardTermCommandHandler implements CommandHandler {
             Deck userDeck = usersDecks.getDeck(deckName);
             userDeck.updateCardTerm(term, newTerm);
             //сообщение пользователю о выполнении
-            return String.format("Термин карты был успешно изменен: %s", userDeck.getCard(newTerm).toString());
+            return String.format("Термин карты был успешно изменен: %s",
+                    userDeck.getCard(newTerm).getDescription());
         } catch (NoSuchElementException | IllegalArgumentException eNoSuch) {
             return MESSAGE_COMMAND_ERROR.formatted(eNoSuch.getMessage());
         }
