@@ -13,9 +13,14 @@ import java.util.Map;
  */
 public class StatsCalculator {
     /**
+     * Максимально возможный процент изученности колоды
+     */
+    private static final int MAX_PERCENTAGE = 100;
+    /**
      * Коэффициент для расчета статистики по ответам
      */
-    private static final int PERCENTAGE_COEFFICIENT = 50;
+    private static final int PERCENTAGE_COEFFICIENT = MAX_PERCENTAGE / 2;
+
     /**
      * Минимально возможное количество баллов для получения статуса "Частично изучена"
      */
@@ -24,6 +29,7 @@ public class StatsCalculator {
      * Минимально возможное количество баллов для получения статуса "Изучена"
      */
     private static final int MIN_SCORE_IN_STUDIED_STATUS = 10;
+
     /**
      * Хранилище коэффициентов для расчета статистики ответов
      */
@@ -71,7 +77,7 @@ public class StatsCalculator {
             totalScore += card.getScore();
         }
 
-        return totalScore * 100 / maxPossibleScore;
+        return totalScore * MAX_PERCENTAGE / maxPossibleScore;
     }
 
     /**
