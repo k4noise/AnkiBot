@@ -1,5 +1,6 @@
 package ru.rtf.telegramBot;
 
+import ru.rtf.Card;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.commands.*;
 import ru.rtf.telegramBot.learning.LearningSession;
@@ -7,6 +8,7 @@ import ru.rtf.telegramBot.learning.SessionManager;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * Класс для обработки сообщений пользователя
@@ -92,15 +94,21 @@ public class MessageHandler {
     private String handleAnswerInLearning(Long chatId, String text) {
         LearningSession learningSession = sessionManager.get(chatId);
         boolean isRightAnswer = learningSession.checkAnswer(text);
-        String activeCardDescription = learningSession.getActiveCardDescription();
+
+        Card activeCard;
+        try {
+            activeCard = learningSession.getActiveCard();
+        } catch (NoSuchElementException e) {
+            sessionManager.end(chatId);
+            return "Вы прошли все карточки в колоде!";
+        }
 
         String resultAnswer = isRightAnswer
                 ? "Верно!"
                 : "Неверно.";
-
-        String checkMessage =  """
+        String checkMessage = """
                 %s Правильный ответ:
-                %s""".formatted(resultAnswer, activeCardDescription);
+                %s""".formatted(resultAnswer, activeCard.getDescription());
 
         learningSession.removeActiveCardFromStudy();
         if (!learningSession.hasCardsToLearn()) {

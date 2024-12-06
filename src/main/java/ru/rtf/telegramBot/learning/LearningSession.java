@@ -4,6 +4,7 @@ import ru.rtf.Card;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 
 /**
@@ -47,10 +48,15 @@ public abstract class LearningSession {
     }
 
     /**
-     * Вернуть строковое представление активной карты
+     * Вернуть активную карту
+     *
+     * @throws NoSuchElementException Карты для изучения закончились
      */
-    public String getActiveCardDescription(){
-        return allCards.peek().toString();
+    public Card getActiveCard() {
+        Card activeCard = allCards.peek();
+        if (activeCard == null)
+            throw new NoSuchElementException("Карты для изучения закончились");
+        return activeCard;
     }
 
     /**
