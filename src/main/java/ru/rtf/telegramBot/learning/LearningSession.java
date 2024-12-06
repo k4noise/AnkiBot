@@ -11,20 +11,6 @@ import java.util.Queue;
  * <p>Создается только на один сеанс</p>
  */
 public abstract class LearningSession {
-    /**
-     * Шаблон сообщения показа ответа
-     */
-    private static final String SHOW_RIGHT_ANSWER = """
-            Правильный ответ:
-            %s""";
-    /**
-     * Шаблон сообщения правильного ответа
-     */
-    public static final String CORRECT_ANSWER_INFO = "Верно! " + SHOW_RIGHT_ANSWER;
-    /**
-     * Шаблон сообщения неправильного ответа
-     */
-    public static final String INCORRECT_ANSWER_INFO = "Неверно. " + SHOW_RIGHT_ANSWER;
 
     /**
      * Карты к изучению

@@ -94,9 +94,13 @@ public class MessageHandler {
         boolean isRightAnswer = learningSession.checkAnswer(text);
         String activeCardDescription = learningSession.getActiveCardDescription();
 
-        String checkMessage = isRightAnswer
-                ? LearningSession.CORRECT_ANSWER_INFO.formatted(activeCardDescription)
-                : LearningSession.INCORRECT_ANSWER_INFO.formatted(activeCardDescription);
+        String resultAnswer = isRightAnswer
+                ? "Верно!"
+                : "Неверно.";
+
+        String checkMessage =  """
+                %s Правильный ответ:
+                %s""".formatted(resultAnswer, activeCardDescription);
 
         learningSession.removeActiveCardFromStudy();
         if (!learningSession.hasCardsToLearn()) {
