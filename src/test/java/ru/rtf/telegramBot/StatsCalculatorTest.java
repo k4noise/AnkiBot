@@ -1,12 +1,16 @@
 package ru.rtf.telegramBot;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import ru.rtf.Card;
 import ru.rtf.CardLearningStatus;
 import ru.rtf.Deck;
 import ru.rtf.telegramBot.learning.AnswerStatus;
 
 import java.util.EnumMap;
+import java.util.stream.Stream;
 
 /**
  * Тестирование калькулятора статистики обучения {@link StatsCalculator}
@@ -27,58 +31,29 @@ class StatsCalculatorTest {
     }
 
     /**
-     * Получение процента успешности без ответов
+     * Получение процента успешности ответов одного типа
      */
     @Test
-    @DisplayName("Процент успешности отсутствия ответов")
-    void testGetSuccessLearningPercentageNoAnswers() {
-        EnumMap<AnswerStatus, Integer> stats = new EnumMap<>(AnswerStatus.class);
-        Assertions.assertEquals(0, calculator.getSuccessLearningPercentage(stats));
-
-        stats.put(AnswerStatus.RIGHT, 0);
-        stats.put(AnswerStatus.PARTIALLY_RIGHT, 0);
-        stats.put(AnswerStatus.WRONG, 0);
-        Assertions.assertEquals(0, calculator.getSuccessLearningPercentage(stats));
-    }
-
-    /**
-     * Получение процента успешности со всеми правильными ответами
-     */
-    @Test
-    @DisplayName("Процент успешности правильных ответов")
-    void testGetSuccessLearningPercentageAllRight() {
+    @DisplayName("Процент успешности ответов одного типа")
+    void testGetSuccessLearningPercentage() {
         EnumMap<AnswerStatus, Integer> stats = new EnumMap<>(AnswerStatus.class);
         stats.put(AnswerStatus.RIGHT, 3);
         Assertions.assertEquals(100, calculator.getSuccessLearningPercentage(stats));
-    }
 
-    /**
-     * Получение процента успешности со всеми неправильными ответами
-     */
-    @Test
-    @DisplayName("Процент успешности неправильных ответов")
-    void testGetSuccessLearningPercentageAllWrong() {
-        EnumMap<AnswerStatus, Integer> stats = new EnumMap<>(AnswerStatus.class);
+        stats = new EnumMap<>(AnswerStatus.class);
         stats.put(AnswerStatus.WRONG, 3);
         Assertions.assertEquals(0, calculator.getSuccessLearningPercentage(stats));
-    }
 
-    /**
-     * Получение процента успешности со всеми частично правильными ответами
-     */
-    @Test
-    @DisplayName("Процент успешности частично правильных ответов")
-    void testGetSuccessLearningPercentageAllPartiallyRight() {
-        EnumMap<AnswerStatus, Integer> stats = new EnumMap<>(AnswerStatus.class);
+        stats = new EnumMap<>(AnswerStatus.class);
         stats.put(AnswerStatus.PARTIALLY_RIGHT, 3);
         Assertions.assertEquals(50, calculator.getSuccessLearningPercentage(stats));
     }
 
     /**
-     * Получение процента успешности, все виды ответов
+     * Получение процента успешности, все типы ответов
      */
     @Test
-    @DisplayName("Процент успешности всех видов ответов")
+    @DisplayName("Процент успешности всех типов ответов")
     void testGetSuccessLearningPercentageAllOptions() {
         EnumMap<AnswerStatus, Integer> stats = new EnumMap<>(AnswerStatus.class);
         stats.put(AnswerStatus.RIGHT, 2);
@@ -165,5 +140,34 @@ class StatsCalculatorTest {
         Assertions.assertNull(cardsStats.get(CardLearningStatus.NOT_STUDIED));
         Assertions.assertEquals(1, cardsStats.get(CardLearningStatus.PARTIALLY_STUDIED));
         Assertions.assertEquals(1, cardsStats.get(CardLearningStatus.STUDIED));
+    }
+
+    /**
+     * Получение процента успешности
+     */
+    @ParameterizedTest
+    @MethodSource("provideDataForSuccessLearningPercentage")
+    @DisplayName("Проверка процента успешности обучения")
+    void testGetSuccessLearningPercentage(EnumMap<AnswerStatus, Integer> stats, int expectedPercentage) {
+        Assertions.assertEquals(expectedPercentage, calculator.getSuccessLearningPercentage(stats));
+    }
+
+    private Stream<Arguments> provideDataForSuccessLearningPercentage() {
+        return Stream.of(
+                Arguments.of(new EnumMap<>(AnswerStatus.class), 0),
+                Arguments.of(createStats(0, 0, 0), 0),
+                Arguments.of(createStats(3, 0, 0), 100),
+                Arguments.of(createStats(0, 0, 3), 0),
+                Arguments.of(createStats(0, 3, 0), 50),
+                Arguments.of(createStats(2, 3, 1), 58)
+        );
+    }
+
+    private EnumMap<AnswerStatus, Integer> createStats(int right, int partiallyRight, int wrong) {
+        EnumMap<AnswerStatus, Integer> stats = new EnumMap<>(AnswerStatus.class);
+        stats.put(AnswerStatus.RIGHT, right);
+        stats.put(AnswerStatus.PARTIALLY_RIGHT, partiallyRight);
+        stats.put(AnswerStatus.WRONG, wrong);
+        return stats;
     }
 }
