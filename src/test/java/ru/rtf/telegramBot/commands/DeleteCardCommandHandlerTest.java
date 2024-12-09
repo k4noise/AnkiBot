@@ -17,6 +17,10 @@ public class DeleteCardCommandHandlerTest {
      * Менеджер колод пользователя
      */
     private DeckManager deckManager;
+    /**
+     * Идентификатор чата
+     */
+    private Long chatId = 1L;
 
     @BeforeEach
     void setUp() {
@@ -31,7 +35,7 @@ public class DeleteCardCommandHandlerTest {
     void testCorrectDelCard() {
         deckManager.addDeck("Deck");
         deckManager.getDeck("Deck").addCard("del term", "def");
-        String message = deleteCardCommandHandler.handle(deckManager, new String[]{"Deck", "del term"});
+        String message = deleteCardCommandHandler.handle(deckManager, chatId, new String[]{"Deck", "del term"});
 
         Assertions.assertEquals(0, deckManager.getDeck("Deck").getCards().size());
         Assertions.assertEquals("Карта с термином \"del term\" была успешно удалена из колоды Deck", message);
@@ -43,7 +47,7 @@ public class DeleteCardCommandHandlerTest {
     @Test
     void testIncorrectTerm() {
         deckManager.addDeck("Deck");
-        String message = deleteCardCommandHandler.handle(deckManager, new String[]{"Deck", "term"});
+        String message = deleteCardCommandHandler.handle(deckManager, chatId, new String[]{"Deck", "term"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""
@@ -56,7 +60,7 @@ public class DeleteCardCommandHandlerTest {
      */
     @Test
     void testIncorrectDeck() {
-        String message = deleteCardCommandHandler.handle(deckManager, new String[]{"Deck2", "term"});
+        String message = deleteCardCommandHandler.handle(deckManager, chatId, new String[]{"Deck2", "term"});
 
         // Проверяем отправку сообщения об ошибке
         Assertions.assertEquals("""

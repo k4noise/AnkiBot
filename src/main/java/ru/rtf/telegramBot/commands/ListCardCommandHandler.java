@@ -20,7 +20,7 @@ public class ListCardCommandHandler implements CommandHandler {
     private static final int COUNT_PARAMS = 2;
 
     @Override
-    public String handle(DeckManager usersDecks, String[] params) {
+    public String handle(DeckManager usersDecks, Long chatId, String[] params) {
         //обработка параметров
         String deckName = params[0];
         String term = params[1];
@@ -29,7 +29,7 @@ public class ListCardCommandHandler implements CommandHandler {
         try {
             Card card = usersDecks.getDeck(deckName).getCard(term);
             //сообщение пользователю о выполнении
-            return String.format(card.toString());
+            return String.format(card.getDescription());
         } catch (NoSuchElementException e) {
             return MESSAGE_COMMAND_ERROR.formatted(e.getMessage());
         }

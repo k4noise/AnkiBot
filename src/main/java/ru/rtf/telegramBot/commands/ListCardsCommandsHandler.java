@@ -20,7 +20,7 @@ public class ListCardsCommandsHandler implements CommandHandler {
     public static final int COUNT_PARAMS = 1;
 
     @Override
-    public String handle(DeckManager usersDecks, String[] params) {
+    public String handle(DeckManager usersDecks, Long chatId, String[] params) {
         //обработка параметров
         String deckName = params[0];
 
@@ -48,7 +48,7 @@ public class ListCardsCommandsHandler implements CommandHandler {
     public String getCardsDescription(Deck deck) {
         StringBuilder sb = new StringBuilder();
         for (Card card : deck.getCards()) {
-            sb.append(card.toString()).append("\n");
+            sb.append(card.getDescription()).append("\n");
         }
         return sb.toString();
     }
