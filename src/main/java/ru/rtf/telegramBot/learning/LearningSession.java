@@ -29,6 +29,8 @@ public abstract class LearningSession {
 
     /**
      * Сформировать вопрос по карте, не показывавшейся пользователю в течении сеанса
+     *
+     * @throws NoSuchElementException Нет активной карты
      */
     public abstract String formQuestion();
 
@@ -37,6 +39,7 @@ public abstract class LearningSession {
      * <p>Показ ответа подразумевает исключение текущей карточки из списка изучаемых</p>
      *
      * @param answer Ответ пользователя
+     * @throws NoSuchElementException Нет активной карты
      */
     public abstract boolean checkAnswer(String answer);
 
@@ -50,12 +53,12 @@ public abstract class LearningSession {
     /**
      * Вернуть активную карту
      *
-     * @throws NoSuchElementException Карты для изучения закончились
+     * @throws NoSuchElementException Нет активной карты
      */
     public Card getActiveCard() {
         Card activeCard = allCards.peek();
         if (activeCard == null)
-            throw new NoSuchElementException("Карты для изучения закончились");
+            throw new NoSuchElementException("Нет активной карты");
         return activeCard;
     }
 

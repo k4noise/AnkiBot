@@ -90,18 +90,13 @@ public class MessageHandler {
      * Обрабатывает сообщение пользователя как ответ в режиме обучения
      *
      * @return Результат обработки ответа
+     * @throws NoSuchElementException Нет активной карты
      */
     private String handleAnswerInLearning(Long chatId, String text) {
         LearningSession learningSession = sessionManager.get(chatId);
         boolean isRightAnswer = learningSession.checkAnswer(text);
 
-        Card activeCard;
-        try {
-            activeCard = learningSession.getActiveCard();
-        } catch (NoSuchElementException e) {
-            sessionManager.end(chatId);
-            return "Вы прошли все карточки в колоде!";
-        }
+        Card activeCard = learningSession.getActiveCard();
 
         String resultAnswer = isRightAnswer
                 ? "Верно!"

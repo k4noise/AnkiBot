@@ -44,7 +44,7 @@ public class MatchLearning extends LearningSession {
         return """
                 Утверждение:
                 %s - %s
-                1 - верно, 0 - неверно""".formatted(allCards.peek().getTerm(), allDefinitions.get(randomDefinitionIndex));
+                1 - верно, 0 - неверно""".formatted(getActiveCard().getTerm(), allDefinitions.get(randomDefinitionIndex));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class MatchLearning extends LearningSession {
         } else {
             return false;
         }
-        return userAnswer == Objects.equals(allCards.peek().getDefinition(), allDefinitions.get(randomDefinitionIndex));
+        return userAnswer == Objects.equals(getActiveCard().getDefinition(), allDefinitions.get(randomDefinitionIndex));
     }
 
     @Override
