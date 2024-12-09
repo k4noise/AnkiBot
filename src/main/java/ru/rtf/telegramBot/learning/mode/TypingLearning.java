@@ -39,12 +39,8 @@ public class TypingLearning extends LearningSession {
         Card currentCard = getActiveCard();
         AnswerStatus status = AnswerStatus.WRONG;
         if (answer.equalsIgnoreCase(currentCard.getTerm())) {
-            currentCard.addScore(RIGHT_ANSWER_SCORE_ADDITION);
             status = AnswerStatus.RIGHT;
-        } else {
-            currentCard.subtractScore();
         }
-        updateStats(status);
         return status;
     }
 
@@ -53,5 +49,10 @@ public class TypingLearning extends LearningSession {
         return """
                 в режиме ввода термина
                 Дано определение, ваша задача написать соответсвующий термин (регистр не учитывается)""";
+    }
+
+    @Override
+    public int getRightAnswerScoreAddition() {
+        return RIGHT_ANSWER_SCORE_ADDITION;
     }
 }

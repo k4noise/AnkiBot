@@ -96,15 +96,16 @@ public class MessageHandler {
     private String handleAnswerInLearning(Long chatId, String text) {
         LearningSession learningSession = sessionManager.get(chatId);
         AnswerStatus answerStatus = learningSession.checkAnswer(text);
-
         Card activeCard = learningSession.getActiveCard();
-        String resultAnswer = answerStatus.equals(AnswerStatus.WRONG) ? "Неверно." : "Верно!";
 
+        learningSession.updateCardScore(activeCard, answerStatus);
+        learningSession.updateStats(answerStatus);
+        learningSession.removeActiveCardFromStudy();
+
+        String resultAnswer = answerStatus.equals(AnswerStatus.WRONG) ? "Неверно." : "Верно!";
         String checkMessage = """
                 %s Правильный ответ:
                 %s""".formatted(resultAnswer, activeCard.getDescription());
-
-        learningSession.removeActiveCardFromStudy();
         if (!learningSession.hasCardsToLearn()) {
             EnumMap<AnswerStatus, Integer> rawStats = sessionManager.get(chatId).getStats();
             sessionManager.end(chatId);

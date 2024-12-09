@@ -38,7 +38,6 @@ public abstract class LearningSession {
     /**
      * Проверить, правильно ли пользователь ответил на вопрос по карте
      * <p>Показ ответа подразумевает исключение текущей карточки из списка изучаемых</p>
-     * <p>Мутирует карту - изменяет балл</p>
      *
      * @param answer Ответ пользователя
      * @return Статус ответа - правильный, частично правильный или неправильный
@@ -51,6 +50,11 @@ public abstract class LearningSession {
      * <p>Содержит краткое имя режима и его описание</p>
      */
     public abstract String getDescription();
+
+    /**
+     * Вернуть количество баллов к добавлению за правильный ответ пользователя
+     */
+    public abstract int getRightAnswerScoreAddition();
 
     /**
      * Проверяет, остались ли карты для обучения
@@ -83,6 +87,17 @@ public abstract class LearningSession {
      */
     public void updateStats(AnswerStatus status) {
         stats.merge(status, 1, Integer::sum);
+    }
+
+    /**
+     * Обновить балл карты согласно статусу ответа
+     */
+    public void updateCardScore(Card card, AnswerStatus status) {
+        if (status.equals(AnswerStatus.RIGHT)) {
+            card.addScore(getRightAnswerScoreAddition());
+        } else if (status.equals(AnswerStatus.WRONG)) {
+            card.subtractScore();
+        }
     }
 
     /**

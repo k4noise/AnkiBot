@@ -45,28 +45,4 @@ class TypingLearningTest {
         Assertions.assertEquals(AnswerStatus.RIGHT, typingLearning.checkAnswer("term"));
         Assertions.assertEquals(AnswerStatus.WRONG, typingLearning.checkAnswer("notTerm"));
     }
-
-    /**
-     * Проверка правильного ответа и изменения баллов карты
-     */
-    @Test
-    @DisplayName("Правильный ответ с изменением балла")
-    void testCheckRightAnswerWithNewStatus() {
-        Card cardToLearn = cards.getFirst();
-        Assertions.assertEquals(AnswerStatus.RIGHT, typingLearning.checkAnswer("term"));
-        Assertions.assertEquals(2, cardToLearn.getScore());
-    }
-
-    /**
-     * Проверка неправильного ответа и изменения баллов карты
-     */
-    @Test
-    @DisplayName("Неправильный ответ с изменением балла")
-    void testCheckWrongAnswerWithNewStatus() {
-        Card cardToLearn = cards.getFirst();
-        cardToLearn.addScore(2);
-
-        Assertions.assertEquals(AnswerStatus.WRONG, typingLearning.checkAnswer("notTerm"));
-        Assertions.assertEquals(1, cardToLearn.getScore());
-    }
 }

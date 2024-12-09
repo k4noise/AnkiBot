@@ -10,6 +10,10 @@ import java.util.*;
  * Режим обучения "соответствие"
  */
 public class MatchLearning extends LearningSession {
+    /**
+     * Количество баллов, которое добавляется карточке при правильном ответе
+     */
+    protected static final int RIGHT_ANSWER_SCORE_ADDITION = 1;
 
     /**
      * Все определения карт
@@ -62,18 +66,10 @@ public class MatchLearning extends LearningSession {
                 isRightUserAnswer = isCorrectDefinition;
                 break;
             default:
-                updateStats(AnswerStatus.WRONG);
                 return AnswerStatus.WRONG;
         }
 
-        AnswerStatus resultStatus = isRightUserAnswer ? AnswerStatus.RIGHT : AnswerStatus.WRONG;
-        if (isRightUserAnswer) {
-            currentCard.addScore();
-        } else {
-            currentCard.subtractScore();
-        }
-        updateStats(resultStatus);
-        return resultStatus;
+        return isRightUserAnswer ? AnswerStatus.RIGHT : AnswerStatus.WRONG;
     }
 
     @Override
@@ -81,6 +77,11 @@ public class MatchLearning extends LearningSession {
         return """
                 в режиме соответствия
                 Показывается термин и определение, ваша задача - определить, соответствует ли термин определению""";
+    }
+
+    @Override
+    public int getRightAnswerScoreAddition() {
+        return RIGHT_ANSWER_SCORE_ADDITION;
     }
 
     /**

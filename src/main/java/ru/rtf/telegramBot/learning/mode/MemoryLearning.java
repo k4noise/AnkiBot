@@ -11,6 +11,11 @@ import java.util.Collection;
  */
 public class MemoryLearning extends LearningSession {
     /**
+     * Количество баллов, которое добавляется карточке при правильном ответе
+     */
+    protected static final int RIGHT_ANSWER_SCORE_ADDITION = 1;
+
+    /**
      * Инициализировать режим обучения
      *
      * @param cards Карты к обучению
@@ -27,21 +32,11 @@ public class MemoryLearning extends LearningSession {
 
     @Override
     public AnswerStatus checkAnswer(String answer) {
-        Card currentCard = getActiveCard();
-        AnswerStatus answerStatus = switch (answer) {
-            case "0" -> {
-                currentCard.subtractScore();
-                yield AnswerStatus.WRONG;
-            }
+        return switch (answer) {
             case "1" -> AnswerStatus.PARTIALLY_RIGHT;
-            case "2" -> {
-                currentCard.addScore();
-                yield AnswerStatus.RIGHT;
-            }
+            case "2" -> AnswerStatus.RIGHT;
             default -> AnswerStatus.WRONG;
         };
-        updateStats(answerStatus);
-        return answerStatus;
     }
 
     @Override
@@ -51,5 +46,10 @@ public class MemoryLearning extends LearningSession {
                 Вам показывается термин, ваша задача - вспомнить определение
                 После оценить, насколько хорошо вы помните определение
                 0 - не помню  1 - частично помню  2 - помню""";
+    }
+
+    @Override
+    public int getRightAnswerScoreAddition() {
+        return RIGHT_ANSWER_SCORE_ADDITION;
     }
 }

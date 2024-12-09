@@ -26,4 +26,9 @@ public class FakeLearningSession extends LearningSession {
     public String getDescription() {
         return "description";
     }
+
+    @Override
+    public int getRightAnswerScoreAddition() {
+        return 1;
+    }
 }
