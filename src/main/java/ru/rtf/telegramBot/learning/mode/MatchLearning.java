@@ -37,7 +37,7 @@ public class MatchLearning extends LearningSession {
     public MatchLearning(Collection<Card> cards) {
         super(cards);
         allDefinitions = cards.stream()
-                    .map(Card::getDefinition)
+                .map(Card::getDefinition)
                 .toList();
         random = new Random();
     }

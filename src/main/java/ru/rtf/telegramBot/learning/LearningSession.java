@@ -16,7 +16,7 @@ public abstract class LearningSession {
     /**
      * Статистика сеанса
      */
-    protected final EnumMap<AnswerStatus, Integer> stats;
+    private final EnumMap<AnswerStatus, Integer> stats;
 
     /**
      * Инициализировать режим обучения
@@ -54,7 +54,7 @@ public abstract class LearningSession {
     /**
      * Вернуть количество баллов к добавлению за правильный ответ пользователя
      */
-    public abstract int getRightAnswerScoreAddition();
+    protected abstract int getRightAnswerScoreAddition();
 
     /**
      * Проверяет, остались ли карты для обучения

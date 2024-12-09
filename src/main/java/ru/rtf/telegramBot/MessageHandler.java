@@ -65,7 +65,9 @@ public class MessageHandler {
     public String handle(Long chatId, String text) {
         boolean isCommand = text.trim().startsWith("/");
 
-        return isCommand || !sessionManager.hasActive(chatId) ? handleCommand(chatId, text) : handleAnswerInLearning(chatId, text);
+        return isCommand || !sessionManager.hasActive(chatId)
+                ? handleCommand(chatId, text)
+                : handleAnswerInLearning(chatId, text);
     }
 
     /**
@@ -84,7 +86,9 @@ public class MessageHandler {
         }
 
         String[] commandParams = commandParser.getCommandParams();
-        return checkArgumentsCount(commandHandler, commandParams) ? commandHandler.handle(userDeckManager, chatId, commandParams) : "Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)";
+        return checkArgumentsCount(commandHandler, commandParams)
+                ? commandHandler.handle(userDeckManager, chatId, commandParams)
+                : "Ошибка параметров команды.\n Проверьте на соответствие шаблону (/help)";
     }
 
     /**
@@ -102,10 +106,13 @@ public class MessageHandler {
         learningSession.updateStats(answerStatus);
         learningSession.removeActiveCardFromStudy();
 
-        String resultAnswer = answerStatus.equals(AnswerStatus.WRONG) ? "Неверно." : "Верно!";
+        String resultAnswer = answerStatus.equals(AnswerStatus.WRONG)
+                ? "Неверно."
+                : "Верно!";
         String checkMessage = """
                 %s Правильный ответ:
                 %s""".formatted(resultAnswer, activeCard.getDescription());
+
         if (!learningSession.hasCardsToLearn()) {
             EnumMap<AnswerStatus, Integer> rawStats = sessionManager.get(chatId).getStats();
             sessionManager.end(chatId);
@@ -156,5 +163,8 @@ public class MessageHandler {
         //команды режимов обучения
         commands.put("/check", new LearnCheckCommandHandler(sessionManager));
         commands.put("/end_check", new EndCheckCommandHandler(sessionManager));
+        //команды статистики
+        commands.put("/deck_stats", new DeckStatsCommandHandler());
+        commands.put("/stats", new StatsCommandHandler());
     }
 }
