@@ -10,7 +10,6 @@ import ru.rtf.telegramBot.learning.mode.MemoryLearning;
 import ru.rtf.telegramBot.learning.mode.TypingLearning;
 
 import java.util.Collection;
-import java.util.NoSuchElementException;
 
 /**
  * Обработчик команд относящихся к режимам обучения
@@ -21,7 +20,7 @@ public class LearnCheckCommandHandler implements CommandHandler {
      * 1.тип режима обучения
      * 2.имя колоды
      */
-    private final int COUNT_PARAMS = 2;
+    private final static int COUNT_PARAMS = 2;
     /**
      * Менеджер сессий пользователе
      */
@@ -33,13 +32,13 @@ public class LearnCheckCommandHandler implements CommandHandler {
 
     @Override
     public String handle(DeckManager usersDecks, Long chatId, String[] params) {
-        String typeCheck = params[0].toLowerCase();
+        String checkType = params[0].toLowerCase();
         String deckName = params[1];
         try {
             Collection<Card> cardsToLearn = usersDecks.getDeck(deckName).getCards();
 
             LearningSession learningSession;
-            switch (typeCheck) {
+            switch (checkType) {
                 case "match":
                     learningSession = new MatchLearning(cardsToLearn);
                     break;
@@ -53,9 +52,15 @@ public class LearnCheckCommandHandler implements CommandHandler {
                     return MESSAGE_COMMAND_ERROR.formatted("Неизвестный режим обучения");
             }
 
-            return sessionManager.start(chatId, learningSession);
+            sessionManager.start(chatId, learningSession);
+            return """
+                    Вы начали обучение %s
+                    Чтобы досрочно завершить сеанс, воспользуйтесь командой /end_check
+                    
+                    Ваш первый вопрос: %s"""
+                    .formatted(learningSession.getDescription(), learningSession.formQuestion());
 
-        } catch (IllegalArgumentException | NoSuchElementException | IllegalStateException exception) {
+        } catch (Exception exception) {
             return MESSAGE_COMMAND_ERROR.formatted(exception.getMessage());
         }
     }

@@ -9,11 +9,8 @@ import java.util.*;
 /**
  * Режим обучения "соответствие"
  */
-public class MatchLearning implements LearningSession {
-    /**
-     * Карты к изучению
-     */
-    private final Queue<Card> allCards;
+public class MatchLearning extends LearningSession {
+
     /**
      * Все определения карт
      */
@@ -22,10 +19,11 @@ public class MatchLearning implements LearningSession {
      * Индекс рандомного определения
      */
     private int randomDefinitionIndex;
+
     /**
-     * Статистика сеанса обучения
+     * Экземпляр генератора случайных чисел
      */
-    private final EnumMap<AnswerStatus, Integer> learningStats;
+    private final Random random;
 
     /**
      * Инициализировать режим обучения
@@ -33,11 +31,11 @@ public class MatchLearning implements LearningSession {
      * @param cards Карты к обучению
      */
     public MatchLearning(Collection<Card> cards) {
-        allCards = new LinkedList<>(cards);
+        super(cards);
         allDefinitions = cards.stream()
                     .map(Card::getDefinition)
                 .toList();
-        learningStats = new EnumMap<>(AnswerStatus.class);
+        random = new Random();
     }
 
     @Override
@@ -47,12 +45,12 @@ public class MatchLearning implements LearningSession {
         return """
                 Утверждение:
                 %s - %s
-                1 - верно, 0 - неверно""".formatted(allCards.peek().getTerm(), allDefinitions.get(randomDefinitionIndex));
+                1 - верно, 0 - неверно""".formatted(getActiveCard().getTerm(), allDefinitions.get(randomDefinitionIndex));
     }
 
     @Override
     public AnswerStatus checkAnswer(String answer) {
-        Card currentCard = allCards.peek();
+        Card currentCard = getActiveCard();
         boolean isCorrectDefinition = Objects.equals(currentCard.getDefinition(), allDefinitions.get(randomDefinitionIndex));
 
         boolean isRightUserAnswer;
@@ -64,28 +62,18 @@ public class MatchLearning implements LearningSession {
                 isRightUserAnswer = isCorrectDefinition;
                 break;
             default:
-                learningStats.merge(AnswerStatus.WRONG, 1, Integer::sum);
+                updateStats(AnswerStatus.WRONG);
                 return AnswerStatus.WRONG;
         }
 
-        AnswerStatus result = isRightUserAnswer ? AnswerStatus.RIGHT : AnswerStatus.WRONG;
+        AnswerStatus resultStatus = isRightUserAnswer ? AnswerStatus.RIGHT : AnswerStatus.WRONG;
         if (isRightUserAnswer) {
             currentCard.addScore();
         } else {
             currentCard.subtractScore();
         }
-        learningStats.merge(result, 1, Integer::sum);
-        return result;
-    }
-
-    @Override
-    public boolean hasCardsToLearn() {
-        return !allCards.isEmpty();
-    }
-
-    @Override
-    public String pullActiveCardDescription() {
-        return allCards.poll().toString();
+        updateStats(resultStatus);
+        return resultStatus;
     }
 
     @Override
@@ -95,15 +83,10 @@ public class MatchLearning implements LearningSession {
                 Показывается термин и определение, ваша задача - определить, соответствует ли термин определению""";
     }
 
-    @Override
-    public EnumMap<AnswerStatus, Integer> getStats() {
-        return learningStats;
-    }
-
     /**
      * Генерирует случайный индекс для определения из списка всех определений
      */
     private int generateNextRandomDefinitionIndex() {
-        return new Random().nextInt(allDefinitions.size());
+        return random.nextInt(allDefinitions.size());
     }
 }

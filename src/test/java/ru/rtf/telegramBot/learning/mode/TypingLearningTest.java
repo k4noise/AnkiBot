@@ -33,14 +33,17 @@ class TypingLearningTest {
 
     /**
      * Проверка формулировки вопроса к пользователю
+     * Проверка ответов
      */
     @Test
-    @DisplayName("Формулировка вопроса")
+    @DisplayName("Один вопрос")
     void testFormQuestion() {
         String question = typingLearning.formQuestion();
         Assertions.assertEquals("""
                 Определение - "def"
                 Введите соответствующий термин:""", question);
+        Assertions.assertEquals(AnswerStatus.RIGHT, typingLearning.checkAnswer("term"));
+        Assertions.assertEquals(AnswerStatus.WRONG, typingLearning.checkAnswer("notTerm"));
     }
 
     /**
@@ -65,15 +68,5 @@ class TypingLearningTest {
 
         Assertions.assertEquals(AnswerStatus.WRONG, typingLearning.checkAnswer("notTerm"));
         Assertions.assertEquals(1, cardToLearn.getScore());
-    }
-
-    /**
-     * Проверка формирования текстового описания активной карты
-     */
-    @Test
-    @DisplayName("Активная карта текстом")
-    void getActiveCardDescription() {
-        String card = typingLearning.pullActiveCardDescription();
-        Assertions.assertEquals("\"term\" = def", card);
     }
 }

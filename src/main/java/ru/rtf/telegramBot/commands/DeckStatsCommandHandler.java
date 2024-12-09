@@ -45,7 +45,7 @@ public class DeckStatsCommandHandler implements CommandHandler {
                         cardsStatusCount.getOrDefault(CardLearningStatus.STUDIED, 0),
                         cardsStatusCount.getOrDefault(CardLearningStatus.PARTIALLY_STUDIED, 0),
                         cardsStatusCount.getOrDefault(CardLearningStatus.NOT_STUDIED, 0));
-        return deck + "\n" + cardsStatusString;
+        return deck.getDescription() + "\n" + cardsStatusString;
     }
 
     @Override
