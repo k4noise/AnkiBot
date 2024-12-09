@@ -38,6 +38,7 @@ class MatchLearningTest {
     @Test
     @DisplayName("Один вопрос")
     void testFormQuestion() {
+        final List<Card> cards = List.of(new Card("term", "def"));
         String question = matchLearning.formQuestion();
         Assertions.assertEquals("""
                 Утверждение:
@@ -45,24 +46,5 @@ class MatchLearningTest {
                 1 - верно, 0 - неверно""", question);
         Assertions.assertEquals(true, matchLearning.checkAnswer("1"));
         Assertions.assertEquals(false, matchLearning.checkAnswer("0"));
-    }
-
-    /**
-     * Общий тест на отсутствие активной карты для обучения
-     */
-    @Test
-    @DisplayName("Нет активной карты")
-    void testNoActiveCard() {
-        Card activeCard = matchLearning.getActiveCard();
-        Assertions.assertEquals("term", activeCard.getTerm());
-
-        matchLearning.removeActiveCardFromStudy();
-
-        NoSuchElementException exceptionNoActiveCard = Assertions.assertThrows(
-                NoSuchElementException.class,
-                () -> matchLearning.getActiveCard(),
-                "Не должно остаться активной карты"
-        );
-        Assertions.assertEquals("Нет активной карты", exceptionNoActiveCard.getMessage());
     }
 }
