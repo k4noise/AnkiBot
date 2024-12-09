@@ -38,7 +38,6 @@ class MatchLearningTest {
     @Test
     @DisplayName("Один вопрос")
     void testFormQuestion() {
-        final List<Card> cards = List.of(new Card("term", "def"));
         String question = matchLearning.formQuestion();
         Assertions.assertEquals("""
                 Утверждение:
