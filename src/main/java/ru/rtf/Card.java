@@ -74,8 +74,11 @@ public class Card {
         return Objects.hash(term);
     }
 
-    @Override
-    public String toString() {
+    /**
+     * Возвращает описание карточки
+     * <p>в формате "термин" = определение</p>
+     */
+    public String getDescription() {
         return String.format("\"%s\" = %s", term, definition);
     }
 }

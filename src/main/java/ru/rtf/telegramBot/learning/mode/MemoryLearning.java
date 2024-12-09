@@ -22,8 +22,7 @@ public class MemoryLearning extends LearningSession {
     @Override
     public String formQuestion() {
         String question = "Термин - \"%s\"";
-        Card currentCard = allCards.peek();
-        return question.formatted(currentCard.getTerm());
+        return question.formatted(getActiveCard().getTerm());
     }
 
     @Override

@@ -25,14 +25,12 @@ public class TypingLearning extends LearningSession {
         String questionText = """
                 Определение - "%s"
                 Введите соответствующий термин:""";
-        Card currentCard = allCards.peek();
-        return questionText.formatted(currentCard.getDefinition());
+        return questionText.formatted(getActiveCard().getDefinition());
     }
 
     @Override
     public boolean checkAnswer(String answer) {
-        Card currentCard = allCards.peek();
-        return answer.equalsIgnoreCase(currentCard.getTerm());
+        return answer.equalsIgnoreCase(getActiveCard().getTerm());
     }
 
     @Override
