@@ -12,10 +12,10 @@ public class CreateDeckCommandHandler implements CommandHandler {
      * Количество параметров команды
      * 1.имя новой колоды
      */
-    private final int COUNT_PARAMS = 1;
+    private static final int COUNT_PARAMS = 1;
 
     @Override
-    public String handle(DeckManager usersDecks, Long id, String[] params) {
+    public String handle(DeckManager usersDecks, Long chatId, String[] params) {
         String deckName = params[0];
 
         //попытка добавить колоду

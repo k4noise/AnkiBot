@@ -41,7 +41,7 @@ class DeckStatsCommandHandlerTest {
         deckManager.addDeck("EmptyDeck");
         String message = deckStatsCommandHandler.handle(deckManager, chatId, new String[]{"EmptyDeck"});
         Assertions.assertEquals("""
-                EmptyDeck: 0 карт
+                emptydeck: 0 карт
                 Полностью изучено:  0
                 Частично изучено:   0
                 Не изучено: 0
@@ -70,7 +70,7 @@ class DeckStatsCommandHandlerTest {
 
         String message = deckStatsCommandHandler.handle(deckManager, chatId, new String[]{"Deck"});
         Assertions.assertEquals("""
-                Deck: 4 карт
+                deck: 4 карт
                 Полностью изучено:  2
                 Частично изучено:   1
                 Не изучено: 1
@@ -84,7 +84,7 @@ class DeckStatsCommandHandlerTest {
     void incorrectDeckNameTest() {
         String message = deckStatsCommandHandler.handle(deckManager, chatId, new String[]{"NoDeck"});
         Assertions.assertEquals("""
-                Ошибка выполнения команды Подробности:
-                Колода с именем NoDeck не существует в менеджере""", message);
+                Ошибка выполнения команды. Подробности:
+                Колода с именем nodeck не существует в менеджере""", message);
     }
 }

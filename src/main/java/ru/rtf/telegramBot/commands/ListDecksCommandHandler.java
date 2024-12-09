@@ -15,10 +15,10 @@ public class ListDecksCommandHandler implements CommandHandler {
      * Количество параметров команды
      * нет параметров
      */
-    public final int COUNT_PARAMS = 0;
+    public static final int COUNT_PARAMS = 0;
 
     @Override
-    public String handle(DeckManager usersDecks, Long id, String[] params) {
+    public String handle(DeckManager usersDecks, Long chatId, String[] params) {
 
         //сообщение пользователю о выполнении
         if (usersDecks.getDecks().isEmpty())
@@ -41,7 +41,7 @@ public class ListDecksCommandHandler implements CommandHandler {
         StringBuilder decksToSting = new StringBuilder();
         for (Deck deck : decks) {
             decksToSting.append("\n");
-            decksToSting.append(deck);
+            decksToSting.append(deck.getDescription());
         }
         return decksToSting.toString();
     }

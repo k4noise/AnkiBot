@@ -12,10 +12,10 @@ public class HelpCommandHandler implements CommandHandler {
      * Количество параметров команды
      * нет параметров
      */
-    private final int COUNT_PARAMS = 0;
+    private static final int COUNT_PARAMS = 0;
 
     @Override
-    public String handle(DeckManager usersDecks, Long id, String[] params) {
+    public String handle(DeckManager usersDecks, Long chatId, String[] params) {
         String help = """
                 Anki — это телеграм бот для изучения карточек - их термина и определения, которое может использоваться для изучения новых языков, памяти, подготовки к экзаменам и других целях.
                 

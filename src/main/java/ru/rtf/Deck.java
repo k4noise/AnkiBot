@@ -4,18 +4,14 @@ import java.util.*;
 
 /**
  * Колода с картами для обучения
- *
- * @author k4noise
- * @since 22.10.2024
  */
 public class Deck {
     /**
-     * Имя колоды - идентификатор
+     * Имя колоды
      */
-    private final String name;
+    private String name;
     /**
-     * Карты колоды, где ключ - термин карты, значение - сама карта
-     * Термин карты хранится в нижнем регистре для обеспечения регистронезависимости при получении карты
+     * Карты колоды
      */
     private final Map<String, Card> cards;
 
@@ -26,11 +22,7 @@ public class Deck {
      * @throws IllegalArgumentException Имя колоды не может быть пустым
      */
     public Deck(String name) {
-        if (name.isEmpty()) {
-            throw new IllegalArgumentException("Имя колоды не может быть пустым");
-        }
-        this.name = name;
-        this.cards = new LinkedHashMap<>();
+        this(name, new LinkedHashMap<>());
     }
 
     /**
@@ -44,7 +36,7 @@ public class Deck {
         if (name.isEmpty()) {
             throw new IllegalArgumentException("Имя колоды не может быть пустым");
         }
-        this.name = name;
+        this.name = name.toLowerCase();
         this.cards = cards;
     }
 
@@ -56,13 +48,12 @@ public class Deck {
     }
 
     /**
-     * Изменить название, создавая экземпляр новой колоды
+     * Изменить название колоды
      *
      * @param newName Новое имя
-     * @return Новая колода
      */
-    public Deck updateName(String newName) {
-        return new Deck(newName, cards);
+    void changeName(String newName) {
+        this.name = newName.toLowerCase();
     }
 
     /**
@@ -81,8 +72,9 @@ public class Deck {
      * @throws IllegalArgumentException Карта с таким термином существует в колоде
      */
     public void addCard(String term, String definition) {
-        validateUnique(term);
-        cards.put(term.toLowerCase(), new Card(term, definition));
+        String lowerCaseTerm = term.toLowerCase();
+        validateUnique(lowerCaseTerm);
+        cards.put(lowerCaseTerm, new Card(term, definition));
     }
 
     /**
@@ -92,14 +84,14 @@ public class Deck {
      * @throws IllegalArgumentException Карта с термином term существует в колоде
      */
     public void addCard(Card card) {
-        String term = card.getTerm();
-        validateUnique(term);
-        cards.put(term.toLowerCase(), card);
+        String lowerCaseTerm = card.getTerm().toLowerCase();
+        validateUnique(lowerCaseTerm);
+        cards.put(lowerCaseTerm, card);
     }
 
     /**
      * Обновить термин карты
-     * <p>Карта создается заново и заносится в карты колоды, предыдущая карта удаляется</p>
+     * <p>Карта перекладывается заново в хранилище карт для изменения ключа доступа к ней</p>
      *
      * @param oldTerm Старый термин карты
      * @param newTerm Новый термин карты
@@ -107,12 +99,14 @@ public class Deck {
      * @throws IllegalArgumentException Карта с термином term существует в колоде
      */
     public void updateCardTerm(String oldTerm, String newTerm) {
-        validateExists(oldTerm);
-        validateUnique(newTerm);
+        String lowerCaseOldTerm = oldTerm.toLowerCase();
+        String lowerCaseNewTerm = newTerm.toLowerCase();
+        validateExists(lowerCaseOldTerm);
+        validateUnique(lowerCaseNewTerm);
 
-        Card oldCard = cards.get(oldTerm.toLowerCase());
-        cards.remove(oldTerm.toLowerCase());
-        cards.put(newTerm.toLowerCase(), oldCard.changeTerm(newTerm));
+        Card card = cards.remove(lowerCaseOldTerm);
+        card.changeTerm(newTerm);
+        cards.put(lowerCaseNewTerm, card);
     }
 
     /**
@@ -123,8 +117,9 @@ public class Deck {
      * @throws NoSuchElementException Карта с термином term не существует в колоде
      */
     public void updateCardDefinition(String term, String newDefinition) {
-        validateExists(term);
-        cards.get(term.toLowerCase()).changeDefinition(newDefinition);
+        String lowerCaseTerm = term.toLowerCase();
+        validateExists(lowerCaseTerm);
+        cards.get(lowerCaseTerm).changeDefinition(newDefinition);
     }
 
     /**
@@ -134,8 +129,9 @@ public class Deck {
      * @throws NoSuchElementException Карта с термином term не существует в колоде
      */
     public Card getCard(String term) {
-        validateExists(term);
-        return cards.get(term.toLowerCase());
+        String lowerCaseTerm = term.toLowerCase();
+        validateExists(lowerCaseTerm);
+        return cards.get(lowerCaseTerm);
     }
 
     /**
@@ -151,19 +147,9 @@ public class Deck {
      * @throws NoSuchElementException Карта с термином term не существует в колоде
      */
     public void removeCard(String term) {
-        validateExists(term);
-        cards.remove(term.toLowerCase());
-    }
-
-    /**
-     * Получить описание всех карт колоды
-     */
-    public String getCardsDescription() {
-        StringBuilder sb = new StringBuilder();
-        for (Card card : cards.values()) {
-            sb.append(card.toString()).append("\n");
-        }
-        return sb.toString();
+        String lowerCaseTerm = term.toLowerCase();
+        validateExists(lowerCaseTerm);
+        cards.remove(lowerCaseTerm);
     }
 
     @Override
@@ -179,8 +165,11 @@ public class Deck {
         return Objects.equals(name, deck.name);
     }
 
-    @Override
-    public String toString() {
+    /**
+     * Возвращает описание колоды
+     * <p>в формате имя колоды: количество карт</p>
+     */
+    public String getDescription() {
         return String.format("%s: %d карт", name, getCardsCount());
     }
 
@@ -190,7 +179,7 @@ public class Deck {
      * @throws IllegalArgumentException Карта с термином term существует в колоде
      */
     private void validateUnique(String term) {
-        if (cards.containsKey(term.toLowerCase()))
+        if (cards.containsKey(term))
             throw new IllegalArgumentException("Карта с термином " + term + " существует в колоде");
     }
 
@@ -200,7 +189,7 @@ public class Deck {
      * @throws NoSuchElementException Карта с термином term не существует в колоде
      */
     private void validateExists(String term) {
-        if (!cards.containsKey(term.toLowerCase()))
+        if (!cards.containsKey(term))
             throw new NoSuchElementException("Карта с термином " + term + " не существует в колоде");
     }
 }

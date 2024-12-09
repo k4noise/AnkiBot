@@ -16,10 +16,10 @@ public class RenameDeckCommandHandler implements CommandHandler {
      * 1.старое имя колоды
      * 2.новое имя колоды
      */
-    private final int COUNT_PARAMS = 2;
+    private static final int COUNT_PARAMS = 2;
 
     @Override
-    public String handle(DeckManager usersDecks, Long id, String[] params) {
+    public String handle(DeckManager usersDecks, Long chatId, String[] params) {
         //обработка параметров
         String oldDeckName = params[0];
         String newDeckName = params[1];
@@ -31,7 +31,7 @@ public class RenameDeckCommandHandler implements CommandHandler {
             return MESSAGE_COMMAND_ERROR.formatted(e.getMessage());
         }
         //сообщение пользователю о выполнении
-        return "Колода успешно переименована: " + oldDeckName + " —\\> " + newDeckName;
+        return "Колода успешно переименована: " + oldDeckName + " —> " + newDeckName;
     }
 
     @Override
