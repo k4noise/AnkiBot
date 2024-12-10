@@ -76,13 +76,6 @@ public class Card {
     }
 
     /**
-     * Добавить балл карточке
-     */
-    public void addScore() {
-        addScore(1);
-    }
-
-    /**
      * Добавить баллы карточке
      *
      * @param scoreDiff Количество баллов для добавления
