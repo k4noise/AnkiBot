@@ -1,6 +1,6 @@
 package ru.rtf.telegramBot.commands;
 
-import ru.rtf.CardLearningStatus;
+import ru.rtf.telegramBot.learning.CardLearningStatus;
 import ru.rtf.Deck;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.CommandHandler;

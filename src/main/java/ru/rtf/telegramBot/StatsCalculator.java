@@ -1,9 +1,9 @@
 package ru.rtf.telegramBot;
 
 import ru.rtf.Card;
-import ru.rtf.CardLearningStatus;
 import ru.rtf.Deck;
 import ru.rtf.telegramBot.learning.AnswerStatus;
+import ru.rtf.telegramBot.learning.CardLearningStatus;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -46,7 +46,7 @@ public class StatsCalculator {
     }
 
     /**
-     * Получить процент успешности целым числом с отбрасыванием дробной части
+     * Получить процент успешности сеанса обучения целым числом с отбрасыванием дробной части
      *
      * @param stats Статистика сеанса
      */

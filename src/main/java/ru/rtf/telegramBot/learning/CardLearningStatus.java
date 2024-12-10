@@ -1,4 +1,4 @@
-package ru.rtf;
+package ru.rtf.telegramBot.learning;
 
 /**
  * Статус карточки
