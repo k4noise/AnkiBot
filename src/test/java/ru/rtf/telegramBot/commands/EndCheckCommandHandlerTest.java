@@ -14,6 +14,10 @@ import java.util.Collection;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EndCheckCommandHandlerTest {
     /**
+     * Идентификатор чата
+     */
+    private final Long chatId = 1L;
+    /**
      * Обработчик команды для завершения режима обучения
      */
     private EndCheckCommandHandler endCheckCommandHandler;
@@ -25,10 +29,6 @@ public class EndCheckCommandHandlerTest {
      * Менеджер колод пользователя
      */
     private DeckManager deckManager;
-    /**
-     * Идентификатор чата
-     */
-    private final Long chatId = 1L;
 
     /**
      * Инициализировать колоду с картами и хранилища для обработчика команды
@@ -65,6 +65,9 @@ public class EndCheckCommandHandlerTest {
         Collection<Card> cards = deckManager.getDeck("Deck").getCards();
         sessionManager.start(chatId, new MatchLearning(cards));
         String message = endCheckCommandHandler.handle(deckManager, chatId, null);
-        Assertions.assertEquals("Вы досрочно завершили сессию", message);
+        Assertions.assertEquals("""
+                Вы досрочно завершили сессию
+                Вы помните 0% терминов из показанных
+                """, message);
     }
 }

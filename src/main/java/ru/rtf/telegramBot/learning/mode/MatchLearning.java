@@ -1,6 +1,7 @@
 package ru.rtf.telegramBot.learning.mode;
 
 import ru.rtf.Card;
+import ru.rtf.telegramBot.learning.AnswerStatus;
 import ru.rtf.telegramBot.learning.LearningSession;
 
 import java.util.*;
@@ -9,6 +10,10 @@ import java.util.*;
  * Режим обучения "соответствие"
  */
 public class MatchLearning extends LearningSession {
+    /**
+     * Количество баллов, которое добавляется карточке при правильном ответе
+     */
+    protected static final int RIGHT_ANSWER_SCORE_ADDITION = 1;
 
     /**
      * Все определения карт
@@ -48,16 +53,23 @@ public class MatchLearning extends LearningSession {
     }
 
     @Override
-    public boolean checkAnswer(String answer) {
-        boolean userAnswer;
-        if (answer.equals("0")) {
-            userAnswer = false;
-        } else if (answer.equals("1")) {
-            userAnswer = true;
-        } else {
-            return false;
+    public AnswerStatus checkAnswer(String answer) {
+        Card currentCard = getActiveCard();
+        boolean isCorrectDefinition = Objects.equals(currentCard.getDefinition(), allDefinitions.get(randomDefinitionIndex));
+
+        boolean isRightUserAnswer;
+        switch (answer) {
+            case "0":
+                isRightUserAnswer = !isCorrectDefinition;
+                break;
+            case "1":
+                isRightUserAnswer = isCorrectDefinition;
+                break;
+            default:
+                return AnswerStatus.WRONG;
         }
-        return userAnswer == Objects.equals(getActiveCard().getDefinition(), allDefinitions.get(randomDefinitionIndex));
+
+        return isRightUserAnswer ? AnswerStatus.RIGHT : AnswerStatus.WRONG;
     }
 
     @Override
@@ -65,6 +77,11 @@ public class MatchLearning extends LearningSession {
         return """
                 в режиме соответствия
                 Показывается термин и определение, ваша задача - определить, соответствует ли термин определению""";
+    }
+
+    @Override
+    public int getRightAnswerScoreAddition() {
+        return RIGHT_ANSWER_SCORE_ADDITION;
     }
 
     /**

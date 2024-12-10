@@ -26,7 +26,7 @@ class SessionManagerTest {
     /**
      * Карта для обучения
      */
-    private final Collection<Card> card = List.of(
+    private final Collection<Card> cards = List.of(
             new Card("term", "def")
     );
 
@@ -46,7 +46,7 @@ class SessionManagerTest {
     @Test
     @DisplayName("Корректное начало и досрочное завершение сессии")
     void testStartAndCheckNewSessionActivity() {
-        sessionManager.start(chatId, new MatchLearning(card));
+        sessionManager.start(chatId, new MatchLearning(cards));
         Assertions.assertTrue(sessionManager.hasActive(chatId), "Должна быть создана активная сессия");
 
         sessionManager.end(chatId);
@@ -59,21 +59,21 @@ class SessionManagerTest {
     @Test
     @DisplayName("Некорректное начало сессии при наличии активной")
     void testStartSessionWithActive() {
-        sessionManager.start(chatId, new MatchLearning(card));
+        sessionManager.start(chatId, new MatchLearning(cards));
 
         IllegalStateException exception = Assertions.assertThrows(
                 IllegalStateException.class,
-                () -> sessionManager.start(chatId, new MatchLearning(card)),
+                () -> sessionManager.start(chatId, new MatchLearning(cards)),
                 "Невозможно начать новую сессию при наличии активной"
         );
         Assertions.assertEquals("Имеется активная сессия обучения", exception.getMessage());
     }
 
     /**
-     * Проверка начала новой сессии обучения {@link SessionManager#start} с пустым списком карт
+     * Проверка начала новой сессии обучения {@link SessionManager#start} с пустой колодой
      */
     @Test
-    @DisplayName("Некорректное начало сессии при отсутствии карт")
+    @DisplayName("Некорректное начало сессии с пустой колодой")
     void testStartSessionWithEmptyCards() {
         NoSuchElementException exception = Assertions.assertThrows(
                 NoSuchElementException.class,

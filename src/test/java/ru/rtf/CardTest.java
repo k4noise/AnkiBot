@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * Класс для тестирования класса карт
+ * Тестирование класса карт
  */
 public class CardTest {
     /**
@@ -58,5 +58,22 @@ public class CardTest {
                 "Термины должны совпадать");
         Assertions.assertEquals("person who saves people", changedCard.getDefinition(),
                 "Определение должно совпадать с переданным значением");
+    }
+
+    /**
+     * Проверка добавления и убавления баллов карточке
+     */
+    @Test
+    @DisplayName("Добавление и убавление баллов карточке")
+    void testAddScores() {
+        Card card = new Card("term", "definition");
+        card.addScore(5);
+        Assertions.assertEquals(5, card.getScore());
+
+        card.addScore(-5);
+        Assertions.assertEquals(5, card.getScore(), "Балл не должен измениться");
+
+        card.subtractScore();
+        Assertions.assertEquals(4, card.getScore(), "Балл не должен измениться");
     }
 }

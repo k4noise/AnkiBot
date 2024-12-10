@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.rtf.Card;
+import ru.rtf.telegramBot.learning.AnswerStatus;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -15,9 +16,9 @@ import java.util.NoSuchElementException;
  */
 class MatchLearningTest {
     /**
-     * Карта для обучения
+     * Карты для обучения
      */
-    private final List<Card> card = List.of(new Card("term", "def"));
+    private final List<Card> cards = List.of(new Card("term", "def"));
     /**
      * Экземпляр режима обучения
      */
@@ -28,7 +29,7 @@ class MatchLearningTest {
      */
     @BeforeEach
     void setUp() {
-        matchLearning = new MatchLearning(card);
+        matchLearning = new MatchLearning(cards);
     }
 
     /**
@@ -43,7 +44,7 @@ class MatchLearningTest {
                 Утверждение:
                 term - def
                 1 - верно, 0 - неверно""", question);
-        Assertions.assertEquals(true, matchLearning.checkAnswer("1"));
-        Assertions.assertEquals(false, matchLearning.checkAnswer("0"));
+        Assertions.assertEquals(AnswerStatus.RIGHT, matchLearning.checkAnswer("1"));
+        Assertions.assertEquals(AnswerStatus.WRONG, matchLearning.checkAnswer("0"));
     }
 }

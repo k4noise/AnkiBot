@@ -1,6 +1,7 @@
 package ru.rtf.telegramBot.learning.mode;
 
 import ru.rtf.Card;
+import ru.rtf.telegramBot.learning.AnswerStatus;
 import ru.rtf.telegramBot.learning.LearningSession;
 
 import java.util.Collection;
@@ -10,6 +11,11 @@ import java.util.Collection;
  * Режим обучения "Ввод термина"
  */
 public class TypingLearning extends LearningSession {
+    /**
+     * Количество баллов, которое добавляется карточке при правильном ответе <br>
+     * 2 балла за сложность режима
+     */
+    private static final int RIGHT_ANSWER_SCORE_ADDITION = 2;
 
     /**
      * Инициализировать режим обучения
@@ -29,8 +35,13 @@ public class TypingLearning extends LearningSession {
     }
 
     @Override
-    public boolean checkAnswer(String answer) {
-        return answer.equalsIgnoreCase(getActiveCard().getTerm());
+    public AnswerStatus checkAnswer(String answer) {
+        Card currentCard = getActiveCard();
+        AnswerStatus status = AnswerStatus.WRONG;
+        if (answer.equalsIgnoreCase(currentCard.getTerm())) {
+            status = AnswerStatus.RIGHT;
+        }
+        return status;
     }
 
     @Override
@@ -38,5 +49,10 @@ public class TypingLearning extends LearningSession {
         return """
                 в режиме ввода термина
                 Дано определение, ваша задача написать соответсвующий термин (регистр не учитывается)""";
+    }
+
+    @Override
+    public int getRightAnswerScoreAddition() {
+        return RIGHT_ANSWER_SCORE_ADDITION;
     }
 }

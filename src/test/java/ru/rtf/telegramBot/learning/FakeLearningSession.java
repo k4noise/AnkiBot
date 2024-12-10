@@ -18,12 +18,17 @@ public class FakeLearningSession extends LearningSession {
     }
 
     @Override
-    public boolean checkAnswer(String answer) {
-        return false;
+    public AnswerStatus checkAnswer(String answer) {
+        return AnswerStatus.WRONG;
     }
 
     @Override
     public String getDescription() {
         return "description";
+    }
+
+    @Override
+    public int getRightAnswerScoreAddition() {
+        return 1;
     }
 }
