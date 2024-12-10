@@ -16,7 +16,8 @@ class TypingLearningTest {
     /**
      * Карты для обучения
      */
-    private List<Card> cards;
+    private final List<Card> cards = List.of(new Card("term", "def"));
+
     /**
      * Экземпляр режима обучения
      */
@@ -27,7 +28,6 @@ class TypingLearningTest {
      */
     @BeforeEach
     void setUp() {
-        cards = List.of(new Card("term", "def"));
         typingLearning = new TypingLearning(cards);
     }
 
