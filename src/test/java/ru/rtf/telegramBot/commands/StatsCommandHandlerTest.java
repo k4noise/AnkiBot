@@ -62,8 +62,8 @@ class StatsCommandHandlerTest {
 
         Assertions.assertEquals("""
                 Прогресс изучения колод в процентах:
-                'First':\t91%
-                'Second':\t45%
+                'first':\t91%
+                'second':\t45%
                 """, message);
     }
 
@@ -89,7 +89,7 @@ class StatsCommandHandlerTest {
 
         Assertions.assertEquals("""
                 Прогресс изучения колод в процентах:
-                'Deck':\t0%
+                'deck':\t0%
                 """, message);
     }
 }

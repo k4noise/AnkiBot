@@ -3,6 +3,7 @@ package ru.rtf.telegramBot;
 import ru.rtf.Card;
 import ru.rtf.Deck;
 import ru.rtf.telegramBot.learning.AnswerStatus;
+import ru.rtf.telegramBot.learning.CardLearningStatus;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -12,9 +13,23 @@ import java.util.Map;
  */
 public class StatsCalculator {
     /**
+     * Максимально возможный процент изученности колоды
+     */
+    private static final int MAX_PERCENTAGE = 100;
+    /**
      * Коэффициент для расчета статистики по ответам
      */
-    private static final int PERCENTAGE_COEFFICIENT = 50;
+    private static final int PERCENTAGE_COEFFICIENT = MAX_PERCENTAGE / 2;
+
+    /**
+     * Минимально возможное количество баллов для получения статуса "Частично изучена"
+     */
+    private static final int MIN_SCORE_IN_PARTIALLY_STUDIED_STATUS = 5;
+    /**
+     * Минимально возможное количество баллов для получения статуса "Изучена"
+     */
+    private static final int MIN_SCORE_IN_STUDIED_STATUS = 10;
+
     /**
      * Хранилище коэффициентов для расчета статистики ответов
      */
@@ -31,7 +46,7 @@ public class StatsCalculator {
     }
 
     /**
-     * Получить процент успешности целым числом с отбрасыванием дробной части
+     * Получить процент успешности сеанса обучения целым числом с отбрасыванием дробной части
      *
      * @param stats Статистика сеанса
      */
@@ -62,6 +77,34 @@ public class StatsCalculator {
             totalScore += card.getScore();
         }
 
-        return totalScore * 100 / maxPossibleScore;
+        return totalScore * MAX_PERCENTAGE / maxPossibleScore;
+    }
+
+    /**
+     * Возвращает статистику по статусам карточек в колоде. <br>
+     * Если нет ни одной карты определенного статуса, то в качестве значения статуса будет null
+     *
+     * @return Статистика в виде словаря,
+     * где ключ - статус карты {@link CardLearningStatus}, значение - количество карт с таким статусом
+     */
+    public EnumMap<CardLearningStatus, Integer> getCardsCountByStatus(Deck deck) {
+        EnumMap<CardLearningStatus, Integer> cardStats = new EnumMap<>(CardLearningStatus.class);
+        for (Card card : deck.getCards()) {
+            cardStats.merge(getCardStatus(card), 1, Integer::sum);
+        }
+        return cardStats;
+    }
+
+    /**
+     * Получить статус карты
+     */
+    private CardLearningStatus getCardStatus(Card card) {
+        int score = card.getScore();
+        if (score >= MIN_SCORE_IN_STUDIED_STATUS) {
+            return CardLearningStatus.STUDIED;
+        } else if (score >= MIN_SCORE_IN_PARTIALLY_STUDIED_STATUS) {
+            return CardLearningStatus.PARTIALLY_STUDIED;
+        }
+        return CardLearningStatus.NOT_STUDIED;
     }
 }

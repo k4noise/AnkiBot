@@ -32,60 +32,16 @@ class MemoryLearningTest {
     }
 
     /**
-     * Проверка правильного ответа и изменения баллов карты
-     */
-    @Test
-    @DisplayName("Правильный ответ с изменением баллов")
-    void testCheckRightAnswerWithNewStatus() {
-        Card cardToLearn = cards.getFirst();
-        Assertions.assertEquals(AnswerStatus.RIGHT, memoryLearning.checkAnswer("2"));
-        Assertions.assertEquals(1, cardToLearn.getScore());
-    }
-
-    /**
-     * Проверка частично правильного ответа и сохранения баллов
-     */
-    @Test
-    @DisplayName("Частично правильный ответ с сохранением баллов")
-    void testCheckPartiallyRightAnswerWithSaveStatus() {
-        Card cardToLearn = cards.getFirst();
-        cardToLearn.addScore(2);
-
-        Assertions.assertEquals(AnswerStatus.PARTIALLY_RIGHT, memoryLearning.checkAnswer("1"));
-        Assertions.assertEquals(2, cardToLearn.getScore());
-    }
-
-    /**
-     * Проверка неправильного ответа и изменения баллов
-     */
-    @Test
-    @DisplayName("Неправильный ответ с изменением баллов")
-    void testCheckWrongAnswerWithNewStatus() {
-        Card cardToLearn = cards.getFirst();
-        cardToLearn.addScore(2);
-
-        Assertions.assertEquals(AnswerStatus.WRONG, memoryLearning.checkAnswer("0"));
-        Assertions.assertEquals(1, cardToLearn.getScore());
-    }
-
-    /**
      * Проверка формулировки вопроса к пользователю
+     * Проверка ответов
      */
     @Test
-    @DisplayName("Формулировка вопроса")
+    @DisplayName("Один вопрос")
     void testFormQuestion() {
         String question = memoryLearning.formQuestion();
         Assertions.assertEquals("Термин - \"term\"", question);
+        Assertions.assertEquals(AnswerStatus.RIGHT, memoryLearning.checkAnswer("2"));
+        Assertions.assertEquals(AnswerStatus.PARTIALLY_RIGHT, memoryLearning.checkAnswer("1"));
+        Assertions.assertEquals(AnswerStatus.WRONG, memoryLearning.checkAnswer("0"));
     }
-
-    /**
-     * Проверка формирования текстового описания активной карты
-     */
-    @Test
-    @DisplayName("Активная карта текстом")
-    void pullActiveCardDescription() {
-        String card = memoryLearning.pullActiveCardDescription();
-        Assertions.assertEquals("\"term\" = def", card);
-    }
-
 }

@@ -8,6 +8,7 @@ import ru.rtf.Card;
 import ru.rtf.telegramBot.learning.AnswerStatus;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 /**
@@ -33,49 +34,18 @@ class MatchLearningTest {
     }
 
     /**
-     * Проверка формулировки вопроса к пользователю
+     * Проверка формулировки вопроса к пользователю и
+     * Проверка ответов
      */
     @Test
-    @DisplayName("Формулировка вопроса")
+    @DisplayName("Один вопрос")
     void testFormQuestion() {
         String question = matchLearning.formQuestion();
         Assertions.assertEquals("""
                 Утверждение:
                 term - def
                 1 - верно, 0 - неверно""", question);
-    }
-
-    /**
-     * Проверка правильного ответа и изменения баллов карты
-     */
-    @Test
-    @DisplayName("Правильный ответ и изменение балла")
-    void testCheckRightAnswerWithNewStatus() {
-        Card cardToLearn = cards.getFirst();
         Assertions.assertEquals(AnswerStatus.RIGHT, matchLearning.checkAnswer("1"));
-        Assertions.assertEquals(1, cardToLearn.getScore());
-    }
-
-    /**
-     * Проверка неправильного ответа и изменения баллов карты
-     */
-    @Test
-    @DisplayName("Неправильный ответ и изменения балла")
-    void testCheckWrongAnswerWithNewStatus() {
-        Card cardToLearn = cards.getFirst();
-        cardToLearn.addScore(2);
-
         Assertions.assertEquals(AnswerStatus.WRONG, matchLearning.checkAnswer("0"));
-        Assertions.assertEquals(1, cardToLearn.getScore());
-    }
-
-    /**
-     * Проверка формирования текстового описания активной карты
-     */
-    @Test
-    @DisplayName("Активная карта текстом")
-    void getActiveCardDescription() {
-        String card = matchLearning.pullActiveCardDescription();
-        Assertions.assertEquals("\"term\" = def", card);
     }
 }

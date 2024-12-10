@@ -1,10 +1,10 @@
 package ru.rtf.telegramBot.commands;
 
-import ru.rtf.Card;
-import ru.rtf.CardLearningStatus;
+import ru.rtf.telegramBot.learning.CardLearningStatus;
 import ru.rtf.Deck;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.CommandHandler;
+import ru.rtf.telegramBot.StatsCalculator;
 
 import java.util.EnumMap;
 import java.util.NoSuchElementException;
@@ -20,6 +20,10 @@ public class DeckStatsCommandHandler implements CommandHandler {
      * 1.имя колоды
      */
     private final static int COUNT_PARAMS = 1;
+    /**
+     * Калькулятор статистики
+     */
+    private final StatsCalculator statsCalculator = new StatsCalculator();
 
     @Override
     public String handle(DeckManager usersDecks, Long chatId, String[] params) {
@@ -31,23 +35,17 @@ public class DeckStatsCommandHandler implements CommandHandler {
             return MESSAGE_COMMAND_ERROR.formatted(e.getMessage());
         }
 
-        EnumMap<CardLearningStatus, Integer> cardsStatusCount = new EnumMap<>(CardLearningStatus.class);
-        for (CardLearningStatus status : CardLearningStatus.values()) {
-            cardsStatusCount.put(status, 0);
-        }
-        for (Card card : deck.getCards()) {
-            cardsStatusCount.merge(card.getStatus(), 1, Integer::sum);
-        }
+        EnumMap<CardLearningStatus, Integer> cardsStatusCount = statsCalculator.getCardsCountByStatus(deck);
         String cardsStatusString =
                 """
                         Полностью изучено:  %d
                         Частично изучено:   %d
                         Не изучено: %d
                         """.formatted(
-                        cardsStatusCount.get(CardLearningStatus.STUDIED),
-                        cardsStatusCount.get(CardLearningStatus.PARTIALLY_STUDIED),
-                        cardsStatusCount.get(CardLearningStatus.NOT_STUDIED));
-        return deck + "\n" + cardsStatusString;
+                        cardsStatusCount.getOrDefault(CardLearningStatus.STUDIED, 0),
+                        cardsStatusCount.getOrDefault(CardLearningStatus.PARTIALLY_STUDIED, 0),
+                        cardsStatusCount.getOrDefault(CardLearningStatus.NOT_STUDIED, 0));
+        return deck.getDescription() + "\n" + cardsStatusString;
     }
 
     @Override

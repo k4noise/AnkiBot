@@ -2,8 +2,12 @@ package ru.rtf.telegramBot.commands;
 
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.CommandHandler;
+import ru.rtf.telegramBot.StatsCalculator;
+import ru.rtf.telegramBot.learning.AnswerStatus;
+import ru.rtf.telegramBot.learning.LearningSession;
 import ru.rtf.telegramBot.learning.SessionManager;
 
+import java.util.EnumMap;
 import java.util.NoSuchElementException;
 
 /**
@@ -20,15 +24,26 @@ public class EndCheckCommandHandler implements CommandHandler {
      * Менеджер сессий пользователей
      */
     private final SessionManager sessionManager;
+    /**
+     * Калькулятор статистики
+     */
+    private final StatsCalculator statsCalculator;
 
     public EndCheckCommandHandler(SessionManager sessionManager) {
         this.sessionManager = sessionManager;
+        this.statsCalculator = new StatsCalculator();
     }
 
     @Override
     public String handle(DeckManager userDecks, Long chatId, String[] params) {
         try {
-            return sessionManager.end(chatId);
+            LearningSession session = sessionManager.get(chatId);
+            sessionManager.end(chatId);
+            EnumMap<AnswerStatus, Integer> rawStats = session.getStats();
+            return """
+                    Вы досрочно завершили сессию
+                    Вы помните %d%% терминов из показанных
+                    """.formatted(statsCalculator.getSuccessLearningPercentage(rawStats));
         } catch (NoSuchElementException exception) {
             return MESSAGE_COMMAND_ERROR.formatted(exception.getMessage());
         }

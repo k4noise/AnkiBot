@@ -36,7 +36,7 @@ class RenameDeckCommandHandlerTest {
         deckManager.addDeck("OldName");
 
         String message = renameDeckCommandHandler.handle(deckManager, chatId, new String[]{"OldName", "NewName"});
-        Assertions.assertEquals("Колода успешно переименована: OldName —\\> NewName", message);
+        Assertions.assertEquals("Колода успешно переименована: OldName —> NewName", message);
     }
 
     /**
@@ -47,7 +47,7 @@ class RenameDeckCommandHandlerTest {
         deckManager.addDeck("Old big Name");
 
         String message = renameDeckCommandHandler.handle(deckManager, chatId, new String[]{"Old big Name", "New Name"});
-        Assertions.assertEquals("Колода успешно переименована: Old big Name —\\> New Name", message);
+        Assertions.assertEquals("Колода успешно переименована: Old big Name —> New Name", message);
     }
 
     /**
@@ -57,8 +57,8 @@ class RenameDeckCommandHandlerTest {
     void testHandleWithNoDecks() {
         String message = renameDeckCommandHandler.handle(deckManager, chatId, new String[]{"OldName", "NewName"});
         Assertions.assertEquals("""
-                Ошибка выполнения команды Подробности:
-                Колода с именем OldName не существует в менеджере""", message);
+                Ошибка выполнения команды. Подробности:
+                Колода с именем oldname не существует в менеджере""", message);
     }
 }
 
