@@ -18,7 +18,7 @@ class MatchLearningTest {
     /**
      * Карты для обучения
      */
-    private List<Card> cards;
+    private final List<Card> cards = List.of(new Card("term", "def"));
     /**
      * Экземпляр режима обучения
      */
@@ -29,7 +29,6 @@ class MatchLearningTest {
      */
     @BeforeEach
     void setUp() {
-        cards = List.of(new Card("term", "def"));
         matchLearning = new MatchLearning(cards);
     }
 

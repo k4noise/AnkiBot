@@ -20,7 +20,7 @@ class StatsCalculatorTest {
     /**
      * Калькулятор статистики обучения
      */
-    private static StatsCalculator calculator;
+    private StatsCalculator calculator;
 
     /**
      * Создать единый экземпляр калькулятора статистики

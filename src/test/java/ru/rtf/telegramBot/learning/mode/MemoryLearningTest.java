@@ -16,7 +16,7 @@ class MemoryLearningTest {
     /**
      * Карты для обучения
      */
-    private List<Card> cards;
+    private final List<Card> cards = List.of(new Card("term", "def"));
     /**
      * Экземпляр режима обучения
      */
@@ -27,7 +27,6 @@ class MemoryLearningTest {
      */
     @BeforeEach
     void setUp() {
-        cards = List.of(new Card("term", "def"));
         memoryLearning = new MemoryLearning(cards);
     }
 
