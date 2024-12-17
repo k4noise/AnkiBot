@@ -50,7 +50,7 @@ public class StatsCalculator {
      *
      * @param stats Статистика сеанса
      */
-    public int getSuccessLearningPercentage(EnumMap<AnswerStatus, Integer> stats) {
+    public int getSuccessLearningPercentage(Map<AnswerStatus, Integer> stats) {
         int totalWeightedScore = 0;
         int totalAnswers = 0;
 
@@ -87,8 +87,8 @@ public class StatsCalculator {
      * @return Статистика в виде словаря,
      * где ключ - статус карты {@link CardLearningStatus}, значение - количество карт с таким статусом
      */
-    public EnumMap<CardLearningStatus, Integer> getCardsCountByStatus(Deck deck) {
-        EnumMap<CardLearningStatus, Integer> cardStats = new EnumMap<>(CardLearningStatus.class);
+    public Map<CardLearningStatus, Integer> getCardsCountByStatus(Deck deck) {
+        Map<CardLearningStatus, Integer> cardStats = new EnumMap<>(CardLearningStatus.class);
         for (Card card : deck.getCards()) {
             cardStats.merge(getCardStatus(card), 1, Integer::sum);
         }

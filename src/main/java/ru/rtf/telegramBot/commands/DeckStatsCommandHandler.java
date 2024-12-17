@@ -6,7 +6,7 @@ import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.CommandHandler;
 import ru.rtf.telegramBot.StatsCalculator;
 
-import java.util.EnumMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -35,7 +35,7 @@ public class DeckStatsCommandHandler implements CommandHandler {
             return MESSAGE_COMMAND_ERROR.formatted(e.getMessage());
         }
 
-        EnumMap<CardLearningStatus, Integer> cardsStatusCount = statsCalculator.getCardsCountByStatus(deck);
+        Map<CardLearningStatus, Integer> cardsStatusCount = statsCalculator.getCardsCountByStatus(deck);
         String cardsStatusString =
                 """
                         Полностью изучено:  %d

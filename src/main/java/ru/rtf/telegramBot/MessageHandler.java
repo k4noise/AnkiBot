@@ -7,7 +7,6 @@ import ru.rtf.telegramBot.learning.AnswerStatus;
 import ru.rtf.telegramBot.learning.LearningSession;
 import ru.rtf.telegramBot.learning.SessionManager;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -114,7 +113,7 @@ public class MessageHandler {
                 %s""".formatted(resultAnswer, activeCard.getDescription());
 
         if (!learningSession.hasCardsToLearn()) {
-            EnumMap<AnswerStatus, Integer> rawStats = sessionManager.get(chatId).getStats();
+            Map<AnswerStatus, Integer> rawStats = sessionManager.get(chatId).getStats();
             sessionManager.end(chatId);
             return checkMessage + '\n' + """
                     Вы прошли все карточки в колоде!
