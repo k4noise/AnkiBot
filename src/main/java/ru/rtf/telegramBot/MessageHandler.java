@@ -3,6 +3,7 @@ package ru.rtf.telegramBot;
 import ru.rtf.Card;
 import ru.rtf.DeckManager;
 import ru.rtf.telegramBot.commands.*;
+import ru.rtf.telegramBot.learning.AnswerStatus;
 import ru.rtf.telegramBot.learning.LearningSession;
 import ru.rtf.telegramBot.learning.SessionManager;
 
@@ -27,6 +28,10 @@ public class MessageHandler {
      * Менеджер сессий пользователя
      */
     private final SessionManager sessionManager;
+    /**
+     * Калькулятор статистики
+     */
+    private final StatsCalculator statsCalculator;
 
     /**
      * Инициализирует поля и добавляет команды по умолчанию в список
@@ -46,6 +51,7 @@ public class MessageHandler {
         this.sessionManager = sessionManager;
         this.commands = commands;
         this.userDeckManagers = new HashMap<>();
+        this.statsCalculator = new StatsCalculator();
     }
 
     /**
@@ -56,9 +62,7 @@ public class MessageHandler {
      * @return Результат обработки
      */
     public String handle(Long chatId, String text) {
-        boolean isCommand = text
-                .trim()
-                .startsWith("/");
+        boolean isCommand = text.trim().startsWith("/");
 
         return isCommand || !sessionManager.hasActive(chatId)
                 ? handleCommand(chatId, text)
@@ -94,21 +98,27 @@ public class MessageHandler {
      */
     private String handleAnswerInLearning(Long chatId, String text) {
         LearningSession learningSession = sessionManager.get(chatId);
-        boolean isRightAnswer = learningSession.checkAnswer(text);
-
+        AnswerStatus answerStatus = learningSession.checkAnswer(text);
         Card activeCard = learningSession.getActiveCard();
 
-        String resultAnswer = isRightAnswer
-                ? "Верно!"
-                : "Неверно.";
+        learningSession.updateCardScore(activeCard, answerStatus);
+        learningSession.updateStats(answerStatus);
+        learningSession.removeActiveCardFromStudy();
+
+        String resultAnswer = answerStatus.equals(AnswerStatus.WRONG)
+                ? "Неверно."
+                : "Верно!";
         String checkMessage = """
                 %s Правильный ответ:
                 %s""".formatted(resultAnswer, activeCard.getDescription());
 
-        learningSession.removeActiveCardFromStudy();
         if (!learningSession.hasCardsToLearn()) {
+            Map<AnswerStatus, Integer> rawStats = sessionManager.get(chatId).getStats();
             sessionManager.end(chatId);
-            return checkMessage + '\n' + "Вы прошли все карточки в колоде!";
+            return checkMessage + '\n' + """
+                    Вы прошли все карточки в колоде!
+                    Вы помните %d%% терминов из показанных
+                    """.formatted(statsCalculator.getSuccessLearningPercentage(rawStats));
         }
         return checkMessage + '\n' + learningSession.formQuestion();
     }
@@ -152,5 +162,8 @@ public class MessageHandler {
         //команды режимов обучения
         commands.put("/check", new LearnCheckCommandHandler(sessionManager));
         commands.put("/end_check", new EndCheckCommandHandler(sessionManager));
+        //команды статистики
+        commands.put("/deck_stats", new DeckStatsCommandHandler());
+        commands.put("/stats", new StatsCommandHandler());
     }
 }

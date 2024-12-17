@@ -171,7 +171,10 @@ class MessageHandlerTest {
         );
 
         String reactionInCommandMessage = messageHandler.handle(newChatId, "/end_check");
-        Assertions.assertEquals("Вы досрочно завершили сессию", reactionInCommandMessage);
+        Assertions.assertEquals("""
+                Вы досрочно завершили сессию
+                Вы помните 100% терминов из показанных
+                """, reactionInCommandMessage);
 
         String reactionNoCommandMessage = messageHandler.handle(newChatId, "term2");
         Assertions.assertEquals(
@@ -205,7 +208,9 @@ class MessageHandlerTest {
         Assertions.assertEquals("""
                         Неверно. Правильный ответ:
                         "term2" = def2
-                        Вы прошли все карточки в колоде!""",
+                        Вы прошли все карточки в колоде!
+                        Вы помните 0% терминов из показанных
+                        """,
                 reactionInRandomPhraseAnswer,
                 "Рандомная фраза - по-прежнему неправильный ответ"
         );
@@ -236,7 +241,9 @@ class MessageHandlerTest {
         Assertions.assertEquals("""
                         Верно! Правильный ответ:
                         "term2" = def2
-                        Вы прошли все карточки в колоде!""",
+                        Вы прошли все карточки в колоде!
+                        Вы помните 50% терминов из показанных
+                        """,
                 reactionInRightAnswerMessage,
                 "Ответ должен быть неправильным"
         );

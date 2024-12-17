@@ -1,32 +1,33 @@
 package ru.rtf.telegramBot.learning.mode;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import ru.rtf.Card;
+import ru.rtf.telegramBot.learning.AnswerStatus;
 
 import java.util.List;
 
 /**
  * Тестирование режима обучения "ввод термина"
  */
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TypingLearningTest {
     /**
-     * Карта для обучения
+     * Карты для обучения
      */
-    private final List<Card> card = List.of(new Card("term", "def"));
+    private List<Card> cards;
+
     /**
      * Экземпляр режима обучения
      */
     private TypingLearning typingLearning;
 
     /**
-     * Создание нового экземпляра режима обучения для каждого теста
+     * Создание нового экземпляра режима обучения и инициализация карт перед тестами
      */
-    @BeforeEach
+    @BeforeAll
     void setUp() {
-        typingLearning = new TypingLearning(card);
+        cards = List.of(new Card("term", "def"));
+        typingLearning = new TypingLearning(cards);
     }
 
     /**
@@ -40,7 +41,7 @@ class TypingLearningTest {
         Assertions.assertEquals("""
                 Определение - "def"
                 Введите соответствующий термин:""", question);
-        Assertions.assertEquals(true, typingLearning.checkAnswer("term"));
-        Assertions.assertEquals(false, typingLearning.checkAnswer("notTerm"));
+        Assertions.assertEquals(AnswerStatus.RIGHT, typingLearning.checkAnswer("term"));
+        Assertions.assertEquals(AnswerStatus.WRONG, typingLearning.checkAnswer("notTerm"));
     }
 }

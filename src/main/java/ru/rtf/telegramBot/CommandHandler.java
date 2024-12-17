@@ -14,6 +14,12 @@ public interface CommandHandler {
             %s""";
 
     /**
+     * Сообщение об ошибке нет колод для выполнения команды
+     */
+    String MESSAGE_NO_DECKS_ERROR =
+            "У Вас пока нет ни одной колоды, создайте первую /create_deck <название>";
+
+    /**
      * Обрабатывает команду
      *
      * @param usersDecks - колоды пользователя

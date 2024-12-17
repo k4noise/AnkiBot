@@ -22,22 +22,11 @@ public class Deck {
      * @throws IllegalArgumentException Имя колоды не может быть пустым
      */
     public Deck(String name) {
-        this(name, new LinkedHashMap<>());
-    }
-
-    /**
-     * Инициализация колоды с сохранением данных карт
-     *
-     * @param name  Имя колоды
-     * @param cards Карты колоды
-     * @throws IllegalArgumentException Имя колоды не может быть пустым
-     */
-    private Deck(String name, Map<String, Card> cards) {
         if (name.isEmpty()) {
             throw new IllegalArgumentException("Имя колоды не может быть пустым");
         }
         this.name = name.toLowerCase();
-        this.cards = cards;
+        this.cards = new LinkedHashMap<>();
     }
 
     /**
@@ -181,7 +170,6 @@ public class Deck {
     private void validateUnique(String term) {
         if (cards.containsKey(term))
             throw new IllegalArgumentException("Карта с термином " + term + " существует в колоде");
-
     }
 
     /**

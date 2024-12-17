@@ -22,7 +22,7 @@ public class ListDecksCommandHandler implements CommandHandler {
 
         //сообщение пользователю о выполнении
         if (usersDecks.getDecks().isEmpty())
-            return "У Вас пока нет ни одной колоды, создайте первую /create_deck <название>";
+            return MESSAGE_NO_DECKS_ERROR;
         return "Ваши колоды:" + collectionDeckToSting(usersDecks.getDecks());
     }
 

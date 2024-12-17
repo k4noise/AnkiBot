@@ -1,33 +1,31 @@
 package ru.rtf.telegramBot.learning.mode;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import ru.rtf.Card;
+import ru.rtf.telegramBot.learning.AnswerStatus;
 
 import java.util.List;
 
 /**
  * Тестирование режима обучения "карточки"
  */
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MemoryLearningTest {
-
     /**
-     * Карта для обучения
+     * Карты для обучения
      */
-    private final List<Card> card = List.of(new Card("term", "def"));
+    private List<Card> cards;
     /**
      * Экземпляр режима обучения
      */
     private MemoryLearning memoryLearning;
-
     /**
-     * Создание нового экземпляра режима обучения для каждого теста
+     * Создание нового экземпляра режима обучения и инициализация карт перед тестами
      */
-    @BeforeEach
+    @BeforeAll
     void setUp() {
-        memoryLearning = new MemoryLearning(card);
+        cards = List.of(new Card("term", "def"));
+        memoryLearning = new MemoryLearning(cards);
     }
 
     /**
@@ -39,7 +37,8 @@ class MemoryLearningTest {
     void testFormQuestion() {
         String question = memoryLearning.formQuestion();
         Assertions.assertEquals("Термин - \"term\"", question);
-        Assertions.assertEquals(true, memoryLearning.checkAnswer("1"));
-        Assertions.assertEquals(false, memoryLearning.checkAnswer("0"));
+        Assertions.assertEquals(AnswerStatus.RIGHT, memoryLearning.checkAnswer("2"));
+        Assertions.assertEquals(AnswerStatus.PARTIALLY_RIGHT, memoryLearning.checkAnswer("1"));
+        Assertions.assertEquals(AnswerStatus.WRONG, memoryLearning.checkAnswer("0"));
     }
 }
