@@ -7,7 +7,7 @@ import ru.rtf.telegramBot.learning.AnswerStatus;
 import ru.rtf.telegramBot.learning.LearningSession;
 import ru.rtf.telegramBot.learning.SessionManager;
 
-import java.util.EnumMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -39,7 +39,7 @@ public class EndCheckCommandHandler implements CommandHandler {
         try {
             LearningSession session = sessionManager.get(chatId);
             sessionManager.end(chatId);
-            EnumMap<AnswerStatus, Integer> rawStats = session.getStats();
+            Map<AnswerStatus, Integer> rawStats = session.getStats();
             return """
                     Вы досрочно завершили сессию
                     Вы помните %d%% терминов из показанных

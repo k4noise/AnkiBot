@@ -10,6 +10,7 @@ import ru.rtf.Deck;
 import ru.rtf.telegramBot.learning.AnswerStatus;
 
 import java.util.EnumMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -36,7 +37,7 @@ class StatsCalculatorTest {
     @Test
     @DisplayName("Процент успешности ответов одного типа")
     void testGetSuccessLearningPercentage() {
-        EnumMap<AnswerStatus, Integer> stats = new EnumMap<>(AnswerStatus.class);
+        Map<AnswerStatus, Integer> stats = new EnumMap<>(AnswerStatus.class);
         stats.put(AnswerStatus.RIGHT, 3);
         Assertions.assertEquals(100, calculator.getSuccessLearningPercentage(stats));
 
@@ -55,7 +56,7 @@ class StatsCalculatorTest {
     @Test
     @DisplayName("Процент успешности всех типов ответов")
     void testGetSuccessLearningPercentageAllOptions() {
-        EnumMap<AnswerStatus, Integer> stats = new EnumMap<>(AnswerStatus.class);
+        Map<AnswerStatus, Integer> stats = new EnumMap<>(AnswerStatus.class);
         stats.put(AnswerStatus.RIGHT, 2);
         stats.put(AnswerStatus.PARTIALLY_RIGHT, 3);
         stats.put(AnswerStatus.WRONG, 1);
@@ -100,7 +101,7 @@ class StatsCalculatorTest {
     @DisplayName("Статусы карт пустой и неизученной колоды")
     void testGetCardsCountByStatusEmptyDeck() {
         Deck deck = new Deck("Deck");
-        EnumMap<CardLearningStatus, Integer> noCardsStats = calculator.getCardsCountByStatus(deck);
+        Map<CardLearningStatus, Integer> noCardsStats = calculator.getCardsCountByStatus(deck);
 
         Assertions.assertNull(noCardsStats.get(CardLearningStatus.NOT_STUDIED));
         Assertions.assertNull(noCardsStats.get(CardLearningStatus.PARTIALLY_STUDIED));
@@ -108,7 +109,7 @@ class StatsCalculatorTest {
 
         deck.addCard(new Card("term", "def"));
         deck.addCard(new Card("term2", "def"));
-        EnumMap<CardLearningStatus, Integer> noLearnedCardsStats = calculator.getCardsCountByStatus(deck);
+        Map<CardLearningStatus, Integer> noLearnedCardsStats = calculator.getCardsCountByStatus(deck);
 
         Assertions.assertEquals(2, noLearnedCardsStats.get(CardLearningStatus.NOT_STUDIED));
         Assertions.assertNull(noLearnedCardsStats.get(CardLearningStatus.PARTIALLY_STUDIED));
@@ -128,7 +129,7 @@ class StatsCalculatorTest {
         deck.getCard("term").addScore(4);
         deck.getCard("term2").addScore(9);
 
-        EnumMap<CardLearningStatus, Integer> cardsStats = calculator.getCardsCountByStatus(deck);
+        Map<CardLearningStatus, Integer> cardsStats = calculator.getCardsCountByStatus(deck);
         Assertions.assertEquals(1, cardsStats.get(CardLearningStatus.NOT_STUDIED));
         Assertions.assertEquals(1, cardsStats.get(CardLearningStatus.PARTIALLY_STUDIED));
         Assertions.assertNull(cardsStats.get(CardLearningStatus.STUDIED));
@@ -148,7 +149,7 @@ class StatsCalculatorTest {
     @ParameterizedTest
     @MethodSource("provideDataForSuccessLearningPercentage")
     @DisplayName("Проверка процента успешности обучения")
-    void testGetSuccessLearningPercentage(EnumMap<AnswerStatus, Integer> stats, int expectedPercentage) {
+    void testGetSuccessLearningPercentage(Map<AnswerStatus, Integer> stats, int expectedPercentage) {
         Assertions.assertEquals(expectedPercentage, calculator.getSuccessLearningPercentage(stats));
     }
 
@@ -163,8 +164,8 @@ class StatsCalculatorTest {
         );
     }
 
-    private EnumMap<AnswerStatus, Integer> createStats(int right, int partiallyRight, int wrong) {
-        EnumMap<AnswerStatus, Integer> stats = new EnumMap<>(AnswerStatus.class);
+    private Map<AnswerStatus, Integer> createStats(int right, int partiallyRight, int wrong) {
+        Map<AnswerStatus, Integer> stats = new EnumMap<>(AnswerStatus.class);
         stats.put(AnswerStatus.RIGHT, right);
         stats.put(AnswerStatus.PARTIALLY_RIGHT, partiallyRight);
         stats.put(AnswerStatus.WRONG, wrong);

@@ -15,18 +15,18 @@ class DeckStatsCommandHandlerTest {
     /**
      * Обработчик команды для получения статистики колоды
      */
-    private final DeckStatsCommandHandler deckStatsCommandHandler= new DeckStatsCommandHandler();
-    /**
-     * Менеджер колод пользователя
-     */
-    private DeckManager deckManager;
+    private final DeckStatsCommandHandler deckStatsCommandHandler = new DeckStatsCommandHandler();
     /**
      * Идентификатор чата
      */
     private final Long chatId = 1L;
+    /**
+     * Менеджер колод пользователя
+     */
+    private DeckManager deckManager;
 
     /**
-     * Создание нового экземпляра обработчика команд и менеджера колод для каждого теста
+     * Создание нового экземпляра менеджера колод для каждого теста
      */
     @BeforeEach
     void setUp() {

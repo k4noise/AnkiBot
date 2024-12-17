@@ -1,34 +1,32 @@
 package ru.rtf.telegramBot.learning.mode;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import ru.rtf.Card;
 import ru.rtf.telegramBot.learning.AnswerStatus;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 
 /**
  * Тестирование режима обучения "соответствие"
  */
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MatchLearningTest {
     /**
      * Карты для обучения
      */
-    private final List<Card> cards = List.of(new Card("term", "def"));
+    private List<Card> cards;
     /**
      * Экземпляр режима обучения
      */
     private MatchLearning matchLearning;
 
     /**
-     * Создание нового экземпляра режима обучения для каждого теста
+     * Создание нового экземпляра режима обучения и инициализация карт перед тестами
      */
-    @BeforeEach
+    @BeforeAll
     void setUp() {
+        cards = List.of(new Card("term", "def"));
         matchLearning = new MatchLearning(cards);
     }
 

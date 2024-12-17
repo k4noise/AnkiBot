@@ -26,7 +26,7 @@ class StatsCommandHandlerTest {
     private final Long chatId = 1L;
 
     /**
-     * Создание нового экземпляра обработчика команд и менеджера колод для каждого теста
+     * Создание нового экземпляра менеджера колод для каждого теста
      */
     @BeforeEach
     void setUp() {

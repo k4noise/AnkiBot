@@ -16,7 +16,7 @@ public abstract class LearningSession {
     /**
      * Статистика сеанса
      */
-    private final EnumMap<AnswerStatus, Integer> stats;
+    private final Map<AnswerStatus, Integer> stats;
 
     /**
      * Инициализировать режим обучения
@@ -102,7 +102,7 @@ public abstract class LearningSession {
     /**
      * Вернуть статистику ответов
      */
-    public EnumMap<AnswerStatus, Integer> getStats() {
+    public Map<AnswerStatus, Integer> getStats() {
         return stats;
     }
 }
